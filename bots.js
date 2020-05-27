@@ -5,7 +5,7 @@ const fs = require("fs"),
       Discord = require("discord.js"),
       
       // Graphics API
-      //canvas = require("canvas"),
+      canvas = require("canvas"),
       
 // ---------------------------- Custom APIS and local files ---------------------------- \\
       
@@ -63,7 +63,7 @@ Object.assign(Discord, { msg, embed });
 // Sets up all bots
 for(let i in c) {
   
-  // All bots have tokens of some sort so if yours doesnt, rip
+  // All bots have tokens of some sort so if yours doesn't, rip
   if(!c[i].t)
     continue;
   
@@ -78,7 +78,7 @@ for(let i in c) {
   if(Array.isArray(c[i].c))
     
     // Loops through bot commands
-    for (let cat of c[i].c.push("Bot Management")) {
+    for (let cat of c[i].c.concat(["Bot Management"])) {
       
       // Determines category
       let category = f.titlecase(cat.split(":")[0]);
@@ -104,7 +104,7 @@ for(let i in c) {
   // Bot handler (If the client is valid, add it into the bots array to be shipped out and logged into)
   bots[i] = require(__dirname + "/clients/" + c[i].ct).call({ Discord, /*canvas,*/ bots }, Object.assign(c[i], { name: i, a: a }), commands, { redis, osu, f });
   
-  // Deletes bot if it doesnt exist anyways
+  // Deletes bot if it doesn't exist anyways
   if (!bots[i])
     delete bots[i];
 }

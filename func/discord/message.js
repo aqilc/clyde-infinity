@@ -1,6 +1,5 @@
 // Gets the word-finder function
-const { word, mentions } = require("../f.js"),
-      { Message } = require("discord.js");
+const { word, mentions } = require("../f.js");
 
 // Exports the function
 module.exports = function Message(m) {

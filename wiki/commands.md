@@ -37,14 +37,18 @@ module.exports = {
   // Examples (String`example1,example2`)
   e: "cmdname,cmdname hello",
 
-  // Permissions needed *for bot* (same as parameter `p`)
-  bp: ["MANAGE_MESSAGES"],
+  //  (same as parameter `p`)
+  p: "MANAGE_MESSAGES" || ["KICK_MEMBERS", "MANAGE_MESSAGES"] || {
 
-  // Permissions needed *for user* (Object || Array<String>)
-  p: ["BOT_OWNER"],
+    // Permissions needed *for bot* (Object || Array<String>)
+    b: ["MANAGE_MESSAGES"] || { MANAGE_MESSAGES: "I cant even manage messages so how do you expect me to do this?" },
+
+    // Permissions needed *for user* (Object || Array<String>)
+    u: ["BOT_ADMIN"] || { BOT_ADMIN: "xP you arent the bot admin so why should you be executing this?" }
+  },
 
   // How to use the command
-  u: "cmdname [username]",
+  u: "commandname [username]",
 
   // Hidden from a regular user (Optional)
   h: false,
@@ -65,20 +69,22 @@ module.exports = {
   - "a": All
   - "d": DMs
   - "t": TextChannels(servers)
-- `cd`:`Number` Command cooldown(how long you need to wait before reusing a command)
+- `cd`:`Number` Command cooldown(how long you need to wait before reusing a command)(milliseconds)
 - `d`:`String||Object` Description of the command.
   - `Object` Properties
     - `d`:`String` Text description.
     - `img`:`String` Image url, can be placed anywhere in the string and will be taken out after parsing.
 - `e`:`String` Example showing how to use the command.
-- `p`:`Object || Array<String>` Permissions required for the command.
+- `p`:`String(Permission) || Object || Array<String(Permission)>` Permissions required for the command.
   - `Object` Format
-    - Key `(permission)`: The permission needed by the user for the activation of the command
-    - Value `(description)`: The returned message for people who can't access the command because they don't have this permission.
-- `bp`:`Object || Array<String>` Permissions needed by the bot to execute this command
-  - `Object` Format
-    - Key `(permission)`: The permission needed by the bot to execute the command.
-    - Value `(description)`: The returned message for the user when the bot is denied permissions to use the command.
+    - `b`:`Object || Array<String(Permission)> || String(Permission)` Key
+      - `Object` Format
+        - Key `(permission)`: The permission needed by the user for the activation of the command
+        - Value `(description)`: The returned message for people who can't access the command because they don't have this permission.
+    - `p`:`Object || Array<String(Permission)> || String(Permission)` Key
+      - `Object` Format
+        - Key `(permission)`: The permission needed by the bot to execute the command
+        - Value `(description)`: The message stating that the bot doesn't have the proper permissions.
 - `f`:`Function(m, s)` The function that happens when the command is called.
   - Inherited Objects
     - `Discord`: The discord.js API
@@ -100,6 +106,7 @@ module.exports = {
 - `del`:`Boolean` Auto-delete the original message
 - `dver`:`String` Default Version
 - `versions`:`Object<name:CommandObject>` Holds versions of that command
+
 
 # Command functions
 

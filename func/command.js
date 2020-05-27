@@ -11,11 +11,11 @@ module.exports = class Command {
   constructor(name, category, type) {
     
     // Check for name and command
-    if(typeof name !== "string" || typeof category !== "string" || typeof type !== "string")
-      throw new Error("\"name\", \"category\" or \"type\" not specified or of incorrect type for new command.\nGiven values: (name) " + name + ", " + category + ", (type) " + type);
+    if(typeof name !== "string" || typeof category !== "string")
+      throw new Error("\"name\" or \"category\" not specified or of incorrect type for new command.\nGiven values: (name) " + name + ", (category)" + category);
     
     // Command type
-    this.type = type;
+    this.type = type || "discord";
     
     // Category
     this.category = category;
@@ -27,11 +27,11 @@ module.exports = class Command {
     else this.name = name;
     
     // Path of the command
-    let cmdpath = path.join(__dirname, `../commands/${type}/${titlecase(category)}/${this.name}.js`);
+    this.path = path.join(__dirname, `../commands/${type}/${titlecase(category)}/${this.name}.js`);
     
     // Gets the command and stores it
-    if(fs.existsSync(cmdpath))
-      this.cmd = require(cmdpath);
+    if(fs.existsSync(this.path))
+      this.cmd = require(this.path);
     else throw new Error(`Command ${this.name} doesn't exist!`);
     
     // Merges both objects
@@ -48,6 +48,9 @@ module.exports = class Command {
     // Merges based on version of command
     if(this.versions && (this._version || this.dver))
       Object.assign(this, this.versions[this._version || this.dver])
+    
+    // Checks for execution function and throws an error if one doesn't exist
+    if(!this.f) throw new Error(`The command '${this.name}' doesn't have any function for execution!`);
   }
   
   // Returns the version
@@ -88,7 +91,7 @@ module.exports = class Command {
     // Sets the values of the command to the `this` object
     this._update();
     
-    // Sets version and syncronizes with version
+    // Sets version and synchronizes with version
     if(this.versions.length >= 1)
       this.version = version || this.versions[this.versions.length - 1];
     else this._version = "1.0.0";

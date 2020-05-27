@@ -23,8 +23,8 @@ module.exports = {
   apis: {
     
     // osu! API Keys
-    osu: "856776937f77c425ac37368d57f54f1eb378fc98", // v1
-    os2: "RnIhfA8dpQjwNgQMbhx6yMBfYuZHQQNV1z8AJrZp", // v2
+    osu: "965d02dbb645026b9a3fef76a144cdd43bdcc135", // v1
+    os2: "2S8PRFLbt1c0jLuFGYOAk2lahpgIZP8ekzhucUIo", // v2
   },
   
   // Holds config data for every database
@@ -47,7 +47,7 @@ module.exports = {
     // Clyde
     main: {
       // Token
-      t: "NjA2OTg2NjQ4NzcyOTM1Njkx.XlcNiQ.H9jrxlxZlFxQCnV3qpquhVGEZlo",
+      t: "NjA2OTg2NjQ4NzcyOTM1Njkx.Xs3CLA.oqiTQyYM3eNKjvOd2dGrwnTYj14",
       
       // Username
       u: "Clyde Infinity Beta",
