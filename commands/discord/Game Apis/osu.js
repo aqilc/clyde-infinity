@@ -21,7 +21,7 @@ const osu = {
       .t(`:flag_${user.country.toLowerCase()}: ` + user.username + "'s osu! Profile").url("https://osu.ppy.sh/u/" + user.username)
 
       // Description
-      .d(`**Level ${Math.floor(user.level)}** ` + (progress >= 1 ? " <:pog1:714449801319546930>" + "<:pog2:714449801030270979>".repeat(progress) + "<:pog3:714449801147711519>" : "<:pog4:714449801269346334>") + (max - progress > 1 ? "<:pog6:714449801269477428>".repeat(max - progress) + "<:pog5:714449801294512158>" : "<:pog7:714454553470173274>"))
+      .d((progress >= 1 ? " <:pog1:714449801319546930>" + "<:pog2:714449801030270979>".repeat(progress) + "<:pog3:714449801147711519>" : "<:pog4:714449801269346334>") + (max - progress > 1 ? "<:pog6:714449801269477428>".repeat(max - progress) + "<:pog5:714449801294512158>" : "<:pog7:714454553470173274>") + ` **Lvl ${Math.floor(user.level)}**`)
 
       // Shows PP
       .af("PP", user.pp_raw, true).af("Accuracy", Number(user.accuracy).toFixed(2), true)

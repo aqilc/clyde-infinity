@@ -15,7 +15,7 @@ module.exports = {
 			return (await m.channel.send("Command not found.")).delete({ timeout: 5000 })
 
 		// Deletes the cache in require so we can do a full refresh later
-		delete require.cache[require.resolve(this.cmd.path)]
+		delete require.cache[require.resolve(cmd.path)]
 
 		// For catching errors
 		try {
@@ -24,7 +24,7 @@ module.exports = {
 			this.commands[command] = new Command(cmd.name, cmd.category)
 
 			// Sends a message confirming that the command was done.
-			return (await m.channel.send("Command refresh successful!")).delete({ timeout: 5000 })
+			return (await m.channel.send(embed.a("Command refresh successful!", m.author.avatarURL()))).delete({ timeout: 5000 })
 
 		// If there was an error
 		} catch(err) {

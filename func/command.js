@@ -27,7 +27,7 @@ module.exports = class Command {
     else this.name = name;
     
     // Path of the command
-    this.path = path.join(__dirname, `../commands/${type}/${titlecase(category)}/${this.name}.js`);
+    this.path = path.join(__dirname, `../commands/${this.type}/${titlecase(this.category)}/${this.name}.js`);
     
     // Gets the command and stores it
     if(fs.existsSync(this.path))

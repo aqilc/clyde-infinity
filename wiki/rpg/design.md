@@ -46,23 +46,12 @@ Game class Item include weapons, equipment, potions, etc
 
 **type: potion**
 
-- `id`:`P(number)` Format of ID for all potions
-- `effect`:`String(Effect)` An effect
+- `effect`:`String(Effect)` An effect executed on user action 
 
 
 ## Effects
 
-Effects will have a special language that records values and how they will effectively change
-
-**Syntax:**
-
-- `>`: Starts a new object
-  - Any value following a `\` is treated as a normal character
-  - Anything after that and before the next `>` will be included in the object(note: `:>` is excluded from this)
-  - Any property can be can be assigned to any data, which will be automatically parsed according to it's data type
-    - Format: `(value name):(value)`
-- `propname:>`: Starts a new object in the current Object and assigns it to the property name
-  
+Effects are buffs that last for a short amount of time.  
 
 **Example:**
 ```
@@ -73,11 +62,11 @@ Effects will have a special language that records values and how they will effec
 
 Will have base stats(decimal multipliers) that multiply weapon stats(will have no max):
 
-- **Strength:** Multiplies the amount of damage a weapon does
-- **Defense:** Multiplies the amount of damage mitigation a shield does
+- **Strength:** Base damage
+- **Defense:** Base damage protection
 - **Speed:** Speed at which you move through quests
-  - No Max, but will likely be debuffed as you go on
-  - Plays a role in knockback
+  - No Max, but will likely be de-buffed as you go on
+  - Plays a role in kickback
 
 Item slots available on the body:
 
@@ -93,8 +82,6 @@ Item slots available on the body:
   - Would usually contain some special attribute/buff that helps the player + maybe an increase in defense
 - Boots
   - Boosts speed
-- Potion
-  - Another one of the main things an adventure gets, heals or buffs them in the middle of a battle. Can only have one equipped, so needed to be chosen wisely.
 
 ## Item buffs & passives
 
