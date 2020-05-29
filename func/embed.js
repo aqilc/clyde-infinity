@@ -55,13 +55,11 @@ module.exports = class Embed extends MessageEmbed {
     if(Array.isArray(title))
       return this.addFields(title);
     
-    // If adding a field using an object, do so
+    // If adding a field using an object, get field values and add them
     if(typeof title === "object")
-    
-      // Get field values and add them
       return this.addField(title.name, title.value, title.inline);
     
     // Or, finally, if you are adding the field normally, do so
-    this.addField(title, desc, inline)
+    return this.addField(title, desc, inline)
   }
 }
