@@ -12,6 +12,9 @@ module.exports = {
             // Available action an admin can do
             actions = {
 
+                // If someone does guilds cx
+                s: () => actions.list(),
+
                 // Lists all guilds
                 list: () => m.channel.send(
 
@@ -35,8 +38,8 @@ module.exports = {
                     // Determines guild to get emojis from
                     let guild = mentions(content.slice(action.length));
 
-                    if(!guild)
-                        return m.channel.send(embed.t("Please send a guild id to get the emojis from!"));
+                    // If what they sent wasn't a guild id, abort
+                    if(!guild) return m.channel.send(embed.t("Please send a guild id to get the emojis from!"));
                 }
             };
         
