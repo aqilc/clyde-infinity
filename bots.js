@@ -81,7 +81,7 @@ for(let i in c) {
     for (let cat of c[i].c.concat(["Bot Management"])) {
       
       // Determines category
-      let category = f.titlecase(cat.split(":")[0]);
+      let category = cat.split(":")[0].toLowerCase();
       
       // If the category is valid
       if(Object.keys(cmds[c[i].ct]).includes(category))
