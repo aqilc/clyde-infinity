@@ -13,7 +13,6 @@ module.exports = class Embed extends MessageEmbed {
     this.i = this.setImage;
     this.ts = this.setTimestamp;
     this.tn = this.setThumbnail;
-    this.af = this.addField;
     this.url = this.setURL;
     
     // Color hexes
@@ -58,13 +57,9 @@ module.exports = class Embed extends MessageEmbed {
     
     // If adding a field using an object, do so
     if(typeof title === "object")
-      
-      // If its an array
-      if(Array.isArray(title))
-        return this.addField(title[0], title[1], title[2]);
     
-      // else if it's an object
-      else return this.addField(title.name, title.value, title.inline);
+      // Get field values and add them
+      return this.addField(title.name, title.value, title.inline);
     
     // Or, finally, if you are adding the field normally, do so
     this.addField(title, desc, inline)
