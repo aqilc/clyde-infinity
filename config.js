@@ -62,7 +62,7 @@ module.exports = {
       dc: "blue",
       
       // Commands
-      c: ["Support", "Utility", "Stats", "Game Apis"],
+      c: ["Support", "Utility", "Stats", "Game Apis", "rpg"],
       
       // Special eval prefix
       e: "main:",
@@ -74,7 +74,7 @@ module.exports = {
     // Reaper's bot
     reaper: {
       // Token
-      t: process.env.REAPER,
+      t: "NjkzODc1ODA1Mzg1OTE2NDY3.XoDefg.NPDwUtIt3_oGOVzsPNTv5jKpjBY",
       
       // Username
       u: "Under Reaper",
