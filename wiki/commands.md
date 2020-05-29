@@ -37,7 +37,7 @@ module.exports = {
   // Examples (String`example1,example2`)
   e: "cmdname,cmdname hello",
 
-  //  (same as parameter `p`)
+  // Contains all permission-related stuff
   p: "MANAGE_MESSAGES" || ["KICK_MEMBERS", "MANAGE_MESSAGES"] || {
 
     // Permissions needed *for bot* (Object || Array<String>)
