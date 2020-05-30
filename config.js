@@ -29,7 +29,28 @@ module.exports = {
   
   // Holds config data for every database
   dbs: {
+
+    // Sqlite Database Filenames
     sqlite: ["./.db/main.db", "./.db/rpg.db"],
+
+    // MySQL servers
+    mysql: [{
+
+      // Database hostname
+      host: "rpg.cdkvmhasvlw6.us-east-2.rds.amazonaws.com",
+
+      // Schema
+      database: "rpg",
+
+      // Port
+      port: 3306,
+
+      // Username
+      user: "aqilcont",
+
+      // Password
+      password: "A5kxL49qvMbG8rwo0c5K"
+    }]
   },
   
   // Admins

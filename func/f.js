@@ -29,13 +29,13 @@ const fs = require('fs'),
   list: (arr) => {
     
     // returns if the input isn't an array
-    if(!Array.isArray(arr)) return; 
+    if(!Array.isArray(arr) || arr.length < 1) return "";
     
     // Gets the last element of the array and takes it out of the main array
     let last = arr.splice(-1, 1);
     
     // Inserts an "and (last element)" and returns the result
-    return arr.join(", ") + " and " + last;
+    return (arr.length > 1 ? arr.join(", ") + " and " : "") + last;
   },
   
   // Calculates similarity between strings/an array of strings (https://glench.github.io/fuzzyset.js/)
@@ -229,7 +229,10 @@ const fs = require('fs'),
       // else, just do it normally
       else return array.reduce((a, b) => Math.min(a, b))
     }
-  }
+  },
+
+  // Creates a random string of letters
+  randstr: len => "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 }
 
 // Exports everything :D

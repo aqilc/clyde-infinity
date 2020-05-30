@@ -2,7 +2,7 @@ module.exports = {
 
 	// Function executed
 	f(m, { content, embed }) {
-		m.channel.send("WIP xP")
+		m.channel.send("WIP xP");
 	},
 
 	// Aliases (Array<String>)

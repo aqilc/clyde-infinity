@@ -102,7 +102,7 @@ for(let i in c) {
     { console.error(`Bot "${i}" of type ${c[i].ct} doesn't have any commands!`); continue; } 
   
   // Bot handler (If the client is valid, add it into the bots array to be shipped out and logged into)
-  bots[i] = require(__dirname + "/clients/" + c[i].ct).call({ Discord, /*canvas,*/ bots }, Object.assign(c[i], { name: i, a: a }), commands, { redis, osu, f });
+  bots[i] = require(__dirname + "/clients/" + c[i].ct).call({ Discord, canvas, bots }, Object.assign(c[i], { name: i, a: a }), commands, { redis, osu, f });
   
   // Deletes bot if it doesn't exist anyways
   if (!bots[i])

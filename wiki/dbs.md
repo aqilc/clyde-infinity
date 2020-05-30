@@ -31,10 +31,12 @@
 - `discord.users[<user id>]:osu.username`:`<String>` osu! username for osu commands
 - `discord.users[<user id>]:osu.mode`:`<String('fruits' || 'osu' || 'mania' || 'taiko')>` osu! user default game mode
 - `discord.users[<user id>]:osu.command.defaultfunc`:`String('r' || 'p')`
+- `discord.users[<user id>]:osu.replays.skin`
 
 ## RPG
 
-
+- `rpg[<username>]:password` A SHA-256 hashed password.
+- 
 
 # SQL Databases
 

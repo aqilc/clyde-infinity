@@ -56,8 +56,8 @@ module.exports = {
                 }
             }))[action];
         
-        // If action is not available, return this message
-        return m.channel.send(embed.t(`Please include an action!`).f(`Available actions: ${list(Object.keys(actions))}`))
+        // If action is not available, just give them a list :D
+        return actions.list();
     },
   
     // Aliases (Array<String>)
