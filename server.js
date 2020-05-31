@@ -12,3 +12,8 @@ app.listen(process.env.PORT);
 
 // Logs every bot in.
 bots.login();
+
+// Handles ~~unhandled~~ Promise rejections
+process.on('unhandledRejection', error => {
+	console.error('Unhandled promise rejection:', error);
+});
