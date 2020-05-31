@@ -74,3 +74,6 @@
 | :---------- | :----------------: | -----------------------------------: |
 | `id`        |    `String(18)`    |    Channel ID for row identification |
 | `blacklist` | `(Bot Name) | ...` | Disables use of bots in this channel |
+
+## RPG
+

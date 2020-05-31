@@ -4,7 +4,7 @@ Detailed plans for how the game will work. Will be based off of Post Knight a bi
 
 ## Accounts
 
-Anyone can create any number of accounts as they want(with a ratelimit, of course). They will work like normal accounts on any online game, with a separate username and password, with means to access them online(from future website[maybe]).
+Anyone can create any number of accounts as they want(with a rate-limit, of course). They will work like normal accounts on any online game, with a separate username and password, with means to access them online(from future website[maybe]).
 
 **Account attributes(Database format):**
 
@@ -86,23 +86,6 @@ Item slots available on the body:
 ## Item buffs & passives
 
 Different items all have at least one buff/passive on them
-
-### Weapon passives
-
-- **Barbaric Blow**: Chance to cause a STUN effect on enemy for Xsec (Warhammers class)
-- **Upheaval**: Chance to increase the knockback an enemy X(blocks? feet? percent?) (Maces class)
-- **Dripping Cut**: Chance to cause a BLEED effect on enemy for Xsec (Knives class)
-- **Full Counter/Noble Shimmer**: Chance to cause an enemy to deal an attack completely on themselves (Swords class)
-- **Debilitation**: Chance to reduce an enemy's attack by X% for Xsec (Battleaxe class)
-- **Piercing Stab**: Chance to reduce an enemy's defense by X% for Xsec (Spears class)
-
-### Other Item passives (Places applicable may vary)
-
-- **Spiked Exterior**: Returns X% of an enemy's attack back to them (Any)
-- **Hardening**: Each consecutive hit by the same enemy does X% less damage each time (Chestplates Only)
-- **Living Material**: Regain X amount of health every Xsec during battle (All)
-- **Shield Bash**: Causes a stun effect on the enemy when blocking (Shields Only)
-- **Spiked Soles**: Reduce the amount of knockback from an attack by X(blocks? feet? percent?) (Boots Only)
 
 ## Enemies
 
