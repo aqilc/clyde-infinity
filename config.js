@@ -83,7 +83,7 @@ module.exports = {
       dc: "blue",
       
       // Commands
-      c: ["Support", "Utility", "Stats", "Game Apis", "rpg"],
+      c: ["Support", "Utility", "Bot Info", "Game Apis", "RPG"],
       
       // Special eval prefix
       e: "main:",
@@ -110,7 +110,7 @@ module.exports = {
       dc: "red",
       
       // Commands
-      c: ["utility", "support", "stats"],
+      c: ["utility", "support", "bot info"],
       
       // Special eval prefix
       e: "reaper:"
