@@ -59,15 +59,17 @@ module.exports = {
 					cooldown: 5000
 				},
 			};
-		
+		let before = Date.now();
+		async function react(action) {
+			await msg.react(action.emoji);
+			let r = (await msg.awaitReactions((reaction, user) => user.id === m.author.id && reaction.emoji.name === action.emoji, { time: 1.2e5, errors: ["time"], max: 1 }));
+			r.array().filter(ree => ree.emoji.name === action.emoji)[0].remove();
+			//this will go on for a day now
+			if(Date.now() - before < 1000000)
+				setTimeout(() => react(action), action.cooldown);
+		}
 		for(let i in actions)
-			actions[i].reaction = await msg.react(actions[i].emoji);
-		let emojis = Object.values(actions);
-		const collector =  msg.createReactionCollector((reaction, user) => user.id === m.author.id && emojis.map(a => a.emoji).includes(reaction.emoji.name), { time: 1.2e5, errors: ["time"] })
-		collector.on("collect", async r => {
-			await r.remove();
-			setTimeout(() => msg.react(r.emoji), emojis.find(a => a.emoji === r.emoji.name).cooldown)
-		})
+			react(actions[i]);
 	},
 
 	// Aliases (Array<String>)
