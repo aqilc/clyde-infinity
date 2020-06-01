@@ -97,12 +97,8 @@ module.exports = class osu {
     return canvas.toBuffer();
   }*/
   
-  // If we ever feel like we need the urls, there is an option
-  static get apis() {
-    
-    // Returns the "apis" variable used for the rest of the urls
-    return apis;
-  }
+  // Returns the "apis" variable used for the rest of the urls
+  static apis = apis;
 }
 
 // Creates a function that sends a get request
