@@ -15,7 +15,7 @@ const { mentions } = require("../../../func/f"),
           max = 8, progress = Math.round((user.level - Math.floor(user.level))/1 * max),
 
           // Calculates total circles tapped by user
-          circles = Number(user.count300) + Number(user.count100) + Number(user.count50);
+          circles = Number(user.count300) + Number(user.count100) + Number(user.count50)
 
     // Sends the info
     return m.channel.send(
@@ -27,7 +27,7 @@ const { mentions } = require("../../../func/f"),
       .t(`:flag_${user.country.toLowerCase()}: ` + user.username + "'s osu! Profile").url("https://osu.ppy.sh/u/" + encodeURIComponent(user.username))
 
       // Description
-      .d((progress >= 1 ? " <:pog1:714449801319546930>" + "<:pog2:714449801030270979>".repeat(progress) + "<:pog3:714449801147711519>" : "<:pog4:714449801269346334>") + (max - progress > 1 ? "<:pog6:714449801269477428>".repeat(max - progress) + "<:pog5:714449801294512158>" : "<:pog7:714454553470173274>") + ` **Lvl ${Math.floor(user.level)}**`)
+      .d((progress >= 1 ? " <:pog1:714449801319546930>" + "<:pog2:714449801030270979>".repeat(progress - 1) : "<:pog4:714449801269346334>") + ((progress >= 1 && max - progress > 1 && "<:pog3:714449801147711519>") || (max - progress <= 1 && "<:pog2:714449801030270979>") || "<:pog6:714449801269477428>") + (max - progress > 1 ? "<:pog6:714449801269477428>".repeat(max - progress - 1) + "<:pog5:714449801294512158>" : "<:pog7:714454553470173274>") + ` **Lvl ${Math.floor(user.level)}**`)
 
       // Shows PP
       .af("PP", user.pp_raw, true).af("Accuracy", Number(user.accuracy).toFixed(2), true)
