@@ -232,7 +232,26 @@ const fs = require('fs'),
   },
 
   // Creates a random string of letters
-  randstr: len => "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+  rand: {
+
+    // Generates a random string
+    str(len, { special, numsonly }) {
+
+      // The returned string
+      let str = "",
+
+      // Determines letters
+      letters = (numsonly && "1234567890") || "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890" + (special && "!@#$%^&*()_+-=\\/?[]{}<>'\";:.,`~" || "");
+
+      // Gets a random letter and adds it
+      for (let i = 0; i < len; i ++)
+        str += letters[Math.floor(Math.random() * letters.length)];
+      
+      // Returns constructed string
+      return str;
+    }
+  }
+
 }
 
 // Exports everything :D
