@@ -3,10 +3,10 @@
 const https = require("https"),
       
       // New API(wrapper)
-      h = url => new Promise((res, rej) => {
+      h = (url, { method, headers, }) => new Promise((res, rej) => {
         
         // Starts a new HTTPS GET request
-        https.get(url, r => {
+        https.request(url, { method: method || "GET", headers}, r => {
           
           // The format of recieved content determining whether to json parse or not
           const type = r.headers["content-type"];
