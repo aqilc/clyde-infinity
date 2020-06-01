@@ -10,7 +10,7 @@ const fs = require("fs"),
 // ---------------------------- Custom APIS and local files ---------------------------- \\
       
       // Config stuff
-      { apis, c, a, m } = require("./config"),
+      { apis, c, a, m, dbs } = require("./config"),
       
       // Custom Message class
       msg = require("./func/discord/message"),
@@ -26,10 +26,15 @@ const fs = require("fs"),
       
       // osu API import and setup
       osu = new (require("./func/osu.js"))(apis.osu, 1),
-      
+
+// -------------------------- Databases and other storage APIs -------------------------- \\
+
       // Redis server connection setup
       redis = new (require("ioredis"))(),
       
+      // MySQL Connection
+      mysql = require("mysql2/promise"),//.createConnection(dbs.mysql[0]),
+
 // ------------------------------- Commands and Bot Object ------------------------------ \\
       
       // Gets all clients
@@ -102,7 +107,7 @@ for(let i in c) {
     { console.error(`Bot "${i}" of type ${c[i].ct} doesn't have any commands!`); continue; } 
   
   // Bot handler (If the client is valid, add it into the bots array to be shipped out and logged into)
-  bots[i] = require(__dirname + "/clients/" + c[i].ct).call({ Discord, canvas, bots }, Object.assign(c[i], { name: i, a: a }), commands, { redis, osu, f });
+  bots[i] = require(__dirname + "/clients/" + c[i].ct).call({ Discord, canvas, bots }, Object.assign(c[i], { name: i, a, m, apis }), commands, { mysql, redis, osu, f });3
   
   // Deletes bot if it doesn't exist anyways
   if (!bots[i])
