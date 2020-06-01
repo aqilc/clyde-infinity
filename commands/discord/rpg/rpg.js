@@ -2,31 +2,21 @@ module.exports = {
 
 	// Function executed
 	async f(m, { content, embed }) {
-		if(!content)
-		m.channel.send("WIP xP");
 
-		let player = {
-			name: m.author.username,
-			strength: 34000,
-			defence: 50000,
-			health: 750000,
-			speed: 20000,
-			items: {
-				"item id": {
-					fusions: {
-						"item id": {
-							quantity: 20,
-						}
-					},
-				}
-			},
-		},  enemies = [
-			{
-				name: "Bob the Builder",
-				health: 1000000,
-				defence: 30000,
-				strength: 10000,
-				speed: 5000,
+		// Deny if you don't know how to use
+		if(!content)
+			return m.channel.send("WIP xP");
+
+		// Stores start of combat
+		let start = Date.now(),
+
+			// You
+			player = {
+				name: m.author.username,
+				strength: 34000,
+				defence: 50000,
+				health: 750000,
+				speed: 20000,
 				items: {
 					"item id": {
 						fusions: {
@@ -36,18 +26,47 @@ module.exports = {
 						},
 					}
 				},
-				drops: {
-					"item id": {
-						quantity: 1,
-						chance: 0.01,
+				
+				// Your enemies
+			},
+			enemies = [
+				{
+					name: "Bob the Builder",
+					health: 1000000,
+					defence: 30000,
+					strength: 10000,
+					speed: 5000,
+					items: {
+						"item id": {
+							fusions: {
+								"item id": {
+									quantity: 20,
+								}
+							},
+						}
+					},
+					drops: {
+						"item id": {
+							quantity: 1,
+							chance: 0.01,
 
+						}
 					}
 				}
-			}
-		],  msg = await m.channel.send(embed.a(`${player.name} vs ${enemies[0].name}`, m.author.avatarURL()).d(`\`\`\`\n${(" ".repeat(30) + "\n").repeat(3)}\`\`\``)),
+			
+			],
+
+			// Message containing the acc information and stuff
+			msg = await m.channel.send(embed.a(`${player.name} vs ${enemies[0].name}`, m.author.avatarURL()).d(`\`\`\`\n${(" ".repeat(30) + "\n").repeat(3)}\`\`\``)),
+
+			// Your actions
 			actions = {
+				get done() {
+					return Date.now() - start > 1000000
+				},
 				rush: {
 					emoji: "🗡",
+					action() {},
 					cooldown: 5000
 				},
 				shield: {
@@ -59,15 +78,28 @@ module.exports = {
 					cooldown: 5000
 				},
 			};
-		let before = Date.now();
+		
+		// Reaction function
 		async function react(action) {
+
+			// React on the attack message
 			await msg.react(action.emoji);
-			let r = (await msg.awaitReactions((reaction, user) => user.id === m.author.id && reaction.emoji.name === action.emoji, { time: 1.2e5, errors: ["time"], max: 1 }));
-			r.array().filter(ree => ree.emoji.name === action.emoji)[0].remove();
-			//this will go on for a day now
-			if(Date.now() - before < 1000000)
+
+			// Wait for reactions
+			let r = (await msg.awaitReactions((reaction, user) => user.id === m.author.id && reaction.emoji.name === action.emoji, { time: 1.2e5, max: 1 })).first()
+			
+			// If no reactions were gotten, exit loop
+			if(!r) return;
+
+			// Remove emojis other wise
+			r.remove();
+
+			// Go back to beginning(the loop part) in a specific amount of time if we aren't done with combat
+			if(!actions.done)
 				setTimeout(() => react(action), action.cooldown);
 		}
+
+		// Loop through action reactions and do above function for all of them
 		for(let i in actions)
 			react(actions[i]);
 	},
