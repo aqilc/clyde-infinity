@@ -250,8 +250,27 @@ const fs = require('fs'),
       // Returns constructed string
       return str;
     }
-  }
+  },
 
+  // Converts an object into an array
+  objtoarr: obj => obj.length && obj || Object.keys(obj).map(k => [k, obj[k]]),
+
+  // Finds permissions/values based on object inputs
+  findperms(bitfield, permobj) {
+
+    // Converts the permobj into an iterable array and sorts based on values
+    permobj = f.objtoarr(permobj).sort((a, b) => b[1] - a[1]);
+
+    // Stores the permissions
+    let perms = [];
+
+    for(let i of permobj)
+      if(bitfield - i[1] > 0)
+        bitfield -= i[1], perms.push(i[0]);
+
+    // Return the permissions
+    return perms;
+  }
 }
 
 // Exports everything :D

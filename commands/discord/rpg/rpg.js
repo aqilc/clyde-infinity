@@ -1,3 +1,8 @@
+
+// Text graphics API :D
+const ASCII = new require("../../../func/ascii");
+
+// Exports command
 module.exports = {
 
 	// Function executed
@@ -55,6 +60,8 @@ module.exports = {
 				}
 			
 			],
+
+			//
 
 			// Message containing the acc information and stuff
 			msg = await m.channel.send(embed.a(`${player.name} vs ${enemies[0].name}`, m.author.avatarURL()).d(`\`\`\`\n${(" ".repeat(30) + "\n").repeat(3)}\`\`\``)),

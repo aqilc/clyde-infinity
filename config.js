@@ -89,7 +89,13 @@ module.exports = {
       e: "main:",
       
       // Command directory/type
-      ct: "discord"
+      ct: "discord",
+
+      // Clyde Admins
+      admin: [],
+
+      // Clyde Moderators
+      mod: []
     },
     
     // Reaper's bot

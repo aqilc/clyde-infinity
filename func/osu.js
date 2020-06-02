@@ -2,7 +2,7 @@
 const //{ createCanvas } = require("canvas"),
       
       // HTTPS api
-      get = require("./get"),
+      get = require("./request"),
       
       // The links to the osu API
       apis = [

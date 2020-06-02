@@ -1,7 +1,7 @@
 let { MessageEmbed } = require("discord.js");
-module.exports = class Embed extends MessageEmbed {
+export class Embed extends MessageEmbed {
   constructor() {
-    
+
     // Makes an embed
     super();
     

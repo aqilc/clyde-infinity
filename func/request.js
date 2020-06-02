@@ -3,12 +3,12 @@
 const https = require("https"),
       
       // New API(wrapper)
-      h = (url, { method, headers, }) => new Promise((res, rej) => {
-        
-        // Starts a new HTTPS GET request
-        https.request(url, { method: method || "GET", headers}, r => {
+      h = (url, options) => new Promise((res, rej) => {
+
+        // Starts a new HTTPS request
+        let req = https.request(url, { method: options && options.method, headers: options && options.headers }, r => {
           
-          // The format of recieved content determining whether to json parse or not
+          // The format of received content determining whether to json parse or not
           const type = r.headers["content-type"];
 
           // Stores data
@@ -30,6 +30,9 @@ const https = require("https"),
           });
 
         }).on("error", rej);
+
+        // Sends the request
+        req.end();
       });
 
 // Exports the new async function

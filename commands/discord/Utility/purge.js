@@ -51,7 +51,7 @@ module.exports = {
   e: "purge 10",
   
   // Permissions
-  p: "MANAGE_MESSAGES",
+  p: "BOT_ADMIN",//"MANAGE_MESSAGES",
   
   // Deletes author's message **before executing the command**
   del: true

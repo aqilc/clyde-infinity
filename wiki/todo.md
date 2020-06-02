@@ -1,5 +1,6 @@
-# TODO
+# Clyde TODO
 
+- Finish Permission system
 - The Game of Ur
 - osu command
 - RPG Plans
