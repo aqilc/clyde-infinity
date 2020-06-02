@@ -7,10 +7,10 @@
 module.exports = function (c, cmds, { redis, osu, f }) {
   
   // Pulls in Discord APIs (or custom Discord apis)
-  const { Client, embed, msg } = this.Discord;
+  const { Client, embed, msg, Permissions, Perms } = this.Discord;
   
   // Pulls in custom functions
-  const { codify, similarity, fetch } = f;
+  const { codify, similarity, fetch, findperms } = f;
 
   // Sets up Client
   let client = new Client();
@@ -54,6 +54,26 @@ module.exports = function (c, cmds, { redis, osu, f }) {
     // Deletes token for safety
     delete c.t;
 
+    // Makes it a better message
+    m = msg(m);
+
+    // Stores command if it is called in the message, Custom permissions based on bot
+    let command, perms = new Perms(), botperms = new Perms("BOT_ADMIN", "BOT_MODERATOR");
+
+    // Adds permissions based on user privileges in the bot
+    c.a.includes(m.author.id) && perms.push("BOT_ADMIN");
+    c.m.includes(m.author.id) && perms.push("BOT_MODERATOR");
+
+    // Determines member and bot permissions
+    if(m.member) {
+
+      // Member Perms
+      perms.add(findperms(m.member.permissions.bitfield, Permissions.FLAGS));
+
+      // Bot perms
+      botperms.add(findperms(m.guild.me.permissions.bitfield, Permissions.FLAGS))
+    }
+
     // Eval command
     if(eva && m.content.startsWith(eva.p) && c.a.includes(m.author.id)) {
       let evalled, e = new embed(), d = "",
@@ -78,12 +98,6 @@ module.exports = function (c, cmds, { redis, osu, f }) {
         m.channel.send(e.d(d).f(`Input Length: ${code.length}`));
     }
 
-    // Makes it a better message
-    m = msg(m);
-
-    // Stores command if it is called in the message
-    let command;
-
     // Checks if the message is issuing a command
     if(c.p && m.content.startsWith(c.p) && (command = cmds[cmds.findIndex(com => com.a && com.a.concat(com.name).find(comm => m.content.slice(c.p.length).startsWith(comm.name)) || m.content.slice(c.p.length).startsWith(com.name))])) {
       
@@ -91,8 +105,20 @@ module.exports = function (c, cmds, { redis, osu, f }) {
       if(command.del)
         await m.delete();
       
+      // Command permissions stuff
+      if(command.p) {
+
+        // If command.p is an string,
+        if(typeof command.p === "string")
+          if(!perms.has(command.p))
+            return m.channel.send(new embed().t(`You don't have the permission to do this!`).d(`You need the permission ${command.p} to do command \`${command.name}\``))
+          else if(!botperms.has(command.p))
+            return m.channel.send(new embed().t(`I don't have the permission to do this!`).d(`I need the permission ${command.p} to do command \`${command.name}\``))
+
+      }
+
       // Executing command with all necessary APIs and customizations
-      return command.f.call({ config: c, client, m, Discord: this.Discord, redis, embed, commands: cmds, bots: this.bots, /*canvas: this.canvas,*/ osu, f, prefix: c.p }, m, { embed: new embed().c(c.dc), content: m.content.slice((c.p + command.name).length).trim() });
+      return command.f.call({ config: c, client, m, Discord: this.Discord, redis, embed, commands: cmds, bots: this.bots, canvas: this.canvas, osu, f, prefix: c.p }, m, { embed: new embed().c(c.dc), content: m.content.slice((c.p + command.name).length).trim(), perms });
     }
     
     // Increments user messagecount if user is not issuing a command

@@ -20,6 +20,9 @@ const fs = require("fs"),
       
       // Custom embed class
       embed = require("./func/embed"),
+
+      // Custom Permissions class
+      Perms = require("./func/perms"),
       
       // Custom functions to make some tasks easier
       f = require("./func/f.js"),
@@ -38,7 +41,7 @@ const fs = require("fs"),
 // ------------------------------- Commands and Bot Object ------------------------------ \\
       
       // Gets all clients
-      clients = fs.readdirSync(__dirname + "/clients"),
+      clients = fs.readdirSync(__dirname + "/clients").map(v => v.slice(0, -3)),
       
       // Stores all clients
       bots = {},
@@ -63,7 +66,7 @@ for(let dir of cmdirs) {
 }
 
 // Sets up the Discord object with custom APIs
-Object.assign(Discord, { msg, embed });
+Object.assign(Discord, { msg, embed, Perms });
 
 // Sets up all bots
 for(let i in c) {
@@ -72,8 +75,8 @@ for(let i in c) {
   if(!c[i].t)
     continue;
   
-  // If bot command type isnt specified, specify it
-  if(!c[i].ct)
+  // If bot command type isn't specified, specify it
+  if(!clients.includes(c[i].ct))
     c[i].ct = "discord";
   
   // Stores bot commands
