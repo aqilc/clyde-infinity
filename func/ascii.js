@@ -9,17 +9,14 @@ export default class ASCII {
     // Starts a canvas and generation
     constructor(width, height, {
         bg // Character to use for starting background
-    }) {
+    } = {}) {
 
         // Adds dimensions to the canvas, a space being the default background
         for(let i = 0; i < height; i ++)
             this.canvas[i] = (bg || " ").repeat(width);
         
         // Assigns height and width to the canvas
-        Object.assign()
-
-        // Stores all drawings
-        this.drawings = [];
+        Object.assign(this.canvas, { width, height });
     }
 
     // Draws something
