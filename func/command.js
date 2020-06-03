@@ -8,9 +8,12 @@ const __dirname = import.meta.url;
 // This is the command(singular) handler, which imports commands and its properties
 export default class Command {
   
+  // Sets private version variable
+  #version = "";
+
   // Constructor. Name can be command name + version(separated by :)
   constructor(name, category, type) {
-    
+
     // Check for name and command
     if(typeof name !== "string" || typeof category !== "string")
       throw new Error("\"name\" or \"category\" not specified or of incorrect type for new command.\nGiven values: (name) " + name + ", (category)" + category);
@@ -24,7 +27,7 @@ export default class Command {
     // Sets name and version based on what is inputted
     if(name.includes("@"))
       this.name = name.split("@")[0],
-      this._version = name.split("@")[1];
+      this.#version = name.split("@")[1];
     else this.name = name;
     
     // Path of the command
@@ -47,14 +50,14 @@ export default class Command {
     // If there is no basic function for the command, search versions
     if(!this.f && typeof this.versions === "object" && Object.keys(this.versions).length > 0)
       if(this.versions[this.dver] && this.versions[this.dver].f)
-        this._versions = this.dver
+        this.#version = this.dver;
       else if(this.versions.basic && this.versions.basic.f)
-        this._version = "basic";
-      else this._version = Object.keys(this.versions).sort()[0]
+        this.#version = "basic";
+      else this.#version = Object.keys(this.versions).sort()[0]
     
     // Merges based on version of command
-    if(this.versions && (this._version || this.dver))
-      Object.assign(this, this.versions[this._version || this.dver])
+    if(this.versions && (this.#version || this.dver))
+      Object.assign(this, this.versions[this.#version || this.dver])
     
     // Checks for execution function and throws an error if one doesn't exist
     if(!this.f) throw new Error(`The command '${this.name}' doesn't have any function for execution!`);
@@ -64,21 +67,21 @@ export default class Command {
   }
 
   // Returns the version
-  get version() { return this._version }
+  get version() { return this.#version }
   
   // Sets version and updates command variables
   set version(v) {
     
     // Various checks to make sure nothing goes wrong
-    if(this.versions[v] && this._version !== v)
-      this._version = v;
-    else return this._version;
+    if(this.versions[v] && this.#version !== v)
+      this.#version = v;
+    else return this.#version;
     
     // Sets the object attributes
-    Object.assign(this, this.versions[this._version])
+    Object.assign(this, this.versions[this.#version])
     
     // Returns new version
-    return this._version;
+    return this.#version;
   }
 }
 
@@ -104,7 +107,7 @@ export default class Command {
     // Sets version and synchronizes with version
     if(this.versions.length >= 1)
       this.version = version || this.versions[this.versions.length - 1];
-    else this._version = "1.0.0";
+    else this.#version = "1.0.0";
   }
   
   // Updates the data based on inputted object
@@ -120,16 +123,16 @@ export default class Command {
   
   // Version getter
   get version() {
-    return this._version;
+    return this.#version;
   }
   
   // If the version is set to anything, update data to match
   set version(ver) {
     ver = ver.replace(/\w/g, ""); ver = ver + "0.0.0".slice(ver.length);
-    if(ver = this._version) return;
+    if(ver = this.#version) return;
     if(this.versions.includes(ver))
-      this._version = ver, this._update((this.cmd.versions || {})[ver] || this.cmd[ver.startsWith("v") ? ver : "v" + ver]);
+      this.#version = ver, this._update((this.cmd.versions || {})[ver] || this.cmd[ver.startsWith("v") ? ver : "v" + ver]);
     else this.version = this.versions[this.versions.length - 1], console.warn(`Version ${ver} for command ${this.name} not found, reverting to latest one`);
-    return this._version;
+    return this.#version;
   }
 */
