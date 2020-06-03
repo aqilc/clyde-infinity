@@ -70,10 +70,10 @@ function l(a, b) {
 **Crappy Command handler:**
 
 ```js
-const Discord = require("discord.js"),
+const Discord from "discord.js"),
       { Collection } = Discord,
-      f = require("../../func/f.js");
-module.exports = class Commands extends Collection {
+      f from "../../func/f.js");
+export default class Commands extends Collection {
   constructor({ categories, messages, permissions } = {}) {
     super();
     this._cooldowns = new Collection();

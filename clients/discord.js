@@ -4,7 +4,7 @@
  */
 
 
-module.exports = function (c, cmds, { redis, osu, f }) {
+export default function (c, cmds, { redis, osu, f }) {
   
   // Pulls in Discord APIs (or custom Discord apis)
   const { Client, embed, msg, Permissions, Perms } = this.Discord;

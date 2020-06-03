@@ -3,8 +3,11 @@
   "version": "0.50.3",
   "description": "Bots made for AqilAcademy.",
   "main": "server.js",
+  "type": "module",
   "scripts": {
-    "start": "npm i && node ."
+    "node": "node --experimental-top-level-await .",
+    "start": "npm i && node --experimental-top-level-await .",
+    "redis": "wsl bash redis.sh"
   },
   "dependencies": {
     "better-sqlite3": "^7.0.1",

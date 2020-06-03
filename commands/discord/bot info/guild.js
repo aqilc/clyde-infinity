@@ -1,7 +1,7 @@
+// Imports some functions
+import { list, mentions } from "../../../func/f.js";
 
-const { list, mentions } = require("../../../func/f.js")
-
-module.exports = {
+export default {
 
     // Function executed
     f(m, { embed, content }) {

@@ -1,2 +1,2 @@
 // Imports the message function
-const mess = require("./message.js");
+import mess from "./message.js";

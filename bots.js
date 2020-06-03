@@ -1,53 +1,62 @@
 // Gets everything needed
-const fs = require("fs"),
+import fs, { readdirSync } from "fs";
+
+// Discord stuff
+import Discord from "discord.js";
       
-      // Discord stuff
-      Discord = require("discord.js"),
-      
-      // Graphics API
-      canvas = require("canvas"),
+// Graphics API
+import canvas from "canvas";
+
+// Needed for getting dirname bc es7 dumb :D
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+// Evaluates __dirname and stores
+const __dirname = dirname(import.meta.url);
       
 // ---------------------------- Custom APIS and local files ---------------------------- \\
       
-      // Config stuff
-      { apis, c, a, m, dbs } = require("./config"),
+// Config stuff
+import { apis, c, a, m, dbs } from "./config.js";
       
-      // Custom Message class
-      msg = require("./func/discord/message"),
+// Custom Message class
+import msg from "./func/discord/message.js";
       
-      // Command class
-      Command = require("./func/command"),
+// Command class
+import Command from "./func/command.js";
       
-      // Custom embed class
-      embed = require("./func/embed"),
+// Custom embed class
+import embed from "./func/embed.js";
 
-      // Custom Permissions class
-      Perms = require("./func/perms"),
+// Custom Permissions class
+import Perms from "./func/perms.js";
       
-      // Custom functions to make some tasks easier
-      f = require("./func/f.js"),
+// Custom functions to make some tasks easier
+import * as f from "./func/f.js";
       
-      // osu API import and setup
-      osu = new (require("./func/osu.js"))(apis.osu, 1),
+// osu API import and setup
+import OSU from "./func/osu.js";
+const osu = new OSU(apis.osu, 0)
 
 // -------------------------- Databases and other storage APIs -------------------------- \\
 
-      // Redis server connection setup
-      redis = new (require("ioredis"))(),
+// Redis server connection setup
+import Redis from "ioredis";
+const redis = new Redis();
       
-      // MySQL Connection
-      mysql = require("mysql2/promise"),//.createConnection(dbs.mysql[0]),
+// MySQL Connection
+import mysql from "mysql2/promise.js";//.createConnection(dbs.mysql[0]),
 
 // ------------------------------- Commands and Bot Object ------------------------------ \\
       
-      // Gets all clients
-      clients = fs.readdirSync(__dirname + "/clients").map(v => v.slice(0, -3)),
+// Gets all clients
+const clients = readdirSync(fileURLToPath(__dirname + "/clients")).map(v => v.slice(0, -3)),
       
       // Stores all clients
       bots = {},
       
       // Fetches all command directories
-      cmdirs = fs.readdirSync(__dirname + "/commands"),
+      cmdirs = readdirSync(fileURLToPath(__dirname + "/commands")),
       
       // Stores all commands
       cmds = {};
@@ -59,10 +68,10 @@ for(let dir of cmdirs) {
   cmds[dir] = {};
   
   // Iterates through the categories
-  for(let category of fs.readdirSync(__dirname + "/commands/" + dir))
+  for(let category of readdirSync(fileURLToPath(__dirname + "/commands/" + dir)))
     
     // Inserts in commands to every category object
-    cmds[dir][category] = (fs.readdirSync(__dirname + "/commands/" + dir + "/" + category)).map(cmd => cmd.slice(0, -3))
+    cmds[dir][category] = (readdirSync(fileURLToPath(__dirname + "/commands/" + dir + "/" + category))).map(cmd => cmd.slice(0, -3))
 }
 
 // Sets up the Discord object with custom APIs
@@ -96,12 +105,12 @@ for(let i in c) {
         
         // If there is a command present and it is valid, make a new command based off of it and add it.
         if(cat.includes(":") && cat.split(":")[1] && cmds[c[i].ct][category].includes(cat.split(":")[1].split("@")[0]))
-          try { commands.push(new Command(cat.split(":")[1], category, c[i].ct));
+          try { commands.push(await (new Command(cat.split(":")[1], category, c[i].ct)).load());
           } catch (err) { console.error(err); continue; }
       
         // Else, if there is only a category, use all commands from it
         else for (let cmd of cmds[c[i].ct][category])
-          try { commands.push(new Command(cmd, category, c[i].ct));
+          try { commands.push(await (new Command(cmd, category, c[i].ct)).load());
           } catch (err) { console.error(err); continue; }
       else console.error(`Category "${cat.split(":")[0]}" inputted in bot "${i}" doesn't exist! Whole command: ${cat}`); }
   
@@ -110,7 +119,7 @@ for(let i in c) {
     { console.error(`Bot "${i}" of type ${c[i].ct} doesn't have any commands!`); continue; } 
   
   // Bot handler (If the client is valid, add it into the bots array to be shipped out and logged into)
-  bots[i] = require(__dirname + "/clients/" + c[i].ct).call({ Discord, canvas, bots }, Object.assign(c[i], { name: i, a, m, apis }), commands, { mysql, redis, osu, f });3
+  bots[i] = (await import(__dirname + "/clients/" + c[i].ct + ".js")).default.call({ Discord, canvas, bots }, Object.assign(c[i], { name: i, a, m, apis }), commands, { mysql, redis, osu, f });
   
   // Deletes bot if it doesn't exist anyways
   if (!bots[i])
@@ -128,4 +137,4 @@ Object.defineProperty(bots, "login", {
 })
 
 // Exports the bot object
-module.exports = bots;
+export default bots;

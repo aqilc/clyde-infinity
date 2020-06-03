@@ -1,23 +1,23 @@
 
 // Gets database files and names
-let { dbfiles } = require("../config"),
+import { dbfiles } from "../config";
     
-    // Stores database files and names
-    dbs = {};
+// Stores database files and names
+const dbs = {};
 
 // Loops through and sets the name of the database the file name and then sets that value to the file path
 for(let i of dbfiles)
   dbs[i.slice(i.lastIndexOf("/"), i.lastIndexOf("."))] = i;
 
 // Loads all databases
-module.exports = async function() {
+async function db() {
   
   // Contains all the databases
   let db = [];
   
   // Loops through the databases and opens them
   for (let i in dbs)
-    db[i] = require("sqlite"), await db[i].open(dbs[i]);
+    db[i] = await import("sqlite"), await db[i].open(dbs[i]);
   
   // returns all databases
   return db;
@@ -25,10 +25,10 @@ module.exports = async function() {
 
 // Loads separate databases
 for (let i in dbs)
-  module.exports[i] = async function() {
+  dbs[i] = function() {
     
     // Imports sqlite
-    let s = require("sqlite");
+    let s = import("sqlite");
     
     // Opens database
     await s.open(dbs[i]);
@@ -36,3 +36,6 @@ for (let i in dbs)
     // Return the open database
     return s;
   }
+
+// Exports everything
+export default dbs;

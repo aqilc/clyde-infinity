@@ -1,1 +1,1 @@
-module.exports = ["shit"];
+export default ["shit"];

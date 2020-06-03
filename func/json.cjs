@@ -1,5 +1,5 @@
 const fs = require("fs");
-module.exports = class JSONDB {
+export default class JSONDB {
   constructor(file, indent) {
     if(typeof file !== "string")
       throw new TypeError("File must be a string");

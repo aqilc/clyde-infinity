@@ -1,8 +1,11 @@
 // Sets up the app
-const app = new (require("koa"))();
+import Koa from "koa";
 
 // Imports bots
-const bots = require("./bots.js");
+import bots from "./bots.js";
+
+// Builds the app
+let app = new Koa();
 
 // Sends a 404 every time a request is sent as the website isn't out yet
 app.use(ctx => ctx = { status: 404 });

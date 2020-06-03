@@ -1,59 +1,61 @@
 // Canvas graphics API
-const //{ createCanvas } = require("canvas"),
+import Canvas from "canvas";
       
-      // HTTPS api
-      get = require("./request"),
+// HTTPS api
+import get from "./request.js";
       
-      // The links to the osu API
-      apis = [
-        {
-          
-          // The base URL
-          base: "https://osu.ppy.sh/api/",
-          
-          // Everything related to maps
-          maps(id/* Beatmapset ID */, key/* API Key */) {
-            
-            // Other APIs
-            const other = {
-              
-              // Return the cover and thumbnail images if you input the beatmapset_id
-              cover: `https://assets.ppy.sh/beatmaps/${id}/covers/cover.jpg`,
-              thumbnail: `https://b.ppy.sh/thumb/${id}l.jpg`
-            };
-            
-            // Returns url for beatmap getting endpoint in a String object with other apis
-            return Object.assign(String(apis[0].base + "get_beatmaps?k=" + key), other);
-          },
-          
-          // Everything related to users
-          user(user/* User ID or Username */, key/* API Key */) {
-            
-            // Other APIs
-            const other = {
-              
-              // Returns url for the user's avatar
-              pfp: "http://s.ppy.sh/a/" + user,
-              
-              // Best user plays
-              best: apis[0].base + "get_user_best?k=" + key + "&u=" + user,
-              
-              // The user's recent plays
-              recent: apis[0].base + "get_user_recent?k=" + key + "&u=" + user
-            };
-            
-            // Returns object containing the string and the other apis
-            return Object.assign(String(apis[0].base + "get_user?k=" + key + "&u=" + user), other);
-          },
-          
-          // Returns the url for the multi data
-          multi: (id, key) => apis[0].base + "get_match?k=" + key + "&mp=" + id,
-        }
-      ];
+// The links to the osu API
+const { createCanvas } = Canvas,
 
+  // API Urls for osu!
+  apis = [
+  {
+    
+    // The base URL
+    base: "https://osu.ppy.sh/api/",
+    
+    // Everything related to maps
+    maps(id/* Beatmapset ID */, key/* API Key */) {
+      
+      // Other APIs
+      const other = {
+        
+        // Return the cover and thumbnail images if you input the beatmapset_id
+        cover: `https://assets.ppy.sh/beatmaps/${id}/covers/cover.jpg`,
+        thumbnail: `https://b.ppy.sh/thumb/${id}l.jpg`
+      };
+      
+      // Returns url for beatmap getting endpoint in a String object with other apis
+      return Object.assign(String(apis[0].base + "get_beatmaps?k=" + key), other);
+    },
+    
+    // Everything related to users
+    user(user/* User ID or Username */, key/* API Key */) {
+      
+      // Other APIs
+      const other = {
+        
+        // Returns url for the user's avatar
+        pfp: "http://s.ppy.sh/a/" + user,
+        
+        // Best user plays
+        best: apis[0].base + "get_user_best?k=" + key + "&u=" + user,
+        
+        // The user's recent plays
+        recent: apis[0].base + "get_user_recent?k=" + key + "&u=" + user
+      };
+      
+      // Returns object containing the string and the other apis
+      return Object.assign(String(apis[0].base + "get_user?k=" + key + "&u=" + user), other);
+    },
+    
+    // Returns the url for the multi data
+    multi: (id, key) => apis[0].base + "get_match?k=" + key + "&mp=" + id,
+  }
+];
 
 // The osu! class with osu integration
-module.exports = class osu {
+export default class osu {
   
   // Constructor made for setting key and version of API
   constructor(key, ver) {

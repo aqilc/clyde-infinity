@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   
   // Main function for command
   async f(m, { embed }) {

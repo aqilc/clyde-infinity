@@ -1,3 +1,3 @@
-module.exports = class RPG {
+export default class RPG {
   constructor(user) {}
 }

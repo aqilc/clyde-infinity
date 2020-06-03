@@ -1,9 +1,9 @@
 
 // Gets the mentions in a message
-const { mentions } = require("../../../func/f"),
+import { mentions } from "../../../func/f.js";
 
 // Contains some handy osu functions
-      osu = {
+const osu = {
   
   // Creates an osu embed
   embed: (m, user, embed) => {
@@ -53,7 +53,7 @@ const { mentions } = require("../../../func/f"),
 }
 
 
-module.exports = {
+export default {
 
   // Command versions(optional)
   versions: {

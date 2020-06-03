@@ -12,7 +12,7 @@ commands/
 Here is some starter code
 
 ```js
-module.exports = {
+export default {
   
   // Command versions(optional)
   versions: {

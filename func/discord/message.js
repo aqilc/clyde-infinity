@@ -1,8 +1,8 @@
 // Gets the word-finder function
-const { word, mentions } = require("../f.js");
+import { word, mentions } from "../f.js";
 
 // Exports the function
-module.exports = function Message(m) {
+export default function Message(m) {
   
   // Makes a new message object
   let message = Object.assign({}, m);

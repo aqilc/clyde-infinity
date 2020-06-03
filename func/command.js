@@ -1,11 +1,12 @@
 
-// Message and filesystem modules
-const m = require("./discord/message.js"),
-      { titlecase } = require('./f'),
-      fs = require("fs"), path = require("path");
+// Filesystem modules
+import fs from "fs"; import { dirname } from "path"; import { resolve, fileURLToPath } from "url";
+
+// Evaluates __dirname and stores
+const __dirname = import.meta.url;
 
 // This is the command(singular) handler, which imports commands and its properties
-module.exports = class Command {
+export default class Command {
   
   // Constructor. Name can be command name + version(separated by :)
   constructor(name, category, type) {
@@ -27,12 +28,18 @@ module.exports = class Command {
     else this.name = name;
     
     // Path of the command
-    this.path = path.join(__dirname, `../commands/${this.type}/${this.category.toLowerCase()}/${this.name}.js`);
+    this.path = resolve(dirname(import.meta.url), `./commands/${this.type}/${this.category.toLowerCase()}/${this.name}.js`);
     
+    // throws an error if the command path is invalid
+    if(!fs.existsSync(fileURLToPath(this.path)))
+      throw new Error(`Command ${this.name} doesn't exist!`);
+  }
+  
+  // Loads the command
+  async load() {
+
     // Gets the command and stores it
-    if(fs.existsSync(this.path))
-      this.cmd = require(this.path);
-    else throw new Error(`Command ${this.name} doesn't exist!`);
+    this.cmd = (await import(this.path)).default;
     
     // Merges both objects
     Object.assign(this, this.cmd);
@@ -51,8 +58,11 @@ module.exports = class Command {
     
     // Checks for execution function and throws an error if one doesn't exist
     if(!this.f) throw new Error(`The command '${this.name}' doesn't have any function for execution!`);
+
+    // Returns newly formed command object
+    return this;
   }
-  
+
   // Returns the version
   get version() { return this._version }
   
@@ -81,7 +91,7 @@ module.exports = class Command {
     this.name = name;
     
     // Gets the command and stores it
-    this.cmd = require(`../commands/${name}`);
+    this.cmd from `../commands/${name}`);
     
     // Maps out the versions of the command
     this.versions = (Object.keys(this.cmd.versions || {}) || Object.keys(this.cmd).filter(v => (v.match(/v[\d.]+/) || [])[0] === v).map(v => v.replace(/\w/g, ""))).map(v => v.search(/[0-9]./) === 0 ? v + "0.0.0".slice(v.length) : v).sort();

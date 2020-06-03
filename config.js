@@ -17,149 +17,147 @@
  * cp: Command Parameters. Changes everything globally
  */
 
-module.exports = {
   
-  // API Keys for every available api
-  apis: {
+// API Keys for every available api
+export const apis = {
+  
+  // osu! API Keys
+  osu: "965d02dbb645026b9a3fef76a144cdd43bdcc135", // v1
+  os2: "2S8PRFLbt1c0jLuFGYOAk2lahpgIZP8ekzhucUIo", // v2
+};
+
+// Holds config data for every database
+export const dbs = {
+
+  // Sqlite Database Filenames
+  sqlite: ["./.db/main.db", "./.db/rpg.db"],
+
+  // MySQL servers
+  mysql: [{
+
+    // Database hostname
+    host: "rpg.cdkvmhasvlw6.us-east-2.rds.amazonaws.com",
+
+    // Schema
+    database: "rpg",
+
+    // Port
+    port: 3306,
+
+    // Username
+    user: "aqilcont",
+
+    // Password
+    password: "A5kxL49qvMbG8rwo0c5K"
+  }]
+};
+
+// Admins
+export const a = [
+  "294115380916649986", // aqil#0001
+  "340215110784122881", // Pikachu#8519
+];
+
+// Moderators(or People in bigger servers managing bot with lower perms than Admin)
+export const m = [];
+
+// Bot Configs
+export const c = {
+  
+  // Clyde
+  main: {
+    // Token
+    t: "NjA2OTg2NjQ4NzcyOTM1Njkx.Xs3CLA.oqiTQyYM3eNKjvOd2dGrwnTYj14",
     
-    // osu! API Keys
-    osu: "965d02dbb645026b9a3fef76a144cdd43bdcc135", // v1
-    os2: "2S8PRFLbt1c0jLuFGYOAk2lahpgIZP8ekzhucUIo", // v2
+    // Username
+    u: "Clyde Infinity Beta",
+    
+    // Prefix
+    p: "c@",
+    
+    // Description
+    d: "This bot stays in AqilAcademy and is the main bot for everything",
+    
+    // Default color
+    dc: "blue",
+    
+    // Commands
+    c: ["Support", "Utility", "Bot Info", "Game Apis", "RPG"],
+    
+    // Special eval prefix
+    e: "main:",
+    
+    // Command directory/type
+    ct: "discord",
+
+    // Clyde Admins
+    admin: [],
+
+    // Clyde Moderators
+    mod: []
   },
   
-  // Holds config data for every database
-  dbs: {
-
-    // Sqlite Database Filenames
-    sqlite: ["./.db/main.db", "./.db/rpg.db"],
-
-    // MySQL servers
-    mysql: [{
-
-      // Database hostname
-      host: "rpg.cdkvmhasvlw6.us-east-2.rds.amazonaws.com",
-
-      // Schema
-      database: "rpg",
-
-      // Port
-      port: 3306,
-
-      // Username
-      user: "aqilcont",
-
-      // Password
-      password: "A5kxL49qvMbG8rwo0c5K"
-    }]
-  },
-  
-  // Admins
-  a: [
-    "294115380916649986", // aqil#0001
-    "340215110784122881", // Pikachu#8519
-  ],
-  
-  // Moderators(or People in bigger servers managing bot with lower perms than Admin)
-  m: [],
-  
-  // Bot Configs
-  c: {
+  // Reaper's bot
+  reaper: {
+    // Token
+    t: "NjkzODc1ODA1Mzg1OTE2NDY3.XoDefg.NPDwUtIt3_oGOVzsPNTv5jKpjBY",
     
-    // Clyde
-    main: {
-      // Token
-      t: "NjA2OTg2NjQ4NzcyOTM1Njkx.Xs3CLA.oqiTQyYM3eNKjvOd2dGrwnTYj14",
-      
-      // Username
-      u: "Clyde Infinity Beta",
-      
-      // Prefix
-      p: "c@",
-      
-      // Description
-      d: "This bot stays in AqilAcademy and is the main bot for everything",
-      
-      // Default color
-      dc: "blue",
-      
-      // Commands
-      c: ["Support", "Utility", "Bot Info", "Game Apis", "RPG"],
-      
-      // Special eval prefix
-      e: "main:",
-      
-      // Command directory/type
-      ct: "discord",
-
-      // Clyde Admins
-      admin: [],
-
-      // Clyde Moderators
-      mod: []
-    },
+    // Username
+    u: "Under Reaper",
     
-    // Reaper's bot
-    reaper: {
-      // Token
-      t: "NjkzODc1ODA1Mzg1OTE2NDY3.XoDefg.NPDwUtIt3_oGOVzsPNTv5jKpjBY",
-      
-      // Username
-      u: "Under Reaper",
-      
-      // Prefix
-      p: "p.",
-      
-      // Description
-      d: "This bot is made specifically to moderate The Scythedom.",
-      
-      // Default color
-      dc: "red",
-      
-      // Commands
-      c: ["utility", "support", "bot info"],
-      
-      // Special eval prefix
-      e: "reaper:"
-    }
-  },
-  
-  // Command Parameters
-  /*cp: {
-    u: {
-      d: "Usage",
-      type: "string"
-    },
-    a: {
-      d: "Aliases",
-      type: "object"
-    },
-    d: {
-      d: "Description",
-      type: "string"
-    },
-    p: {
-      d: "Permissions",
-      type: "string||object"
-    },
-    e: {
-      d: "Example",
-      type: "string||object"
-    },
-    h: {
-      d: "Hidden",
-      type: "boolean"
-    },
-    del: {
-      d: "Delete User's Message",
-      type: "boolean"
-    },
-    spre: {
-      d: "Special Prefix",
-      type: "string||object"
-    },
-    func: {
-      d: "Function",
-      type: "function"
-    }
-  }*/
-}
+    // Prefix
+    p: "p.",
+    
+    // Description
+    d: "This bot is made specifically to moderate The Scythedom.",
+    
+    // Default color
+    dc: "red",
+    
+    // Commands
+    c: ["utility", "support", "bot info"],
+    
+    // Special eval prefix
+    e: "reaper:"
+  }
+};
+
+// Command Parameters
+/*cp: {
+  u: {
+    d: "Usage",
+    type: "string"
+  };
+  a: {
+    d: "Aliases",
+    type: "object"
+  };
+  d: {
+    d: "Description",
+    type: "string"
+  };
+  p: {
+    d: "Permissions",
+    type: "string||object"
+  };
+  e: {
+    d: "Example",
+    type: "string||object"
+  };
+  h: {
+    d: "Hidden",
+    type: "boolean"
+  };
+  del: {
+    d: "Delete User's Message",
+    type: "boolean"
+  };
+  spre: {
+    d: "Special Prefix",
+    type: "string||object"
+  };
+  func: {
+    d: "Function",
+    type: "function"
+  }
+}*/

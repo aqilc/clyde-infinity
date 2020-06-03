@@ -1,18 +1,18 @@
 // Fetches message fetcher
-const { fetch } = require("../../../func/f.js"),
+import { fetch } from "../../../func/f.js";
 
-      // Stores filters for messages
-      filters = {
-        
-        // If you only specify a number
-        "(\\d+)": (i, m) => fetch.messages(m.channel.messages, Number(i)),
+// Stores filters for messages
+const filters = {
+  
+  // If you only specify a number
+  "(\\d+)": (i, m) => fetch.messages(m.channel.messages, Number(i)),
 
-        // If you specify you want to delete bot messages too
-        "bot (\\d+)": (i, m) => m.channel.messages.cache.filter(msg => msg.bot)
-      };
+  // If you specify you want to delete bot messages too
+  "bot (\\d+)": (i, m) => m.channel.messages.cache.filter(msg => msg.bot)
+};
 
 // Exports the command object
-module.exports = {
+export default {
   async f(m, { embed, content }) {
     
     // If the message amount wasn't specified, return an autodeleted message saying they should specify it

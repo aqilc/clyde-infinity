@@ -1,9 +1,9 @@
 
 // Fetches the command module so we can make new commands
-const Command = require("../../../func/command");
+import Command from "../../../func/command.js";
 
 // Exports the command function
-module.exports = {
+export default {
 	async f(m, { content, embed }) {
 
 		// Finds command based on content
@@ -21,7 +21,7 @@ module.exports = {
 		try {
 
 			// Gets and makes a new command :D
-			this.commands[command] = new Command(cmd.name, cmd.category);
+			this.commands[command] = await (new Command(cmd.name, cmd.category)).load();
 
 			// Logs that it was successful
 			console.log(`Refreshed command: ${cmd.name}`);

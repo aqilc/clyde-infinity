@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   
   // Version list
   versions: {

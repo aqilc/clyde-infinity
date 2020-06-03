@@ -1,8 +1,8 @@
 // Imports all databases automatically
-const sql = require("./sqlite.js");
+import sql from "./sqlite.js";
 
 // The table class
-class Table {
+export class Table {
   constructor(db, table) {
     
     // Makes sure I filled in all required parameters
@@ -104,4 +104,4 @@ class DB {
 }
 
 // Exports all classes
-module.exports = { Table, DB };
+export default { Table, DB };

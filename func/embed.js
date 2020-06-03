@@ -1,5 +1,9 @@
-let { MessageEmbed } = require("discord.js");
-export class Embed extends MessageEmbed {
+
+// Default embed class from Discord
+import { MessageEmbed } from "discord.js";
+
+// Exports edited embed class :D
+export default class Embed extends MessageEmbed {
   constructor() {
 
     // Makes an embed

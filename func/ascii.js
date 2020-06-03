@@ -1,4 +1,4 @@
-export class ASCII {
+export default class ASCII {
 
     // Starts a canvas and generation
     constructor(width, height, {

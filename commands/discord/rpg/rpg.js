@@ -1,9 +1,9 @@
 
 // Text graphics API :D
-const ASCII = new require("../../../func/ascii");
+import ASCII from "../../../func/ascii.js";
 
 // Exports command
-module.exports = {
+export default {
 
 	// Function executed
 	async f(m, { content, embed }) {
