@@ -32,7 +32,7 @@ export default (url, options) => new Promise((res, rej) => {
   }).on("error", rej);
   
   // If there is data to be sent, send it
-  if(options.data)
+  if(options && options.data)
     req.write(options.data);
 
   // Sends the request
