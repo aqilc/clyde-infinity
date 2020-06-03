@@ -1,12 +1,15 @@
 export default class ASCII {
 
+    // Stores drawings
+    drawings = [];
+
+    // Makes the "canvas"
+    canvas = [];
+
     // Starts a canvas and generation
     constructor(width, height, {
         bg // Character to use for starting background
     }) {
-
-        // Makes the "canvas"
-        this.canvas = [];
 
         // Adds dimensions to the canvas, a space being the default background
         for(let i = 0; i < height; i ++)
@@ -52,8 +55,8 @@ export default class ASCII {
         
         // Loops through drawings and actually draws them
         for (let d of this.drawings)
-            for(let y = 0; y < d.length; y ++)
-                for(let x = 0; x < d[y].length; x ++)
+            for (let y = 0; y < d.length; y ++)
+                for (let x = 0; x < d[y].length; x ++)
                     this.canvas[y + d.y][x + d.x] = d[y][x];
         
         // Joins the canvas into one string and returns
