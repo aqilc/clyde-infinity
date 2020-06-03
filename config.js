@@ -48,7 +48,7 @@ export const dbs = {
     user: "aqilcont",
 
     // Password
-    password: "A5kxL49qvMbG8rwo0c5K"
+    password: "dASkQSQdQnMl2B0G"
   }]
 };
 
@@ -66,6 +66,7 @@ export const c = {
   
   // Clyde
   main: {
+
     // Token
     t: "NjA2OTg2NjQ4NzcyOTM1Njkx.Xs3CLA.oqiTQyYM3eNKjvOd2dGrwnTYj14",
     
