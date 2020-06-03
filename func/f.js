@@ -1,3 +1,33 @@
+// Imports cryptographic functions
+import crypto from "crypto";
+
+// Finds all mentions in a string
+export const mentions = (str) => str.replace(/\D/g, "").replace(/\s/g, " ").split(" ").filter(v => v.length === 18);
+
+// Finds a word with a an optional prefix and suffix in a string
+export const word = (str/*string*/, w/*word*/, p/*prefix*/, s/*suffix*/) => typeof str === "string" && typeof w === "string" && (typeof p === "object" || typeof s === "object" ? (Array.isArray(p) && p.some(pw => str.includes(` ${pw + w} `))) || (Array.isArray(s) && s.some(sw => str.includes(` ${w + sw} `))) || (Array.isArray(p) && Array.isArray(s) && p.some(pw => s.some(sw => ` ${pw + w + sw} `))) : str.includes(` ${w} `));
+
+// Creates a hash
+export const hash = str => crypto.createHash("sha256").update(str).digest();
+
+// Returns a sentence/phrase in title case
+export const titlecase = (str) => str.split(" ").map(s => s[0].toUpperCase() + s.slice(1)).join(" ");
+
+// Converts an object into an array
+export const objtoarr = obj => obj.length && obj || Object.keys(obj).map(k => [k, obj[k]]);
+
+// Turns an array into a proper, human-readable list
+export const list = (arr) => {
+  
+  // returns if the input isn't an array
+  if(!Array.isArray(arr) || arr.length < 1) return "";
+  
+  // Gets the last element of the array and takes it out of the main array
+  let last = arr.splice(-1, 1);
+  
+  // Inserts an "and (last element)" and returns the result
+  return (arr.length > 1 ? arr.join(", ") + " and " : "") + last;
+};
 
 // Cleans up text for code for evalling. Returns an object
 export function codify(str) {
@@ -17,23 +47,123 @@ export function codify(str) {
   return v.code = str, v;
 };
 
-// Finds all mentions in a string
-export const mentions = (str) => str.replace(/\D/g, "").replace(/\s/g, " ").split(" ").filter(v => v.length === 18);
+// Finds permissions/values based on object inputs
+export function findperms(bitfield, permobj) {
 
-// Finds a word with a an optional prefix and suffix in a string
-export const word = (str/*string*/, w/*word*/, p/*prefix*/, s/*suffix*/) => typeof str === "string" && typeof w === "string" && (typeof p === "object" || typeof s === "object" ? (Array.isArray(p) && p.some(pw => str.includes(` ${pw + w} `))) || (Array.isArray(s) && s.some(sw => str.includes(` ${w + sw} `))) || (Array.isArray(p) && Array.isArray(s) && p.some(pw => s.some(sw => ` ${pw + w + sw} `))) : str.includes(` ${w} `));
+  // Converts the permobj into an iterable array and sorts based on values
+  permobj = objtoarr(permobj).sort((a, b) => b[1] - a[1]);
 
-// Turns an array into a proper, human-readable list
-export const list = (arr) => {
+  // Stores the permissions
+  let perms = [];
+
+  for(let i of permobj)
+    if(bitfield - i[1] > 0)
+      bitfield -= i[1], perms.push(i[0]);
+
+  // Return the permissions
+  return perms;
+}
+
+// Suite of functions for fetching stuff from the discord api
+export const fetch = {
   
-  // returns if the input isn't an array
-  if(!Array.isArray(arr) || arr.length < 1) return "";
+  // Fetches a bunch of messages, almost to Infinity, until it encounters some undeletable ones(Input: MessageManager ie. m.channel.messages, Amount)
+  async messages(manager, amount) {
+    
+    if(typeof amount !== "number")
+      throw new TypeError("\"amount\" not of correct type")
+    
+    // Stores messages
+    let m = manager.cache.array();
+    
+    // Slices off the size we already have cached.
+    amount -= m.length;
+    
+    // Fetches all messages and caches them :D
+    while (m.length < amount) {
+      
+      // Sets up the options for getting messages
+      let opts = {
+        
+        // How many messages should be gotten
+        limit: Math.min(amount - m.length, 100)
+      };
+      
+      // If *any* messages are cached, find the oldest one and add it into the options
+      if(m.length)
+        opts.before = m.reduce((a, b) => Math.min(a.createdTimestamp, b.createdTimestamp)).id;
+      
+      // Fetches as many messages as needed before the last message we currently have :D
+      (await manager.fetch(opts)).each(v => m.push(v));
+      
+      // If undeletable messages are encountered, filter them out of the cache and exit the loop
+      if(m.find(mes => !mes.deletable))
+        { let mess; console.log("filtered", mess = (m = m.filter(mes => mes.deletable)).map(v => v.content), mess.length); break; }
+    }
+    
+    // Returns the cache
+    return m;
+  }
+};
+
+// A suite of array functions that can be put into the Array constructor or used externally to do handy stuff
+export const arr = {
   
-  // Gets the last element of the array and takes it out of the main array
-  let last = arr.splice(-1, 1);
+  // Shuffles the array
+  shuffle(array) {
+
+    // If this function was applied to the Array prototype object already, switch around values accordingly
+    if(Array.isArray(this))
+      array = this;
+    
+    // Loop through the array, end to beginning
+    for (let i = array.length - 1; i > 0; i--) {
+      
+      // Find a random value before the current one
+      let j = Math.floor(Math.random() * (i + 1));
+      
+      // Switch out the current value with the random one.
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    
+    return array;
+  },
   
-  // Inserts an "and (last element)" and returns the result
-  return (arr.length > 1 ? arr.join(", ") + " and " : "") + last;
+  // Finds a minimum value in an array and returns it.
+  min(array, fn) {
+
+    // If this function was applied to the Array prototype object already, switch around values accordingly
+    if(Array.isArray(this))
+      array = this, fn = array;
+    
+    // If fn was a function, apply the function to the values
+    if(typeof fn === "function")
+      return array.reduce((a, b) => Math.min(fn(a), fn(b)))
+    
+    // else, just do it normally
+    else return array.reduce((a, b) => Math.min(a, b))
+  }
+};
+
+// Creates a random string of letters
+export const rand = {
+
+  // Generates a random string
+  str(len, { special, numsonly }) {
+
+    // The returned string
+    let str = "",
+
+    // Determines letters
+    letters = (numsonly && "1234567890") || "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890" + (special && "!@#$%^&*()_+-=\\/?[]{}<>'\";:.,`~" || "");
+
+    // Gets a random letter and adds it
+    for (let i = 0; i < len; i ++)
+      str += letters[Math.floor(Math.random() * letters.length)];
+    
+    // Returns constructed string
+    return str;
+  }
 };
 
 // Calculates similarity between strings/an array of strings (https://glench.github.io/fuzzyset.js/)
@@ -144,128 +274,3 @@ export const similarity = {
     };
   })()
 };
-
-// Returns a sentence/phrase in title case
-export const titlecase = (str) => str.split(" ").map(s => s[0].toUpperCase() + s.slice(1)).join(" ");
-
-// Suite of functions for fetching stuff from the discord api
-export const fetch = {
-  
-  // Fetches a bunch of messages, almost to Infinity, until it encounters some undeletable ones(Input: MessageManager ie. m.channel.messages, Amount)
-  async messages(manager, amount) {
-    
-    if(typeof amount !== "number")
-      throw new TypeError("\"amount\" not of correct type")
-    
-    // Stores messages
-    let m = manager.cache.array();
-    
-    // Slices off the size we already have cached.
-    amount -= m.length;
-    
-    // Fetches all messages and caches them :D
-    while (m.length < amount) {
-      
-      // Sets up the options for getting messages
-      let opts = {
-        
-        // How many messages should be gotten
-        limit: Math.min(amount - m.length, 100)
-      };
-      
-      // If *any* messages are cached, find the oldest one and add it into the options
-      if(m.length)
-        opts.before = m.reduce((a, b) => Math.min(a.createdTimestamp, b.createdTimestamp)).id;
-      
-      // Fetches as many messages as needed before the last message we currently have :D
-      (await manager.fetch(opts)).each(v => m.push(v));
-      
-      // If undeletable messages are encountered, filter them out of the cache and exit the loop
-      if(m.find(mes => !mes.deletable))
-        { let mess; console.log("filtered", mess = (m = m.filter(mes => mes.deletable)).map(v => v.content), mess.length); break; }
-    }
-    
-    // Returns the cache
-    return m;
-  }
-};
-
-// A suite of array functions that can be put into the Array constructor or used externally to do handy stuff
-export const arr = {
-  
-  // Shuffles the array
-  shuffle(array) {
-
-    // If this function was applied to the Array prototype object already, switch around values accordingly
-    if(Array.isArray(this))
-      array = this;
-    
-    // Loop through the array, end to beginning
-    for (let i = array.length - 1; i > 0; i--) {
-      
-      // Find a random value before the current one
-      let j = Math.floor(Math.random() * (i + 1));
-      
-      // Switch out the current value with the random one.
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    
-    return array;
-  },
-  
-  // Finds a minimum value in an array and returns it.
-  min(array, fn) {
-
-    // If this function was applied to the Array prototype object already, switch around values accordingly
-    if(Array.isArray(this))
-      array = this, fn = array;
-    
-    // If fn was a function, apply the function to the values
-    if(typeof fn === "function")
-      return array.reduce((a, b) => Math.min(fn(a), fn(b)))
-    
-    // else, just do it normally
-    else return array.reduce((a, b) => Math.min(a, b))
-  }
-};
-
-// Creates a random string of letters
-export const rand = {
-
-  // Generates a random string
-  str(len, { special, numsonly }) {
-
-    // The returned string
-    let str = "",
-
-    // Determines letters
-    letters = (numsonly && "1234567890") || "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890" + (special && "!@#$%^&*()_+-=\\/?[]{}<>'\";:.,`~" || "");
-
-    // Gets a random letter and adds it
-    for (let i = 0; i < len; i ++)
-      str += letters[Math.floor(Math.random() * letters.length)];
-    
-    // Returns constructed string
-    return str;
-  }
-};
-
-// Converts an object into an array
-export const objtoarr = obj => obj.length && obj || Object.keys(obj).map(k => [k, obj[k]]);
-
-// Finds permissions/values based on object inputs
-export function findperms(bitfield, permobj) {
-
-  // Converts the permobj into an iterable array and sorts based on values
-  permobj = objtoarr(permobj).sort((a, b) => b[1] - a[1]);
-
-  // Stores the permissions
-  let perms = [];
-
-  for(let i of permobj)
-    if(bitfield - i[1] > 0)
-      bitfield -= i[1], perms.push(i[0]);
-
-  // Return the permissions
-  return perms;
-}
