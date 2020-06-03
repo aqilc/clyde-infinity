@@ -45,7 +45,7 @@ import Redis from "ioredis";
 const redis = new Redis();
       
 // MySQL Connection
-import mysql from "mysql2/promise.js";//.createConnection(dbs.mysql[0]),
+import mysql from "mysql2-promise";//.createConnection(dbs.mysql[0]),
 
 // ------------------------------- Commands and Bot Object ------------------------------ \\
       
