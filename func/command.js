@@ -1,6 +1,9 @@
 
 // Filesystem modules
-import fs from "fs"; import { dirname } from "path"; import { resolve, fileURLToPath } from "url";
+import { existsSync } from "fs"; import { dirname } from "path"; import { resolve, fileURLToPath } from "url";
+
+// Creates random strings for re-importing
+import { rand } from "./f.js";
 
 // Evaluates __dirname and stores
 const __dirname = import.meta.url;
@@ -10,6 +13,9 @@ export default class Command {
   
   // Sets private version variable
   #version = "";
+
+  // Command hasn't been loaded pog so set loaded to false
+  loaded = false;
 
   // Constructor. Name can be command name + version(separated by :)
   constructor(name, category, type) {
@@ -34,7 +40,7 @@ export default class Command {
     this.path = resolve(dirname(import.meta.url), `./commands/${this.type}/${this.category.toLowerCase()}/${this.name}.js`);
     
     // throws an error if the command path is invalid
-    if(!fs.existsSync(fileURLToPath(this.path)))
+    if(!existsSync(fileURLToPath(this.path)))
       throw new Error(`Command ${this.name} doesn't exist!`);
   }
   
@@ -42,7 +48,7 @@ export default class Command {
   async load() {
 
     // Gets the command and stores it
-    this.cmd = (await import(this.path)).default;
+    this.cmd = (await import(this.path + (this.loaded ? "?doesthiswork=" + rand.str(10) : ""))).default;
     
     // Merges both objects
     Object.assign(this, this.cmd);
@@ -61,6 +67,9 @@ export default class Command {
     
     // Checks for execution function and throws an error if one doesn't exist
     if(!this.f) throw new Error(`The command '${this.name}' doesn't have any function for execution!`);
+
+    // Sets loaded property to true as this command has been loaded
+    this.loaded = true;
 
     // Returns newly formed command object
     return this;

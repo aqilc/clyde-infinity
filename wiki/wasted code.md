@@ -2,7 +2,7 @@
 
 Trash/inefficient code that I don't completely want to discard forever because of the efforts that went into writing it.
 
-**Custom Levensthein algorithm:**
+**Custom Levenshtein algorithm:**
 
 ```js
 // Holds the matrix containing step values
@@ -30,18 +30,18 @@ function l(a, b) {
   if(al > bl)
     tmp = a, a = b, b = tmp;
 
-  // Holds values so we dont have to do calculations again
+  // Holds values so we don't have to do calculations again
   let t, min, cost, ai, bi;
 
   // Loops through both words, filling in the matrix with the step values.
   for(let i = 1; i <= bl; i ++) {
 
-    // Gets and stores b[i - 1] so we dont have to get it over and over
+    // Gets and stores b[i - 1] so we don't have to get it over and over
     bi = b[i - 1];
 
     for(let j = 1; j <= al; j ++) {
 
-      // Gets and stores a[i - 1] so we dont have to get it over and over
+      // Gets and stores a[i - 1] so we don't have to get it over and over
       ai = a[i - 1];
 
       // Defines cost

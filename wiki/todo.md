@@ -6,4 +6,4 @@
 - RPG Plans
 - Moderation
 - Purge Fixes
-- Brainfuck library, upload, and parser
+- BrainFuck library, upload, and parser
