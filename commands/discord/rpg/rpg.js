@@ -32,8 +32,10 @@ export default {
 					}
 				},
 				
-				// Your enemies
+			
 			},
+
+			// Your enemies
 			enemies = [
 				{
 					name: "Bob the Builder",
@@ -61,16 +63,14 @@ export default {
 			
 			],
 
-			//
+			// Text canvas
+			canvas = new ASCII(50, 5),
 
 			// Message containing the acc information and stuff
-			msg = await m.channel.send(embed.a(`${player.name} vs ${enemies[0].name}`, m.author.avatarURL()).d(`\`\`\`\n${(" ".repeat(30) + "\n").repeat(3)}\`\`\``)),
+			msg = await m.channel.send(embed.a(`${player.name} vs ${enemies[0].name}`, m.author.avatarURL()).d(`\`\`\`\n${"" + canvas}\`\`\``)),
 
 			// Your actions
 			actions = {
-				get done() {
-					return Date.now() - start > 1000000
-				},
 				rush: {
 					emoji: "🗡",
 					action() {},
@@ -86,6 +86,8 @@ export default {
 				},
 			};
 		
+		const done = () => Date.now() - start > 1000000;
+
 		// Reaction function
 		async function react(action) {
 
@@ -99,16 +101,19 @@ export default {
 			if(!r) return;
 
 			// Remove emojis other wise
-			r.remove();
+			await r.remove();
 
 			// Go back to beginning(the loop part) in a specific amount of time if we aren't done with combat
-			if(!actions.done)
-				setTimeout(() => react(action), action.cooldown);
+			if(!done())
+				setTimeout(async () => await react(action), action.cooldown);
 		}
 
 		// Loop through action reactions and do above function for all of them
 		for(let i in actions)
 			react(actions[i]);
+
+		canvas.draw("hello", 10, 3);
+		m.edit(embed.d("" + canvas));
 	},
 
 	// Aliases (Array<String>)
