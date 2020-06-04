@@ -11,7 +11,7 @@ import embed from "../func/discord/embed.js";
 import Perms from "../func/perms.js";
       
 // Custom functions to make some tasks easier
-import * as f from "./func/f.js";
+import * as f from "../func/f.js";
 const { codify, similarity, fetch, findperms } = f;
 
 // Imports Discord :D
