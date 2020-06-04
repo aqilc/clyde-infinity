@@ -1,20 +1,21 @@
 /* Clyde Configuration Key
+ * apis: 
  * dbs: File paths for databases
  * a: Admins of the bots(IDS)(Are given most priority)
- *  if(a[i] === "object")
- *   a[i][0]: Id of admin
- *   a[i][0]: The bot they are admin of
+  * if Array.isArray(a[i])
+   * a[i][0]: Id of admin
+   * a[i][0]: The bot they are admin of
  * m: Moderators (Same format as the admins)
  * c: Configs for all bots
- *  [name]: Object
- *   t: Token
- *   u: Username(will be set to this every startup)
- *   p: Prefix. Can be anything. (mentioning the bot will also work btw)
- *   d: Description of the bot(will be seen when looking up bots on other bots)
- *   dc: Default color for embeds.
- *   c: Commands in an array of strings in a "category:name@version" format
- *   e: Eval command prefix. Eval doesn't work if not set
- * cp: Command Parameters. Changes everything globally
+  * [name]: Object
+   * t: Token
+   * u: Username(will be set to this every startup)
+   * p: Prefix. Can be anything. (mentioning the bot will also work btw)
+   * d: Description of the bot(will be seen when looking up bots on other bots)
+   * dc: Default color for embeds.
+   * c: Commands in an array of strings in a "category:name@version" format
+   * e: Eval command prefix. Eval doesn't work if not set
+ // * cp: Command Parameters. Changes everything globally
  */
 
   
@@ -48,7 +49,7 @@ export const dbs = {
     user: "aqilcont",
 
     // Password
-    password: "dASkQSQdQnMl2B0G"
+    password: "prGWH6qrVRQFMsIFITy9"
   }]
 };
 

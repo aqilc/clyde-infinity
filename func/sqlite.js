@@ -25,10 +25,10 @@ async function db() {
 
 // Loads separate databases
 for (let i in dbs)
-  dbs[i] = function() {
+  dbs[i] = async function() {
     
     // Imports sqlite
-    let s = import("sqlite");
+    let s = (await import("sqlite")).default;
     
     // Opens database
     await s.open(dbs[i]);

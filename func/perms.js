@@ -1,4 +1,4 @@
-export default class Perms extends Array {
+export default class Permissions extends Array {
 
     // Constructor that just makes an array :D
     constructor(...perms) {
