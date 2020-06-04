@@ -3,14 +3,22 @@
  * 
  */
 
+// Discord API stuff
+import msg from "../func/discord/message.js";
+import embed from "../func/discord/embed.js";
 
-export default function (c, cmds, { redis, osu, f }) {
-  
-  // Pulls in Discord APIs (or custom Discord apis)
-  const { Client, embed, msg, Permissions, Perms } = this.Discord;
-  
-  // Pulls in custom functions
-  const { codify, similarity, fetch, findperms } = f;
+// Permissions Class
+import Perms from "../func/perms.js";
+      
+// Custom functions to make some tasks easier
+import * as f from "./func/f.js";
+const { codify, similarity, fetch, findperms } = f;
+
+// Imports Discord :D
+import Discord, { Client, Permissions } from "discord.js";
+
+// Exports the bot client
+export default function (c, cmds, { redis, osu }) {
 
   // Sets up Client
   let client = new Client();
@@ -118,7 +126,7 @@ export default function (c, cmds, { redis, osu, f }) {
       }
 
       // Executing command with all necessary APIs and customizations
-      return command.f.call({ config: c, client, m, Discord: this.Discord, redis, embed, commands: cmds, bots: this.bots, canvas: this.canvas, osu, f, prefix: c.p }, m, { embed: new embed().c(c.dc), content: m.content.slice((c.p + command.name).length).trim(), perms });
+      return command.f.call({ config: c, client, m, Discord, redis, commands: cmds, bots: this.bots, osu, prefix: c.p }, m, { embed: new embed().c(c.dc), content: m.content.slice((c.p + command.name).length).trim(), perms, botperms });
     }
     
     // Increments user messagecount if user is not issuing a command

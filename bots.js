@@ -1,11 +1,5 @@
 // Gets everything needed
-import fs, { readdirSync } from "fs";
-
-// Discord stuff
-import Discord from "discord.js";
-      
-// Graphics API
-import canvas from "canvas";
+import { readdirSync } from "fs";
 
 // Needed for getting dirname bc es7 dumb :D
 import { fileURLToPath } from 'url';
@@ -19,20 +13,8 @@ const __dirname = dirname(import.meta.url);
 // Config stuff
 import { apis, c, a, m, dbs } from "./config.js";
       
-// Custom Message class
-import msg from "./func/discord/message.js";
-      
 // Command class
 import Command from "./func/command.js";
-      
-// Custom embed class
-import embed from "./func/embed.js";
-
-// Custom Permissions class
-import Perms from "./func/perms.js";
-      
-// Custom functions to make some tasks easier
-import * as f from "./func/f.js";
       
 // osu API import and setup
 import OSU from "./func/osu.js";
@@ -73,9 +55,6 @@ for(let dir of cmdirs) {
     // Inserts in commands to every category object
     cmds[dir][category] = (readdirSync(fileURLToPath(__dirname + "/commands/" + dir + "/" + category))).map(cmd => cmd.slice(0, -3))
 }
-
-// Sets up the Discord object with custom APIs
-Object.assign(Discord, { msg, embed, Perms });
 
 // Sets up all bots
 for(let i in c) {
@@ -119,7 +98,7 @@ for(let i in c) {
     { console.error(`Bot "${i}" of type ${c[i].ct} doesn't have any commands!`); continue; } 
   
   // Bot handler (If the client is valid, add it into the bots array to be shipped out and logged into)
-  bots[i] = (await import(__dirname + "/clients/" + c[i].ct + ".js")).default.call({ Discord, canvas, bots }, Object.assign(c[i], { name: i, a, m, apis }), commands, { mysql, redis, osu, f });
+  bots[i] = (await import(__dirname + "/clients/" + c[i].ct + ".js")).default.call({ bots }, Object.assign(c[i], { name: i, a, m, apis }), commands, { mysql, redis, osu });
   
   // Deletes bot if it doesn't exist anyways
   if (!bots[i])
