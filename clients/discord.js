@@ -134,7 +134,7 @@ export default function (c, cmds, { redis, osu }) {
   });
 
   // Sets up a custom login function
-  let login = client.login;
+  const { login } = client;
   client.login = () => login.call(client, c.t);
 
   // Pushes the client object into the bots object to be exported.

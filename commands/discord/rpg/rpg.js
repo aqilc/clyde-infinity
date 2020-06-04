@@ -113,7 +113,7 @@ export default {
 			react(actions[i]);
 
 		canvas.draw("hello", 10, 3);
-		m.edit(embed.d("" + canvas));
+		msg.edit(embed.d("" + canvas));
 	},
 
 	// Aliases (Array<String>)

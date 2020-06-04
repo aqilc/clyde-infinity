@@ -4,6 +4,9 @@ import Koa from "koa";
 // Imports bots
 import bots from "./bots.js";
 
+// Cool console output coloring module
+import colors from "colors";
+
 // Builds the app
 let app = new Koa();
 
@@ -18,5 +21,5 @@ bots.login();
 
 // Handles ~~unhandled~~ Promise rejections
 process.on('unhandledRejection', error => {
-	console.error('Unhandled Promise Rejection:', error);
+	console.error('Unhandled Promise Rejection:'.bgRed, error);
 });

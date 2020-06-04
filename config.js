@@ -90,13 +90,7 @@ export const c = {
     e: "main:",
     
     // Command directory/type
-    ct: "discord",
-
-    // Clyde Admins
-    admin: [],
-
-    // Clyde Moderators
-    mod: []
+    ct: "discord"
   },
   
   // Reaper's bot
