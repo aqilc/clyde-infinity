@@ -21,5 +21,5 @@ bots.login();
 
 // Handles ~~unhandled~~ Promise rejections
 process.on('unhandledRejection', error => {
-	console.error('Unhandled Promise Rejection:'.bgRed, error);
+	console.error(' UNHANDLED PROMISE REJECTION '.bgRed.bold, error);
 });
