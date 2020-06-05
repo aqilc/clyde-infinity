@@ -3,10 +3,10 @@
 import https from "https";
       
 // Exports the new function which returns a Promise
-export default (url, options) => new Promise((res, rej) => {
+export default (url, { method, headers } = {}) => new Promise((res, rej) => {
 
   // Starts a new HTTPS request
-  let req = https.request(url, { method: options && options.method, headers: options && options.headers }, r => {
+  let req = https.request(url, { method, headers }, r => {
     
     // The format of received content determining whether to json parse or not
     const type = r.headers["content-type"];

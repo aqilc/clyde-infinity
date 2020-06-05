@@ -1,3 +1,8 @@
+
+// Imports handy functions
+import { list } from "../../../func/f.js";
+
+// Exports main command function
 export default {
   
   // Version list
@@ -12,7 +17,7 @@ export default {
         // If the user just calls for basic help, use this embed
         if (!content)
           embed.a("Bot Commands", this.client.user.avatarURL)
-            .d(this.f.list(this.commands.map(c => `**\`${this.prefix + c.name}\`**`)));
+            .d(list(this.commands.map(c => `**\`${this.prefix + c.name}\`**`)));
         else this.commands.find()
         m.channel.send(embed);
       }
