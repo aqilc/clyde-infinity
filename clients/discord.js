@@ -84,16 +84,16 @@ export default function (c, cmds, { redis, osu }) {
 
     // Eval command
     if(eva && m.content.startsWith(eva.p) && c.a.includes(m.author.id)) {
-      let evalled, e = new embed(), d = "",
+      let evalled, e = new embed(), d = "", start = Date.now(),
           { code, type } = codify(m.content.slice(eva.p.length));
-
+      
       // Runs the evalled code inside of a try..catch just in case
       try {
         evalled = eval(code);
       } catch(err) { console.error(err); }
 
       // Logs that this happened
-      console.log(`Evalled Code: ${code}\nOutput: ${evalled}`);
+      console.log(`Evalled Code: ${code}\nIn ${Date.now() - start} ms\nOutput: ${evalled}`);
 
       // Adds information to the embed based on the options
       if(eva.i)
