@@ -84,7 +84,7 @@ export default function (c, cmds, { redis, osu }) {
 
     // Eval command
     if(eva && m.content.startsWith(eva.p) && c.a.includes(m.author.id)) {
-      let evalled, e = new embed(), d = "", start = Date.now(),
+      let evalled, e = new embed(), d = "", start = Date.now(), time,
           { code, type } = codify(m.content.slice(eva.p.length));
       
       // Runs the evalled code inside of a try..catch just in case
@@ -93,7 +93,7 @@ export default function (c, cmds, { redis, osu }) {
       } catch(err) { console.error(err); }
 
       // Logs that this happened
-      console.log(`Evalled Code: ${code}\nIn ${Date.now() - start} ms\nOutput: ${evalled}`);
+      console.log(`'default eval' used on bot '${c.name}' (took ${time = Date.now() - start} ms). Code: ${code}\nOutput: ${evalled}`);
 
       // Adds information to the embed based on the options
       if(eva.i)
@@ -103,7 +103,7 @@ export default function (c, cmds, { redis, osu }) {
 
       // Sends embed after adding a footer
       if(d !== "")
-        m.channel.send(e.d(d).f(`Input Length: ${code.length}`));
+        m.channel.send(e.d(d).f(`Input Length: ${code.length} | Time Taken: ${time}`));
     }
 
     // Checks if the message is issuing a command
