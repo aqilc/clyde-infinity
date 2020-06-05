@@ -1,6 +1,7 @@
 # Clyde TODO
 
 - Finish Permission system
+- Cooldowns pog
 - Individual bot workers
 - Website
 - The Game of Ur
