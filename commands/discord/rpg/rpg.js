@@ -67,7 +67,7 @@ export default {
 			canvas = new ASCII(50, 5),
 
 			// Message containing the acc information and stuff
-			msg = await m.channel.send(embed.a(`${player.name} vs ${enemies[0].name}`, m.author.avatarURL()).d(`\`\`\`\n${"" + canvas}\`\`\``)),
+			msg = await m.channel.send(embed.a(`${player.name} vs ${enemies[0].name}`, m.author.avatarURL()).d(`\`\`\`\n${canvas}\`\`\``)),
 
 			// Your actions
 			actions = {
@@ -112,8 +112,12 @@ export default {
 		for(let i in actions)
 			react(actions[i]);
 
-		canvas.draw("hello", 10, 3);
-		msg.edit(embed.d("" + canvas));
+		let frame = 0, drawing = canvas.draw(" 😔\n | 🗡️\n/ \\", 10, 2);
+		let int = setInterval(() => {
+			++ frame%2 && drawing.x ++ || drawing.x --;
+			msg.edit(embed.d(`\`\`\`\n${canvas}\`\`\``));
+		}, 1500);
+		setTimeout(() => clearInterval(int), 20000)
 	},
 
 	// Aliases (Array<String>)
