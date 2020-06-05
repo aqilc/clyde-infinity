@@ -5,9 +5,6 @@ import { existsSync } from "fs"; import { dirname } from "path"; import { resolv
 // Creates random strings for re-importing
 import { rand } from "./f.js";
 
-// Evaluates __dirname and stores
-const __dirname = import.meta.url;
-
 // This is the command(singular) handler, which imports commands and its properties
 export default class Command {
   
