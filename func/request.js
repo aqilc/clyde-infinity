@@ -3,10 +3,10 @@
 import https from "https";
       
 // Exports the new function which returns a Promise
-export default (url, { method, headers } = {}) => new Promise((res, rej) => {
+export default (url, { method, headers, data } = {}) => new Promise((res, rej) => {
 
   // Starts a new HTTPS request
-  let req = https.request(url, { method, headers }, r => {
+  let req = https.request(url, { method, headers, data }, r => {
     
     // The format of received content determining whether to json parse or not
     const type = r.headers["content-type"];
@@ -32,8 +32,7 @@ export default (url, { method, headers } = {}) => new Promise((res, rej) => {
   }).on("error", rej);
   
   // If there is data to be sent, send it
-  if(options && options.data)
-    req.write(options.data);
+  if(data) req.write(data);
 
   // Sends the request
   req.end();
