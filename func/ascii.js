@@ -4,7 +4,7 @@ export default class ASCII {
     drawings = [];
 
     // Makes the "canvas"
-    canvas = [];
+    background = [];
 
     // Starts a canvas and generation
     constructor(width, height, {
@@ -13,10 +13,10 @@ export default class ASCII {
 
         // Adds dimensions to the canvas, a space being the default background
         for(let i = 0; i < height; i ++)
-            this.canvas[i] = (bg || " ").repeat(width);
+            this.background[i] = (bg || " ").repeat(width);
         
         // Assigns height and width to the canvas
-        Object.assign(this.canvas, { width, height });
+        Object.assign(this.background, { width, height });
     }
 
     // Draws something
@@ -40,8 +40,8 @@ export default class ASCII {
                     if(t.drawings[drawing][p])
                         return t.drawings[drawing][p];
                     
-                    // Return undefined if property is undefined
-                    return undefined;
+                    // Return proxy if property is not found
+                    return proxy;
                 },
                 set(t, p, v) {
     
@@ -75,16 +75,58 @@ export default class ASCII {
         return this;
     }
 
+    // Adds a border to the background
+    border({ left, right, top, bottom, all, horiz, vert, corners = [] } = {}) {
+
+        // Exchanges properties with others if needed
+        left = left || horiz || all || right || top || bottom
+        right = right || horiz || all || left || top || bottom
+        top = top || vert || all || bottom || left || right
+        bottom = bottom || vert || all || top || left || right
+        corners = [
+            corners[0] || corners[1] || corners[2] || corners[3] || left,
+            corners[1] || corners[0] || corners[2] || corners[3] || left,
+            corners[2] || corners[0] || corners[1] || corners[3] || left,
+            corners[3] || corners[0] || corners[2] || corners[2] || left
+        ];
+
+        /*  xoox  Middle of top line
+            xxxx
+            xxxx
+            xxxx  */
+        this.background[0] = this.background[0][0] + top.repeat(background.width - 2) + this.background[0][this.background.length - 1]
+
+        /*  oxxx  Top Left corner
+            xxxx
+            xxxx
+            xxxx  */
+        this.background[0][0] = corners[0];
+
+        /*  xxxo  Top Right corner  
+            xxxx
+            xxxx
+            xxxx  */
+        this.background[0][this.background.length - 1] = corners[1];
+
+        /*  xxxx  Middle of sides
+            oxxo
+            oxxo
+            xxxx  */
+        for(let i = 1; i < this.background.length - 1; i ++)
+            this.background[i] = left + this.background[i].slice(1, -1) + right;
+
+    }
+
     // Compiles the drawing
     toString() {
         
         // Loops through drawings and actually draws them
-        let i; for (let d of this.drawings)
+        let i, b = Array.from(this.background); for (let d of this.drawings)
             for (let y = 0; y < d.length; y ++)
-                i = this.canvas[y + d.y], this.canvas[y + d.y] = i.slice(0, d.x) + d[y] + i.slice(d.x + d[y].length, i.length);
+                i = b[y + d.y], b[y + d.y] = i.slice(0, d.x) + d[y] + i.slice(d.x + d[y].length, i.length);
 
         // Joins the canvas into one string and returns
-        return this.canvas.join("\n");
+        return b.join("\n");
     }
 
     // Some starter shapes

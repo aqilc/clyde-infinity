@@ -1,6 +1,9 @@
 // Imports cryptographic functions
 import crypto from "crypto";
 
+// Imports filesystem modules
+import { readdirSync } from "fs";
+
 // Finds all mentions in a string
 export const mentions = (str) => str.replace(/\D/g, "").replace(/\s/g, " ").split(" ").filter(v => v.length === 18);
 
@@ -11,13 +14,69 @@ export const word = (str/*string*/, w/*word*/, p/*prefix*/, s/*suffix*/) => type
 export const hash = str => crypto.createHash("sha256").update(str).digest();
 
 // Returns a sentence/phrase in title case
-export const titlecase = (str) => str.split(" ").map(s => s[0].toUpperCase() + s.slice(1)).join(" ");
+export const titlecase = str => str.split(" ").map(s => s[0].toUpperCase() + s.slice(1)).join(" ");
 
 // Converts an object into an array
 export const objtoarr = obj => obj.length && obj || Object.keys(obj).map(k => [k, obj[k]]);
 
+// Benchmarking function
+export const bench = (setup, ...funcs) => {
+
+  // If there are no arguments, then do this
+  if(!setup)
+    throw new Error("You need to provide a function to benchmark!")
+
+  // If you specify a setup function
+  if(funcs)
+    setup();
+
+  // If not, just take the setup as the function to benchmark
+  else funcs = [setup];
+
+  // If you provide an array yourself, set 'funcs' to be that array
+  if(Array.isArray(funcs[0]))
+    funcs = funcs[0];
+
+  
+};
+
+// Reads the directories and classifies files and folders
+export const readdir = dir => {
+
+  // Reads the directory
+  dir = readdirSync(dir.startsWith("file:///") ? new URL(dir) : dir, { withFileTypes: true });
+
+  // Gets folders
+  let folders = dir.filter(v => v.isDirectory()),
+
+      // Gets file names and maps them into objects
+      files = dir.filter(f => f.isFile()).map(({ name }) => {
+        let period = name.lastIndexOf("."),
+            name = period > 0 && name.slice(0, period) || name,
+            type = period > 0 && name.slice(period + 1);
+        return { name, type }
+      });
+  
+  // Returns the contents of the directory
+  return { folders, files }
+}
+
+// Converts a number into a human-readable byte system number
+export const byte = num => {
+
+  // Levels of byte divisions
+  let levels = ["bits", "kb", "mb", "gb", "tb", "pb"], level = 0;
+
+  // Loops through divisions of the numbers while also determining level
+  while (num >= 1024)
+    num /= 1024, level ++;
+
+  // Returns the rounded number + the level of byte division
+  return num.toFixed(2) + " " + levels[level];
+}
+
 // Turns an array into a proper, human-readable list
-export const list = (arr) => {
+export const list = arr => {
   
   // returns if the input isn't an array
   if(!Array.isArray(arr) || arr.length < 1) return "";

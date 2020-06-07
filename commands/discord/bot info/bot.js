@@ -1,8 +1,15 @@
+import { byte } from "../../../func/f.js";
+
 export default {
 
     // Function executed
     f(m, { embed }) {
-        return m.channel.send(embed.a("Bot info", this.client.user.avatarURL()).d("Hello xP"))
+
+        embed.a("Bot info", this.client.user.avatarURL())
+            .af("Memory Usage", byte(process.memoryUsage().rss))
+            .d("Hello xP")
+
+        return m.channel.send(embed)
     },
 
     // Aliases (Array<String>)

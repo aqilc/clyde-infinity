@@ -86,7 +86,7 @@ export default {
 				},
 			};
 		
-		const done = () => Date.now() - start > 1000000;
+		const done = () => frame > 20;
 
 		// Reaction function
 		async function react(action) {
@@ -112,12 +112,12 @@ export default {
 		for(let i in actions)
 			react(actions[i]);
 
-		let frame = 0, drawing = canvas.draw(" 😔\n | 🗡️\n/ \\", 10, 2);
-		let int = setInterval(() => {
+		let frame = 0, drawing = canvas.draw(" 😔\n | 🗡️\n/ \\", 10, 2),
+		int = setInterval(() => {
+			frame === 20 && clearInterval(int);
 			++ frame%2 && drawing.x ++ || drawing.x --;
 			msg.edit(embed.d(`\`\`\`\n${canvas}\`\`\``));
 		}, 1500);
-		setTimeout(() => clearInterval(int), 20000)
 	},
 
 	// Aliases (Array<String>)
