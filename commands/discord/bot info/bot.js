@@ -5,10 +5,12 @@ export default {
     // Function executed
     f(m, { embed }) {
 
+        // Makes the embed
         embed.a("Bot info", this.client.user.avatarURL())
             .af("Memory Usage", byte(process.memoryUsage().rss))
             .d("Hello xP")
 
+        // Sends the message
         return m.channel.send(embed)
     },
 
