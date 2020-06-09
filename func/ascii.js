@@ -27,7 +27,9 @@ export default class ASCII {
             text = text.split("\n");
 
         // Stores drawings
-        let drawing = this.drawings.push(Object.assign(text, { x, y })) - 1,
+        let drawing = this.drawings.push(Object.assign(text, {
+            x, y, rotate: dir => (ASCII.rotate(this.drawings[drawing], dir), proxy)
+        })) - 1,
         
             // Returned Proxy
             proxy = new Proxy(this, {
@@ -75,9 +77,11 @@ export default class ASCII {
         return this;
     }
 
-    // Adds a border to the background
+    /** Adds a border to the background
+     * @param options - Options for the border
+     */
     border({ left, right, top, bottom, all, horiz, vert, corners = [] } = {}) {
-
+        
         // Exchanges properties with others if needed
         left = left || horiz || all || right || top || bottom
         right = right || horiz || all || left || top || bottom
@@ -85,36 +89,43 @@ export default class ASCII {
         bottom = bottom || vert || all || top || left || right
         corners = [
             corners[0] || corners[1] || corners[2] || corners[3] || left,
-            corners[1] || corners[0] || corners[2] || corners[3] || left,
+            corners[1] || corners[0] || corners[2] || corners[3] || right,
             corners[2] || corners[0] || corners[1] || corners[3] || left,
-            corners[3] || corners[0] || corners[2] || corners[2] || left
+            corners[3] || corners[0] || corners[2] || corners[2] || right
         ];
 
-        /*  xoox  Middle of top line
-            xxxx
-            xxxx
-            xxxx  */
-        this.background[0] = this.background[0][0] + top.repeat(background.width - 2) + this.background[0][this.background.length - 1]
+        // Checks if you included *anything*
+        if(!left || !corners[0])
+            throw new Error("You need to provide *something* to create corners out of!")
 
-        /*  oxxx  Top Left corner
+        /*  xoox  Middle of top and bottom line
             xxxx
             xxxx
-            xxxx  */
-        this.background[0][0] = corners[0];
-
-        /*  xxxo  Top Right corner  
-            xxxx
-            xxxx
-            xxxx  */
-        this.background[0][this.background.length - 1] = corners[1];
+            xoox  */
+        for(let i = 0; i < Math.max(bottom.length, top.length); i ++) {
+            top[i] && (this.background[i] = this.background[i].slice(0, left.length) + top[i].repeat(this.background.width - (left + right).length) + this.background[i].slice(- right.length));
+            bottom[i] && (this.background[this.background.length - i - 1] = this.background[this.background.length - i - 1].slice(0, left.length) + bottom[i].repeat(this.background.width - (left + right).length) + this.background[this.background.length - i - 1].slice(- right.length));
+        }
 
         /*  xxxx  Middle of sides
             oxxo
             oxxo
             xxxx  */
         for(let i = 1; i < this.background.length - 1; i ++)
-            this.background[i] = left + this.background[i].slice(1, -1) + right;
+            this.background[i] = left + this.background[i].slice(left.length, -right.length) + right;
 
+        /*  oxxo  All corners
+            xxxx
+            xxxx
+            oxxo  */
+        for(let i in corners.slice(0, 4))
+            if(typeof corners[i] === "string")
+                corners[i] = corners[i].split("\n");
+        for(let i = 0; i < Math.max(corners[0].length, corners[1].length); i ++)
+            this.background[i] = (corners[0][i] || "") + this.background[i].slice((corners[0][i] || "").length, - (corners[1][i] || "").length) + (corners[1][i] || "");
+        for(let i = 1; i < Math.max(corners[2].length, corners[3].length) + 1; i ++)
+            this.background[this.background.length - i] = (corners[2][i - 1] || "") + this.background[this.background.length - i].slice((corners[2][i - 1] || "").length, - (corners[3][i - 1] || "").length) + (corners[3][i - 1] || "");
+        return this;
     }
 
     // Compiles the drawing
@@ -134,5 +145,52 @@ export default class ASCII {
         
     };
 
-    // Borders :D
+    // Some pre-made borders :D
+    static borders = {
+        solid: { all: "█" },
+        light: { all: "░" },
+        medium: { all: "▒" },
+        dark: { all: "▓" },
+        small: {
+            left: "▌",
+            right: "▐",
+            top: "▀",
+            bottom: "▄",
+            corners: ["▛", "▜", "▙", "▟"]
+        }
+    };
+
+    // Static method for rotation of 2d string arrays
+    static rotate(str, dir) {
+
+        // You need to provide arguments xP
+        if(!str || !dir)
+            throw new Error("You need to define the string('str') and direction('dir') for string rotation!");
+
+        // You can't have 0 as a direction
+        if(typeof dir === "number" && dir == 0)
+            throw new Error("The content of the numerical input format for 'dir' can't be 0!");
+
+        // If input is a string store that it was, and then turn it into an array
+        let string = false;
+        if(typeof str === "string")
+            string = true, str = str.split("\n");
+
+        // Calculate the widest string in the array
+        let widest = 0;
+        for(let i = 0; i < arr.length; i ++)
+          if(arr[i].length > widest)
+              widest = arr[i].length;
+
+        // Now for the actual rotation...
+        let returned = [], s;
+        for(let x = 0; x < widest; x ++) {
+            s = ""; for(let y = 0; y < str.length; y ++)
+                s += str[y][x] || "";
+            returned[x] = s;
+        }
+
+        // Return the ending array
+        return string ? returned : returned.join("\n");
+    }
 }
