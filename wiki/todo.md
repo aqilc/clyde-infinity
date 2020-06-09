@@ -8,6 +8,7 @@
 - osu command
 - RPG Plans
 - Moderation
+- Tetris
 - Purge Fixes
 - User subscription to bot updates
 - BrainFuck library, upload, and parser

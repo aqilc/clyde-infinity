@@ -2,6 +2,48 @@
 
 Trash/inefficient code that I don't completely want to discard forever because of the efforts that went into writing it.
 
+**Unfinished Benchmarking Function:**
+
+```js
+/**
+ * Benchmarking function
+ * @param {function} setup 
+ * @param  {...Object|function} funcs 
+ */
+export const bench = (setup, ...funcs) => {
+
+  // If there are no arguments, then do this
+  if(!setup)
+    throw new Error("You need to provide a function to benchmark!")
+
+  // If you specify a setup function
+  if(funcs)
+    setup();
+
+  // If not, just take the setup as the function to benchmark
+  else funcs = [setup];
+
+  // If you provide an array yourself, set 'funcs' to be that array
+  if(Array.isArray(funcs[0]))
+    funcs = funcs[0];
+
+  // 10 seconds to time the test ops = operations per second and start holds start time of run
+  let time = 10000, start, ops;
+
+  for(let func of funcs) {
+    ops = [];
+    for(let i = 0; i < time/1000; i += 1) {
+      start = performance.now(), ops[i] = 0, f = func.f || func.do || func;
+      while (performance.now() - start < 1000)
+        f(), ops[i] ++;
+      
+    }
+    Object.assign(func)
+  }
+  
+};
+```
+
 **Custom Levenshtein algorithm:**
 
 ```js

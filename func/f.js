@@ -19,27 +19,6 @@ export const titlecase = str => str.split(" ").map(s => s[0].toUpperCase() + s.s
 // Converts an object into an array
 export const objtoarr = obj => obj.length && obj || Object.keys(obj).map(k => [k, obj[k]]);
 
-// Benchmarking function
-export const bench = (setup, ...funcs) => {
-
-  // If there are no arguments, then do this
-  if(!setup)
-    throw new Error("You need to provide a function to benchmark!")
-
-  // If you specify a setup function
-  if(funcs)
-    setup();
-
-  // If not, just take the setup as the function to benchmark
-  else funcs = [setup];
-
-  // If you provide an array yourself, set 'funcs' to be that array
-  if(Array.isArray(funcs[0]))
-    funcs = funcs[0];
-
-  
-};
-
 // Reads the directories and classifies files and folders
 export const readdir = dir => {
 
@@ -52,8 +31,8 @@ export const readdir = dir => {
       // Gets file names and maps them into objects
       files = dir.filter(f => f.isFile()).map(({ name }) => {
         let period = name.lastIndexOf("."),
-            name = period > 0 && name.slice(0, period) || name,
             type = period > 0 && name.slice(period + 1);
+        name = period > 0 && name.slice(0, period) || name
         return { name, type }
       });
   
