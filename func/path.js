@@ -19,9 +19,11 @@ export default class Path {
     this.check = check;
 
     // Stores original directory
-    if (Path.type(dir) === "url")
+    let type = Path.type(dir);
+    if (type === "url")
       this.#url = dir, this.#path = fileURLToPath(dir);
-    else this.#url = pathToFileURL(dir), this.#path = dir;
+    else if(type === "path")
+      this.#url = pathToFileURL(dir), this.#path = dir;
   }
 
   // Sets default url
@@ -38,7 +40,7 @@ export default class Path {
   append(str) {
 
     // If the string includes invalid file name characters
-    if(/[~<>|?*]*/.test(str))
+    if(/[~<>|?*]/.test(str))
       throw new Error("The file name you are trying to append is invalid.")
 
     // If the string starts with "/" or "\" (eg. /path/to/file)
@@ -74,10 +76,10 @@ export default class Path {
 
   /**
    * Returns the type of file path
-   * @param {string|URL} path Path string
-   * @returns {string} Type of path - either "url" or "path"
+   * @param {string|URL} path - Path string
+   * @returns {string} - Type of path - either "url" or "path" (or "none" for unknown string)
    */
   static type(path) {
-    return path instanceof URL ? "url" : path.startsWith("file:///") ? "url" : "path"
+    return typeof path === "object" && path instanceof URL ? "url" : typeof path === "string" ? (path.startsWith("file:///") ? "url" : "path") : "none";
   }
 }
