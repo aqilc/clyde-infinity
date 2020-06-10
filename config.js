@@ -18,6 +18,28 @@
  // * cp: Command Parameters. Changes everything globally
  */
 
+// Imports Path class
+import Path from "./func/path.js";
+
+// Makes a new Path on project directory
+const dir = new Path(import.meta.url);
+
+// Project metadata
+export const project = {
+
+  // Project directories
+  dir,
+
+  // Log files directories
+  logs: {
+
+    // Main directory
+    dir: dir.append("/logs"),
+
+    // Child processes directory
+    'child-processes': dir.append("/logs/child-process")
+  },
+}
   
 // API Keys for every available api
 export const apis = {
@@ -37,10 +59,10 @@ export const dbs = {
   mysql: [{
 
     // Database hostname
-    host: "rpg.cdkvmhasvlw6.us-east-2.rds.amazonaws.com",
+    host: "clyde.cdkvmhasvlw6.us-east-2.rds.amazonaws.com",
 
     // Schema
-    database: "rpg",
+    database: "clyde",
 
     // Port
     port: 3306,
