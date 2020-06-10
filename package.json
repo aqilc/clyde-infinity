@@ -5,8 +5,8 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "node": "node --experimental-top-level-await .",
-    "start": "npm i && node --experimental-top-level-await .",
+    "node": "node --experimental-top-level-await --experimental-json-modules --experimental-import-meta-resolve --title=\"Clyde Infinity Beta\" .",
+    "start": "npm i && npm run node",
     "redis": "wsl bash redis.sh"
   },
   "dependencies": {
