@@ -4,11 +4,20 @@ import crypto from "crypto";
 // Imports filesystem modules
 import { readdirSync } from "fs";
 
-// Finds all mentions in a string
+/** Finds all mentions in a string
+ * @param {string} str
+ * @returns {string}
+*/
 export const mentions = (str) => str.replace(/\D/g, "").replace(/\s/g, " ").split(" ").filter(v => v.length === 18);
 
-// Finds a word with a an optional prefix and suffix in a string
-export const word = (str/*string*/, w/*word*/, p/*prefix*/, s/*suffix*/) => typeof str === "string" && typeof w === "string" && (typeof p === "object" || typeof s === "object" ? (Array.isArray(p) && p.some(pw => str.includes(` ${pw + w} `))) || (Array.isArray(s) && s.some(sw => str.includes(` ${w + sw} `))) || (Array.isArray(p) && Array.isArray(s) && p.some(pw => s.some(sw => ` ${pw + w + sw} `))) : str.includes(` ${w} `));
+/**
+ * Finds words(with optional prefixes and suffixes) in a string
+ * @param {string} str 
+ * @param {string} w 
+ * @param {string|string[]} p 
+ * @param {string|string[]} s 
+ */
+export const word = (str/*string*/, w/*word*/, p/*prefix*/, s/*suffix*/) => typeof str === "string" && typeof w === "string" && (Array.isArray(p) || Array.isArray(s) ? (Array.isArray(p) && p.some(pw => str.includes(` ${pw + w} `))) || (Array.isArray(s) && s.some(sw => str.includes(` ${w + sw} `))) || (Array.isArray(p) && Array.isArray(s) && p.some(pw => s.some(sw => ` ${pw + w + sw} `))) : str.includes(` ${w} `));
 
 // Creates a hash
 export const hash = str => crypto.createHash("sha256").update(str).digest();
@@ -16,8 +25,12 @@ export const hash = str => crypto.createHash("sha256").update(str).digest();
 // Returns a sentence/phrase in title case
 export const titlecase = str => str.split(" ").map(s => s[0].toUpperCase() + s.slice(1)).join(" ");
 
-// Converts an object into an array
-export const objtoarr = obj => obj.length && obj || Object.keys(obj).map(k => [k, obj[k]]);
+/**
+ * Converts an object into an array
+ * @param {Object} obj 
+ * @returns {Array<string, *>}
+ */
+export const objtoarr = obj => obj.length ? obj : Object.keys(obj).map(k => [k, obj[k]]);
 
 // Reads the directories and classifies files and folders
 export const readdir = dir => {
@@ -26,18 +39,41 @@ export const readdir = dir => {
   dir = readdirSync(dir.startsWith("file:///") ? new URL(dir) : dir, { withFileTypes: true });
 
   // Gets folders
-  let folders = dir.filter(v => v.isDirectory()),
+  let folders = dir.filter(v => v.isDirectory()).map(f => f.name),
 
       // Gets file names and maps them into objects
       files = dir.filter(f => f.isFile()).map(({ name }) => {
         let period = name.lastIndexOf("."),
             type = period > 0 && name.slice(period + 1);
-        name = period > 0 && name.slice(0, period) || name
+        name = period > 0 ? name.slice(0, period) : name
         return { name, type }
       });
   
   // Returns the contents of the directory
   return { folders, files }
+}
+
+/**
+ * Reads EVERYTHING in a directory :D\
+ * WARNING: Could take a long time depending on the directory
+ * @param {string} dir
+ * @returns {Object<folders: Object|files: Array>}
+ */
+export const readeverything = dir => {
+
+  // Reads the directory inputted
+  let directory = readdir(dir),
+      folders = {};
+
+  // Gets all the data in all folders
+  for(let i of directory.folders)
+    folders[i] = readeverything(dir.endsWith("/") || dir.endsWith("\\") ? dir + i : dir + "/" + i)
+
+  // Sets the original directory's folders to the folders we just got
+  directory.folders = folders;
+
+  // Returns the resulting object
+  return directory;
 }
 
 // Converts a number into a human-readable byte system number

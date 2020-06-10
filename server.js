@@ -23,3 +23,5 @@ bots.login();
 process.on('unhandledRejection', error => {
 	console.error(' UNHANDLED PROMISE REJECTION '.bgRed.bold, error);
 });
+
+console.log(process.argv, process.config, process.execArgv);
