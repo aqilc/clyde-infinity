@@ -7,12 +7,16 @@ export default {
 
 	f() {
 		
+		// Logs directory
 		const log_dir = fileURLToPath(dirname(dirname(dirname(dirname(import.meta.url)))) + "/child-logs");
 
+		// Logs action
+		console.log("Restarting... Logs at: " + log_dir);
+
 		// Spawns a new, detached process with the same arguments as this one
-		spawn(process.argv[0], process.execArgv.concat(process.argv.slice(1)), {
+		spawn(process.argv[0], [...process.execArgv, ...process.argv.slice(1)], {
 			detached: true,
-			stdio: ["ignore", openSync(log_dir + "\\out"), openSync(log_dir + "\\err")]
+			stdio: ["ignore", openSync(log_dir + "\\out", "a"), openSync(log_dir + "\\err", "a")]
 		}).unref()
 
 		// Exits current process
