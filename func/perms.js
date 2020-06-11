@@ -1,9 +1,8 @@
 export default class Permissions extends Array {
 
     // Constructor that just makes an array :D
-    constructor(...perms) {
-        super(...perms);
-    }
+    constructor(...arr) {
+        super(...arr); }
 
     // If the array contains a permission
     has(perm) {
@@ -15,9 +14,9 @@ export default class Permissions extends Array {
         if(typeof perm === "string")
             return this.includes(perm);
         
-        // If we got perms as an array
+        // If we got arr as an array
         else if(Array.isArray(perm))
-            for(let i of perms)
+            for(let i of arr)
                 if(!this.includes(i)) {
                     has = i; }
         
@@ -43,4 +42,28 @@ export default class Permissions extends Array {
         // Returns this object so you can do more crap
         return this;
     }
-}
+
+    // Static method for getting permissions from a bitfield
+    static find(bitfield, arr) {
+
+        // First of all, convert 'perm' into a string of 1s and 0s
+        bitfield = bitfield.toString(2);
+
+        // Stores perms
+        let perms = [];
+
+        // Then take care of various perm types
+        if(arr instanceof Object)
+            arr = Object.keys(arr);
+        if(!Array.isArray(arr))
+            throw new TypeError("'arr' not of applicable type!");
+
+        // Loops through the bitfield string, adding a permission where it finds a '1'
+        for(let i = 0; i < perm.length; i ++)
+            if(bitfield[i] === "1")
+                perms.push(arr[i]);
+
+        // Returns the resulting permissions array
+        return perms;
+    }
+} // 69 lines lol
