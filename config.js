@@ -109,7 +109,7 @@ export const c = {
     c: ["Support", "Utility", "Bot Info", "Game Apis", "RPG"],
     
     // Special eval prefix
-    e: "main:",
+    eval: "main:",
     
     // Command directory/type
     ct: "discord"
@@ -136,7 +136,7 @@ export const c = {
     c: ["utility", "support", "bot info"],
     
     // Special eval prefix
-    e: "reaper:"
+    eval: "reaper:"
   }
 };
 
