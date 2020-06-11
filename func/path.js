@@ -35,7 +35,7 @@ export default class Path {
   /**
    * Adds a folder/file name to the urls
    * @param {string} str The path to append
-   * @returns {Path} The instance
+   * @returns {new Path} new Path for a new path
    */
   append(str) {
 
@@ -43,17 +43,8 @@ export default class Path {
     if(/[~<>|?*]/.test(str))
       throw new Error("The file name you are trying to append is invalid.")
 
-    // If the string starts with "/" or "\" (eg. /path/to/file)
-    if(/[\\\/].*/.test(str)) {
-      let p = str.slice(1);
-      this.#url += p, this.#path += p;
-    }
-    
-    // else, just add it into the path variables
-    else this.#url += str, this.#path += str;
-
-    // Return instance
-    return this;
+    // Appends the string to all url strings, create a new Path, and return
+    return new Path(this.#path + str.replace(/\//g, "\\"));
   }
 
   /**

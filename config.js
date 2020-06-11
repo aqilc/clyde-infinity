@@ -22,7 +22,7 @@
 import Path from "./func/path.js";
 
 // Makes a new Path on project directory
-const dir = new Path(import.meta.url);
+const dir = new Path(import.meta.url).dir;
 
 // Project metadata
 export const project = {
@@ -37,7 +37,7 @@ export const project = {
     dir: dir.append("/logs"),
 
     // Child processes directory
-    'child-processes': dir.append("/logs/child-process")
+    'child-processes': dir.append("/logs/child-processes")
   },
 }
   

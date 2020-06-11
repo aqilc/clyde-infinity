@@ -10,8 +10,8 @@ export default {
 		const log_dir = project.logs['child-processes']
 
     // Clears logs of bot restarts
-		writeFileSync(log_dir.append("/out"), "");
-		writeFileSync(log_dir.append("/err"), "");
+		writeFileSync(log_dir.append("/out").path, "");
+		writeFileSync(log_dir.append("/err").path, "");
 
 		// Logs success(oh god)
 		console.log(" Cleared logs! ".bgYellow.bold);
