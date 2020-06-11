@@ -3,7 +3,6 @@ import { writeFileSync } from "fs";
 import { project } from "../../../config.js";
 
 export default {
-
 	async f(m, { embed }) {
 
 		// child processes logs directory
