@@ -16,6 +16,7 @@ export const mentions = (str) => str.replace(/\D/g, "").replace(/\s/g, " ").spli
  * @param {string} w 
  * @param {string|string[]} p 
  * @param {string|string[]} s 
+ * @returns {boolean} Whether the string has the word or not
  */
 export const word = (str/*string*/, w/*word*/, p/*prefix*/, s/*suffix*/) => typeof str === "string" && typeof w === "string" && (Array.isArray(p) || Array.isArray(s) ? (Array.isArray(p) && p.some(pw => str.includes(` ${pw + w} `))) || (Array.isArray(s) && s.some(sw => str.includes(` ${w + sw} `))) || (Array.isArray(p) && Array.isArray(s) && p.some(pw => s.some(sw => ` ${pw + w + sw} `))) : str.includes(` ${w} `));
 
@@ -28,7 +29,7 @@ export const titlecase = str => str.split(" ").map(s => s[0].toUpperCase() + s.s
 /**
  * Converts an object into an array
  * @param {Object} obj 
- * @returns {Array<string, *>}
+ * @returns {Array<string, any>}
  */
 export const objtoarr = obj => obj.length ? obj : Object.keys(obj).map(k => [k, obj[k]]);
 
@@ -120,23 +121,6 @@ export function codify(str) {
   // Returns v + the code
   return v.code = str, v;
 };
-
-// Finds permissions/values based on object inputs
-export function findperms(bitfield, permobj) {
-
-  // Converts the permobj into an iterable array and sorts based on values
-  permobj = objtoarr(permobj).sort((a, b) => b[1] - a[1]);
-
-  // Stores the permissions
-  let perms = [];
-
-  for(let i of permobj)
-    if(bitfield - i[1] > 0)
-      bitfield -= i[1], perms.push(i[0]);
-
-  // Return the permissions
-  return perms;
-}
 
 // Suite of functions for fetching stuff from the discord api
 export const fetch = {
