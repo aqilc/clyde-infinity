@@ -4,7 +4,7 @@ import { project } from "../../../config.js";
 
 export default {
 
-	f(m, { embed }) {
+	async f(m, { embed }) {
 
 		// child processes logs directory
 		const log_dir = project.logs['child-processes']
