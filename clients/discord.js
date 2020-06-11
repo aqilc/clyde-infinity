@@ -27,7 +27,7 @@ export default function (c, cmds, { redis, osu }) {
   let client = new Client();
 
   // Stores eval attributes
-  let eva = {}; // Attributes: (p: Prefix, o: Output, i: Input)
+  let eval = {}; // Attributes: (p: Prefix, o: Output, i: Input)
 
   // If the bot has the 'eval' function enabled
   if(c.eval)
@@ -36,18 +36,18 @@ export default function (c, cmds, { redis, osu }) {
     if(typeof c.eval === "object")
 
       // Set eval properties based on bot config
-      eva = {
+      eval = {
         p: c.eval.p,
         o: c.eval.o,
         i: c.eval.i
       }
 
     // If there is only a prefix provided
-    else eva.p = c.eval,
-      eva.o = eva.i = true;
+    else eval.p = c.eval,
+      eval.o = eval.i = true;
 
   // Sets it to no eval if no information is provided
-  else eva = false;
+  else eval = false;
 
   // Client login
   client.on("ready", async () => {
@@ -86,9 +86,9 @@ export default function (c, cmds, { redis, osu }) {
     }
 
     // Eval command
-    if(eva && m.content.startsWith(eva.p) && c.a.includes(m.author.id)) {
+    if(eval && m.content.startsWith(eval.p) && c.a.includes(m.author.id)) {
       let evalled, e = new embed(), d = "", start = Date.now(), time,
-          { code, type } = codify(m.content.slice(eva.p.length));
+          { code, type } = codify(m.content.slice(eval.p.length));
       
       // Runs the evalled code inside of a try..catch just in case
       try {
@@ -99,9 +99,9 @@ export default function (c, cmds, { redis, osu }) {
       console.log(`'default eval' used on bot '${c.name}' (took ${time = Date.now() - start} ms). Code: ${code}\nOutput: ${evalled}`);
 
       // Adds information to the embed based on the options
-      if(eva.i)
-        eva.o = true, d = `**Input:**\`\`\`${type}\n${code}\`\`\`\n`;
-      if(eva.o)
+      if(eval.i)
+        eval.o = true, d = `**Input:**\`\`\`${type}\n${code}\`\`\`\n`;
+      if(eval.o)
         d += `**Output:**\`\`\`${type}\n${evalled}\`\`\``;
 
       // Sends embed after adding a footer
