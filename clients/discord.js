@@ -3,6 +3,9 @@
  * 
  */
 
+// Colorful logs :3
+import colors from "colors";
+
 // Discord API stuff
 import msg from "../func/discord/message.js";
 import embed from "../func/discord/embed.js";
@@ -27,20 +30,20 @@ export default function (c, cmds, { redis, osu }) {
   let eva = {}; // Attributes: (p: Prefix, o: Output, i: Input)
 
   // If the bot has the 'eval' function enabled
-  if(c.e)
+  if(c.eval)
 
     // If there is an object
-    if(typeof c.e === "object")
+    if(typeof c.eval === "object")
 
       // Set eval properties based on bot config
       eva = {
-        p: c.e.p,
-        o: c.e.o,
-        i: c.e.i
+        p: c.eval.p,
+        o: c.eval.o,
+        i: c.eval.i
       }
 
     // If there is only a prefix provided
-    else eva.p = c.e,
+    else eva.p = c.eval,
       eva.o = eva.i = true;
 
   // Sets it to no eval if no information is provided
@@ -119,9 +122,9 @@ export default function (c, cmds, { redis, osu }) {
         // If command.p is an string,
         if(typeof command.p === "string")
           if(!perms.has(command.p))
-            return m.channel.send(new embed().t(`You don't have the permission to do this!`).d(`You need the permission ${command.p} to do command \`${command.name}\``))
+            return m.channel.send(new embed().t(`You don't have the permission to do this!`).d(`You need the permission ${command.p} to do command \`${command.name}\``));
           else if(!botperms.has(command.p))
-            return m.channel.send(new embed().t(`I don't have the permission to do this!`).d(`I need the permission ${command.p} to do command \`${command.name}\``))
+            return m.channel.send(new embed().t(`I don't have the permission to do this!`).d(`I need the permission ${command.p} to do command \`${command.name}\``));
 
       }
 
