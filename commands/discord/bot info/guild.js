@@ -70,7 +70,7 @@ export default {
     e: "cmdname,cmdname hello",
   
     // All permission things
-    p: "BOT_ADMIN",
+    perms: "BOT_ADMIN",
   
     // How to use the command
     u: "commandname [username]",

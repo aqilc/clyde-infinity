@@ -51,7 +51,7 @@ export default {
   e: "purge 10",
   
   // Permissions
-  p: "BOT_ADMIN",//"MANAGE_MESSAGES",
+  perms: "BOT_ADMIN",//"MANAGE_MESSAGES",
   
   // Deletes author's message **before executing the command**
   del: true
