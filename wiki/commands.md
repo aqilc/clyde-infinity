@@ -20,13 +20,27 @@ export default {
     // Command name: Properties to update
     basic: {
       
-      // Version function (Required)
+      // Version function
       f(m, s) {}
     }
   },
 
-  // Function executed
+  // Function executed(optional if arguments provided)
   f(m, s) {},
+
+  // Hard-programmed command arguments(optional but required if no main function)
+  args: [
+    {
+      // Function executed (required)
+      f() {},
+
+      // The argument (string|Array<string>)(required)
+      name: ["settings"],
+
+      // Whether the main function is executed or not
+      main: false
+    }
+  ],
 
   // Aliases (Array<String>)
   a: [],
@@ -34,17 +48,17 @@ export default {
   // Description
   d: "This command does things",
 
-  // Examples (String`example1,example2`)
+  // Examples (String`example1:desc,example2:desc`)
   e: "cmdname,cmdname hello",
 
   // Contains all permission-related stuff
-  p: "MANAGE_MESSAGES" || ["KICK_MEMBERS", "MANAGE_MESSAGES"] || {
+  perms: "MANAGE_MESSAGES" || ["KICK_MEMBERS", "MANAGE_MESSAGES"] || {
 
     // Permissions needed *for bot* (Object || Array<String>)
-    b: ["MANAGE_MESSAGES"] || { MANAGE_MESSAGES: "I cant even manage messages so how do you expect me to do this?" },
+    bot: ["MANAGE_MESSAGES"] || { MANAGE_MESSAGES: "I cant even manage messages so how do you expect me to do this?" },
 
     // Permissions needed *for user* (Object || Array<String>)
-    u: ["BOT_ADMIN"] || { BOT_ADMIN: "xP you arent the bot admin so why should you be executing this?" }
+    user: ["BOT_ADMIN"] || { BOT_ADMIN: "xP you aren't the bot admin so why should you be executing this?" }
   },
 
   // How to use the command
@@ -65,6 +79,9 @@ export default {
 
 - `a`:`Array<String>` Aliases/alternate names for the command.
   - **Example:** For command `help`: `["h", "commands"]`
+- `args`:`Array<Object>`
+  - `Object` Properties
+  - 
 - `c`:`String` Channel the command works in
   - "a": All
   - "d": DMs
@@ -80,11 +97,11 @@ export default {
     - `b`:`Object || Array<String(Permission)> || String(Permission)` Key
       - `Object` Format
         - Key `(permission)`: The permission needed by the user for the activation of the command
-        - Value `(description)`: The returned message for people who can't access the command because they don't have this permission.
+        - Value `(message)`: The returned message for people who can't access the command because they don't have this permission.
     - `p`:`Object || Array<String(Permission)> || String(Permission)` Key
       - `Object` Format
         - Key `(permission)`: The permission needed by the bot to execute the command
-        - Value `(description)`: The message stating that the bot doesn't have the proper permissions.
+        - Value `(message)`: The message stating that the bot doesn't have the proper permissions.
 - `f`:`Function(m, s)` The function that happens when the command is called.
   - Inherited Objects
     - `Discord`: The discord.js API

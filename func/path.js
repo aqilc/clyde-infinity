@@ -3,7 +3,7 @@
 import { dirname } from "path";
 
 // Makes a file URL a file path, vice versa
-import URL, { fileURLToPath, pathToFileURL } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 
 /**
  * Class for getting path names, parameters, and other info
@@ -35,7 +35,7 @@ export default class Path {
   /**
    * Adds a folder/file name to the urls
    * @param {string} str The path to append
-   * @returns {new Path} new Path for a new path
+   * @returns {Path} new Path for a new path
    */
   append(str) {
 
@@ -61,7 +61,7 @@ export default class Path {
 
   /**
    * Returns a new Path instance set on the **directory** of current path
-   * @returns {new Path} New path instance
+   * @returns {Path} New path instance
    */
   get dir() { return new Path(dirname(this.#url), this.check) }
 

@@ -18,7 +18,7 @@ export const mentions = (str) => str.replace(/\D/g, "").replace(/\s/g, " ").spli
  * @param {string|string[]} s 
  * @returns {boolean} Whether the string has the word or not
  */
-export const word = (str/*string*/, w/*word*/, p/*prefix*/, s/*suffix*/) => typeof str === "string" && typeof w === "string" && (Array.isArray(p) || Array.isArray(s) ? (Array.isArray(p) && p.some(pw => str.includes(` ${pw + w} `))) || (Array.isArray(s) && s.some(sw => str.includes(` ${w + sw} `))) || (Array.isArray(p) && Array.isArray(s) && p.some(pw => s.some(sw => ` ${pw + w + sw} `))) : str.includes(` ${w} `));
+export const word = (str/*string*/, w/*word*/, p/*prefix*/, s/*suffix*/) => typeof str === "string" && typeof w === "string" && (Array.isArray(p) || Array.isArray(s) ? (Array.isArray(p) && p.some(pw => str.includes(` ${pw + w} `))) || (Array.isArray(s) && s.some(sw => str.includes(` ${w + sw} `))) || (Array.isArray(p) && Array.isArray(s) && p.some(pw => s.some(sw => str.includes(` ${pw + w + sw} `)))) : str.includes(` ${w} `));
 
 // Creates a hash
 export const hash = str => crypto.createHash("sha256").update(str).digest();
@@ -207,13 +207,13 @@ export const arr = {
 export const rand = {
 
   // Generates a random string
-  str(len, { special, numsonly }) {
+  str(len, { special, nums }) {
 
     // The returned string
     let str = "",
 
     // Determines letters
-    letters = (numsonly && "1234567890") || "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890" + (special && "!@#$%^&*()_+-=\\/?[]{}<>'\";:.,`~" || "");
+    letters = (nums && "1234567890") || "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890" + (special && "!@#$%^&*()_+-=\\/?[]{}<>'\";:.,`~" || "");
 
     // Gets a random letter and adds it
     for (let i = 0; i < len; i ++)
@@ -241,7 +241,7 @@ export const similarity = {
               : d1 + 1;
     }
     
-    // Returns custom levelshtein algorithm function
+    // Returns custom levenshtein algorithm function
     return function(a, b) {
       if (a === b) {
         return 0;

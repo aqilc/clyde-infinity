@@ -35,7 +35,7 @@ import mysql from "mysql2-promise";//.createConnection(dbs.mysql[0]),
 const clients = readdirSync(fileURLToPath(__dirname + "/clients")).map(v => v.slice(0, -3)),
       
       // Stores all clients
-      bots = {},
+      bots = [],
       
       // Fetches all command directories
       cmdirs = readdirSync(fileURLToPath(__dirname + "/commands")),
@@ -95,25 +95,14 @@ for(let i in c) {
   
   // If no commands exist, abort
   if (commands.length === 0)
-    { console.error(`Bot "${i}" of type ${c[i].ct} doesn't have any commands!`); continue; } 
+    { console.error(`Bot "${i}" of type ${c[i].ct} doesn't have any commands!`); continue; }
   
-  // Bot handler (If the client is valid, add it into the bots array to be shipped out and logged into)
-  bots[i] = (await import(__dirname + "/clients/" + c[i].ct + ".js")).default.call({ bots }, Object.assign(c[i], { name: i, a, m, apis }), commands, { mysql, redis, osu });
+  // Bot handler function
+  const bot = async worker => (await import(__dirname + "/clients/" + c[i].ct + ".js")).default.call({ bots, worker }, Object.assign(c[i], { name: i, a, m, apis }), commands, { mysql, redis, osu });
   
-  // Deletes bot if it doesn't exist anyways
-  if (!bots[i])
-    delete bots[i];
+  // Push the bot function into the main bots object to export
+  bots.push({ bot, commands, name: i });
 }
-
-// Defines the login method that logs in all bots at call.
-Object.defineProperty(bots, "login", {
-  value() {
-    
-    // Loops through everything.
-    for(let i in this)
-      this[i].login();
-  }
-})
 
 // Exports the bot object
 export default bots;

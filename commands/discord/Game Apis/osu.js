@@ -147,10 +147,10 @@ export default {
   a: ["o"],
 
   // Description
-  d: "This command does things",
+  d: "View your current osu! profile page!",
 
-  // Examples (String`example1,example2`)
-  e: "cmdname,cmdname hello",
+  // Examples (String`example1:desc,example2:desc`)
+  e: "osu,cmdname hello",
 
   // How to use the command
   u: "osu [username]",

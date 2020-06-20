@@ -1,6 +1,6 @@
 
 // Filesystem modules
-import { existsSync } from "fs"; import { dirname } from "path"; import { resolve, fileURLToPath } from "url";
+import { existsSync } from "fs"; import { project } from "../config.js";
 
 // Creates random strings for re-importing
 import { rand } from "./f.js";
@@ -14,7 +14,7 @@ export default class Command {
   // Command hasn't been loaded pog so set loaded to false
   loaded = false;
 
-  // Constructor. Name can be command name + version(separated by :)
+  // Constructor. Name can be command name + version(separated by "@")
   constructor(name, category, type) {
 
     // Check for name and command
@@ -34,10 +34,10 @@ export default class Command {
     else this.name = name;
     
     // Path of the command
-    this.path = resolve(dirname(import.meta.url), `./commands/${this.type}/${this.category.toLowerCase()}/${this.name}.js`);
+    this.path = project.commands.append(`/${this.type}/${this.category.toLowerCase()}/${this.name}.js`);
     
     // throws an error if the command path is invalid
-    if(!existsSync(fileURLToPath(this.path)))
+    if(!existsSync(this.path.path))
       throw new Error(`Command ${this.name} doesn't exist!`);
   }
   
@@ -45,18 +45,23 @@ export default class Command {
   async load() {
 
     // Gets the command and stores it
-    this.cmd = (await import(this.path + (this.loaded ? "?doesthiswork=" + rand.str(10) : ""))).default;
+    this.cmd = (await import(this.path.url + (this.loaded ? "?doesthiswork=" + rand.str(10) : ""))).default;
     
     // Merges both objects
     Object.assign(this, this.cmd);
     
+    // Delete all invalid versions
+    for(let i in this.versions)
+      if(!this.versions[i].f && !this.versions[i].args)
+        delete this.versions[i];
+
     // If there is no basic function for the command, search versions
     if(!this.f && typeof this.versions === "object" && Object.keys(this.versions).length > 0)
-      if(this.versions[this.dver] && this.versions[this.dver].f)
+      if(this.versions[this.dver])
         this.#version = this.dver;
-      else if(this.versions.basic && this.versions.basic.f)
+      else if(this.versions.basic)
         this.#version = "basic";
-      else this.#version = Object.keys(this.versions).sort()[0]
+      else this.#version = Object.keys(this.versions)[0]
     
     // Merges based on version of command
     if(this.versions && (this.#version || this.dver))
@@ -83,11 +88,18 @@ export default class Command {
       this.#version = v;
     else return this.#version;
     
-    // Sets the object attributes
-    Object.assign(this, this.versions[this.#version])
+    // Sets the object attributes(oh crap i just found out theres no way to revert... fixing in a bit)
+    Object.assign(this, this.versions[this.#version]);
     
     // Returns new version
     return this.#version;
+  }
+
+  // Executes the command.
+  execute(thisArg, m, ...args) {
+
+    // Does the actual command function
+    
   }
 }
 

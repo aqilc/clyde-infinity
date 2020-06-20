@@ -100,7 +100,7 @@ export default class osu {
   }*/
   
   // Returns the "apis" variable used for the rest of the urls
-  static apis = apis;
+  static apis;
 }
 
 // Creates a function that sends a get request
