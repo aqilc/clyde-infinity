@@ -22,13 +22,16 @@
 import Path from "./func/path.js";
 
 // Makes a new Path on project directory
-const dir = new Path(import.meta.url).dir;
+const { dir } = new Path(import.meta.url);
 
 // Project metadata
 export const project = {
 
   // Project directories
   dir,
+
+  // Command directories
+  commands: dir.append("/commands"),
 
   // Log files directories
   logs: {
@@ -59,7 +62,7 @@ export const dbs = {
   mysql: [{
 
     // Database hostname
-    host: "clyde.cdkvmhasvlw6.us-east-2.rds.amazonaws.com",
+    host: "clyde-infinity.cdkvmhasvlw6.us-east-2.rds.amazonaws.com",
 
     // Schema
     database: "clyde",
@@ -71,7 +74,7 @@ export const dbs = {
     user: "aqilcont",
 
     // Password
-    password: "prGWH6qrVRQFMsIFITy9"
+    password: "FirF9ie4LxqJgya8P9U6"
   }]
 };
 
@@ -111,8 +114,8 @@ export const c = {
     // Special eval prefix
     eval: "main:",
     
-    // Command directory/type
-    ct: "discord"
+    // Bot type
+    bt: "discord"
   },
   
   // Reaper's bot
@@ -139,43 +142,3 @@ export const c = {
     eval: "reaper:"
   }
 };
-
-// Command Parameters
-/*cp: {
-  u: {
-    d: "Usage",
-    type: "string"
-  };
-  a: {
-    d: "Aliases",
-    type: "object"
-  };
-  d: {
-    d: "Description",
-    type: "string"
-  };
-  p: {
-    d: "Permissions",
-    type: "string||object"
-  };
-  e: {
-    d: "Example",
-    type: "string||object"
-  };
-  h: {
-    d: "Hidden",
-    type: "boolean"
-  };
-  del: {
-    d: "Delete User's Message",
-    type: "boolean"
-  };
-  spre: {
-    d: "Special Prefix",
-    type: "string||object"
-  };
-  func: {
-    d: "Function",
-    type: "function"
-  }
-}*/
