@@ -62,3 +62,6 @@ typings/
 
 # vscode crap
 .vscode
+
+# Modules code and other things
+package-lock.json*
