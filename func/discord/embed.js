@@ -4,7 +4,7 @@ import { MessageEmbed } from "discord.js";
 
 // Exports edited embed class :D
 export default class Embed extends MessageEmbed {
-  constructor() {
+  constructor(title) {
 
     // Makes an embed
     super();
@@ -19,37 +19,19 @@ export default class Embed extends MessageEmbed {
     this.tn = this.setThumbnail;
     this.url = this.setURL;
     
-    // Color hexes
-    this.colors = {
-      black:   0x000000,
-      white:   0xFFFFFF,
-      red:     0xFF0000,
-      lime:    0x00FF00,
-      blue:    0x007BFF,//0x007BFF,//31743,
-      yellow:  0xFFFF00,
-      cyan:    0x00FFFF,
-      magenta: 0xFF00FF,
-      silver:  0xC0C0C0,
-      gray:    0x808080,
-      maroon:  0x800000,
-      olive:   0x808000,
-      green:   0x008000,//0x00FF00,
-      purple:  0x800080,
-      teal:    0x008080,
-      navy:    0x000080
-    };
-    
     // Sets default color
     this.c("blue");
+
+    // Sets title if included
+    if(title)
+      this.t(title);
   }
   
   // Discord RichEmbed setColor function edit
   c(color) {
-    if(this.colors[color])
-      color = this.colors[color];
     
     // Sets the actual embed color and returns
-    return this.setColor(color);
+    return this.setColor(Embed.colors[color] || color);
   }
   
   // Adds field
@@ -66,4 +48,24 @@ export default class Embed extends MessageEmbed {
     // Or, finally, if you are adding the field normally, do so
     return this.addField(title, desc, inline)
   }
+
+  // Colors
+  static colors = {
+    black:   0x000000,
+    white:   0xFFFFFF,
+    red:     0xFF0000,
+    lime:    0x00FF00,
+    blue:    0x007BFF,//0x007BFF,//31743,
+    yellow:  0xFFFF00,
+    cyan:    0x00FFFF,
+    magenta: 0xFF00FF,
+    silver:  0xC0C0C0,
+    gray:    0x808080,
+    maroon:  0x800000,
+    olive:   0x808000,
+    green:   0x008000,//0x00FF00,
+    purple:  0x800080,
+    teal:    0x008080,
+    navy:    0x000080
+  };
 }
