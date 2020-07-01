@@ -1,5 +1,7 @@
 # Everything to do with commands
 
+bot commands op
+
 ## File Structure
 
 ```path
@@ -45,13 +47,13 @@ export default {
   ],
 
   // Aliases (Array<string>)
-  a: [],
+  alt: [],
 
   // Description
-  d: "This command does things",
+  desc: "This command does things",
 
   // Examples (string`example1:desc,example2:desc`)
-  e: "cmdname,cmdname hello",
+  ex: "cmdname,cmdname hello",
 
   // Contains all permission-related stuff
   perms: "MANAGE_MESSAGES" | ["KICK_MEMBERS", "MANAGE_MESSAGES"] | {
@@ -64,10 +66,10 @@ export default {
   },
 
   // How to use the command
-  u: "commandname [username]",
+  use: "commandname [username]",
 
   // Hidden from a regular user (Optional)
-  h: false,
+  hid: false,
 
   // Delete (Optional)
   del: false,
@@ -85,7 +87,7 @@ export default {
 
 ### Command Parameters and what they mean
 
-- `a`:`Array<string>` Aliases/alternate names for the command.
+- `alt`:`Array<string>` Aliases/alternate names for the command.
   - **Example:** For command `help`: `["h", "commands"]`
 - `args`:`Array<Object>`
   - `Object` Properties
@@ -93,17 +95,17 @@ export default {
     - `f`:`function` Function executed for this argument
     - `main`:`boolean` Whether we should still execute the main command function or not.
     - `ParentProperties`:`any` You can also redefine anything from the parent command during runtime.
-- `c`:`string` Channel the command works in
+- `chnl`:`string` Channel the command works in
   - "a": All
   - "d": DMs
   - "t": TextChannels(servers)
 - `cd`:`Number` Command cooldown(how long you need to wait before reusing a command)(milliseconds)
-- `d`:`string||Object` Description of the command.
+- `esc`:`string||Object` Description of the command.
   - `Object` Properties
     - `d`:`string` Text description.
     - `img`:`string` Image url, can be placed anywhere in the string and will be taken out after parsing.
-- `e`:`string` Example showing how to use the command.
-- `p`:`string<Permission> || Object || Array<string<Permission>>` Permissions required for the command.
+- `ex`:`string` Example showing how to use the command.
+- `perms`:`string<Permission> || Object || Array<string<Permission>>` Permissions required for the command.
   - `Object` Format
     - `bot`:`Object || Array<string<Permission>> || string<Permission>` Bot permissions
       - `Object` Format
@@ -127,11 +129,11 @@ export default {
       - `embed`: An already created embed.
       - `content`: Message content without the command in it.
       - `args`: Command arguments, if you don't have your `args` defined for handling this.
-- `u`:`string` How to call the command.
+- `use`:`string` How to call the command.
   - `" ()"` means required
   - `" []"` means optional
   - `" {}"` means a list(can add items indefinitely)
-- `h`:`Boolean` Hidden from help
+- `hid`:`Boolean` Hidden from help
 - `del`:`Boolean` Auto-delete the original message
 - `dver`:`string` Default Version
 - `versions`:`Object<name:CommandObject>` Holds versions of that command
