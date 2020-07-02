@@ -4,9 +4,11 @@
   "description": "Bots made for AqilAcademy.",
   "main": "server.js",
   "type": "module",
+  "private": true,
   "scripts": {
+    "redis-node": "npm run redis && npm run node",
     "node": "node --experimental-top-level-await --experimental-json-modules --experimental-import-meta-resolve --title=\"Clyde Infinity Beta\" .",
-    "start": "npm i && npm run node",
+    "start": "npm i && npm run redis-node",
     "redis": "wsl bash redis.sh"
   },
   "dependencies": {
@@ -22,9 +24,6 @@
     "mysql2-promise": "^0.1.4",
     "rdtsc": "^2.0.0",
     "yaml": "^1.10.0"
-  },
-  "engines": {
-    "node": "12.10.1"
   },
   "repository": {
     "url": "https://glitch.com/edit/#!/hello-express"
