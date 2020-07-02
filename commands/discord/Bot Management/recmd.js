@@ -1,7 +1,4 @@
 
-// Fetches the command module so we can make new commands
-import Command from "../../../func/command.js";
-
 // Exports the command function
 export default {
 	async f(m, { content, embed }) {
@@ -37,5 +34,5 @@ export default {
 	perms: ["BOT_ADMIN"],
 
 	// Only developers and mods should have access to this so we hide the command and delete the message invoking it
-	h: true,	del: true,
+	hid: true,	del: true,
 };
