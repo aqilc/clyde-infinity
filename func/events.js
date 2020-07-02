@@ -55,16 +55,16 @@ export default class Events {
     if(!this.#events[event])
       return (console.warn("Tried to remove an already non-existent event '" + event + "'"), this);
     
-    // Stores listeners so we don't have to get them over and over again
+    // Stores referenced listeners so we don't have to get them over and over again
     const listeners = this.#events[event].listeners;
     
     // If the listener is a function, find it and remove it
     if(typeof listener === "function")
-      return (listeners.splice(listeners.indexOf(listener), 1), this);
+      return listeners.splice(listeners.indexOf(listener), 1), this;
 
     // If you are trying to take off an individual event by index
     if(listener > -1 && listeners.length > 1 && listeners[listener])
-      return (listeners.splice(listener, 1), this);
+      return listeners.splice(listener, 1), this;
 
     // Finally, if all of the above failed, take off the whole event
     delete this.#events[event];
@@ -115,7 +115,7 @@ export default class Events {
 	 * Listener class for holding functions listening to events
 	 * @extends Array
 	 */
-	static Listeners = class extends Array {
+	static Listeners = class Listeners extends Array {
 		constructor() {
 			super(...arguments);
 		}
