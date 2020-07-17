@@ -64,4 +64,4 @@ typings/
 .vscode
 
 # Modules code and other things
-package-lock.json*
+package-lock.json
