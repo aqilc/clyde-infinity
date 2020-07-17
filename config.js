@@ -1,6 +1,10 @@
-/* Clyde Configuration Key
- * apis: 
- * dbs: File paths for databases
+/*
+ ------ Clyde Configuration Key ------
+ * project: Project directories(!!IMPORTANT!! They are accessed everywhere!)
+ * apis: Object
+   * (API name): "api key"
+ * dbs: Configuration objects for databases
+  * sqlite: string[] - SQLite database files
  * a: Admins of the bots(IDS)(Are given most priority)
   * if Array.isArray(a[i])
    * a[i][0]: Id of admin
@@ -45,11 +49,17 @@ export const project = {
 }
   
 // API Keys for every available api
-export const apis = {
+export const keys = {
   
   // osu! API Keys
   osu: "965d02dbb645026b9a3fef76a144cdd43bdcc135", // v1
   os2: "2S8PRFLbt1c0jLuFGYOAk2lahpgIZP8ekzhucUIo", // v2
+
+  // Paper Stock Trading API keys
+  stocks: {
+    key: "PKIX61BNVR9RT0B5DRUH",
+    secret: "2WTRmTyLKOuvT/fOcZbqiNtq/cWE8brD84jh3Gun"
+  }
 };
 
 // Holds config data for every database
@@ -87,6 +97,27 @@ export const a = [
 // Moderators(or People in bigger servers managing bot with lower perms than Admin)
 export const m = [];
 
+// Imports embeds for proper message things
+import embed from "./func/discord/embed.js";
+
+// Default messages across the bots
+export const messages = {
+
+  // Default messages for discord bots
+  discord: {
+
+    // Messages for permissions
+    permissions: {
+
+      // User messages
+      user: perm => new embed().t(`Sorry, you can't do this command without permission \`${perm}\`.`).c("red"),
+
+      // Bot messages
+      bot: perm => new embed().t(`Sorry, I can't do this command without permission \`${perm}\`.`).c("red")
+    }
+  }
+};
+
 // Bot Configs
 export const c = {
   
@@ -94,16 +125,16 @@ export const c = {
   main: {
 
     // Token
-    t: "NjA2OTg2NjQ4NzcyOTM1Njkx.Xs3CLA.oqiTQyYM3eNKjvOd2dGrwnTYj14",
+    token: "NjA2OTg2NjQ4NzcyOTM1Njkx.Xs3CLA.oqiTQyYM3eNKjvOd2dGrwnTYj14",
     
     // Username
-    u: "Clyde Infinity Beta",
+    user: "Clyde Infinity Beta",
     
     // Prefix
-    p: "c@",
+    pre: "c@",
     
     // Description
-    d: "This bot stays in AqilAcademy and is the main bot for everything",
+    desc: "This bot stays in AqilAcademy and is the main bot for everything",
     
     // Default color
     dc: "blue",
@@ -115,22 +146,29 @@ export const c = {
     eval: "main:",
     
     // Bot type
-    bt: "discord"
+    bt: "discord",
+
+    // APIs the bot can access
+    apis: ["osu", "redis"],
+
+    // Modules the bot has access to
+    mods: []
   },
   
   // Reaper's bot
   reaper: {
+    
     // Token
-    t: "NjkzODc1ODA1Mzg1OTE2NDY3.XoDefg.NPDwUtIt3_oGOVzsPNTv5jKpjBY",
+    token: "NjkzODc1ODA1Mzg1OTE2NDY3.XoDefg.NPDwUtIt3_oGOVzsPNTv5jKpjBY",
     
     // Username
-    u: "Under Reaper",
+    user: "Under Reaper",
     
     // Prefix
-    p: "p.",
+    pre: "p.",
     
     // Description
-    d: "This bot is made specifically to moderate The Scythedom.",
+    desc: "This bot is made specifically to moderate The Scythedom.",
     
     // Default color
     dc: "red",
