@@ -1,46 +1,16 @@
-export default class Permissions extends Array {
+export default class Permissions extends Set {
 
     // Constructor that just makes an array :D
     constructor(...arr) {
-        super(...arr); }
+        super(arr);
 
-    // If the array contains a permission
-    has(perm) {
+        // Pre-storage for remapping later
+        let add = this.add.bind(this),
+            has = this.has.bind(this);
 
-        // Holds boolean containing a boolean defining if the array has the permission(s) or not
-        let has = true;
-
-        // If you only wanted to get one permission
-        if(typeof perm === "string")
-            return this.includes(perm);
-        
-        // If we got arr as an array
-        else if(Array.isArray(perm))
-            for(let i of arr)
-                if(!this.includes(i)) {
-                    has = i; }
-        
-        // If 'perm' isn't of correct type
-        else has = false;
-        
-        // Returns has
-        return has;
-    }
-
-    // Adds a permission to the object
-    add(perm) {
-
-        // If its a single permission
-        if(typeof perm === "string")
-            this.push(perm);
-        
-        // If its an array of permissions
-        else if(Array.isArray(perm) || perm instanceof Perms)
-            for(let i of perm)
-                this.push(i);
-        
-        // Returns this object so you can do more crap
-        return this;
+        // Remaps has and add for array and support
+        this.has = function(perms) { return typeof perms === "object" ? Array.isArray(perms) ? perms.every(p => has(p)) : perms instanceof Set ? Array.from(perms).every(p => perms.has(p)) : Object.keys(perms).every(p => has(p)) : has(perm); }
+        this.add = function(perms) { return typeof perms === "object" ? Array.isArray(perms) || perms instanceof Set ? perms.forEach(p => add(p)) : Object.keys(perms).forEach(p => add(p)) : add(perms); }
     }
 
     // Static method for getting permissions from a bitfield
@@ -50,7 +20,7 @@ export default class Permissions extends Array {
         bitfield = bitfield.toString(2);
 
         // Stores perms
-        let perms = [];
+        let perms = new Set();
 
         // Then take care of various perm types
         if(arr instanceof Object)
@@ -59,11 +29,11 @@ export default class Permissions extends Array {
             throw new TypeError("'arr' not of applicable type!");
 
         // Loops through the bitfield string, adding a permission where it finds a '1'
-        for(let i = 0; i < perm.length; i ++)
+        for (let i = bitfield.length - 1; i >= 0; i ++)
             if(bitfield[i] === "1")
-                perms.push(arr[i]);
+                perms.add(arr[i]);
 
         // Returns the resulting permissions array
         return perms;
     }
-} // 69 lines lol
+} // ~~used to be ;-;~~ 69 lines lol
