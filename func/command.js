@@ -1,9 +1,9 @@
 
 // Filesystem modules
-import { existsSync } from "fs"; import { project } from "../config.js";
+import { existsSync } from "fs"; import { project, messages } from "../config.js";
 
 // Creates random strings for re-importing
-import { rand } from "./f.js";
+import { list, trim } from "./f.js";
 
 // This is the command(singular) handler, which imports commands and its properties
 export default class Command {
@@ -45,7 +45,7 @@ export default class Command {
   async load() {
 
     // Gets the command and stores it
-    this.cmd = (await import(this.path.url + (this.loaded ? "?doesthiswork=" + rand.str(10) : ""))).default;
+    this.cmd = (await import(this.path.url)).default;
     
     // Merges both objects
     Object.assign(this, this.cmd);
@@ -70,6 +70,10 @@ export default class Command {
     // Checks for execution function and throws an error if one doesn't exist
     if(!this.f) throw new Error(`The command '${this.name}' doesn't have any function for execution!`);
 
+    // Parses permissions
+    if(this.perms)
+      this.perms = Command.perms(this.perms, this.type);
+
     // Sets loaded property to true as this command has been loaded
     this.loaded = true;
 
@@ -88,17 +92,172 @@ export default class Command {
       this.#version = v;
     else return this.#version;
     
-    // Sets the object attributes(oh crap i just found out theres no way to revert... fixing in a bit)
+    // Sets the object attributes(oh crap i just found out theres no way to revert... fixing soon™️)
     Object.assign(this, this.versions[this.#version]);
+
+    // Parses permissions
+    if(this.perms)
+      this.perms = Command.perms(this.perms, this.type);
     
     // Returns new version
     return this.#version;
   }
 
-  // Executes the command.
-  execute(thisArg, m, ...args) {
-
-    // Does the actual command function
+  // Permission Parser
+  static perms(obj, type = "discord") {
     
+    // Defines the default, basic permissions object and the format of the output
+    const basic = {
+      bot: {}, user: {}
+    }, msgs = messages[type].permissions;
+
+    // Object has to exist(and not be null)
+    if(obj)
+
+      // Basic string permission handler
+      if(typeof obj === "string")
+        basic.bot[obj] = msgs.bot(obj),
+        basic.user[obj] = msgs.user(obj);
+
+      // If you have an array or an object
+      else if (typeof obj === "object")
+
+        // If you pass in an array of permissions
+        if (Array.isArray(obj))
+
+          // Loop through the array, setting each permission to have the default message
+          for (let i of obj)
+            basic.bot[i] = msgs.bot(obj),
+            basic.user[i] = msgs.user(obj);
+
+        // else if you pass in object in for parsing
+        else if (obj.b || obj.u)
+
+          // Loop through object properties
+          for (let i in obj) {
+
+            // Gets the permission and stores it
+            const perm = obj[i];
+
+            // If the permission is a string, just 
+            if (typeof perm === "string")
+              basic[i][perm] = msgs[i](perm);
+
+            // Else if its and array or object
+            else if (typeof perm === "object")
+
+              // If its actually an array, loop through and assign each perm to the default message in 'basic'
+              if (Array.isArray(perm))
+                for (let j of perm)
+                  basic[i][j] = msgs[i](j);
+              
+              // Else just assign all of the things to basic, then naturally return
+              else Object.assign(basic[i], perm)
+          }
+
+    // Return constructed permission thing
+    return basic;
+  }
+
+  /** 
+   * Parses a string/message into a command
+   * @param {Command[]} commands - All commands to find the command from
+   * @param {string} str - The string possibly invoking a command
+   * @param {string} prefix - The possible prefix of the command
+  */
+  static find(commands, str, prefix = "") {
+
+    // Slices the prefix off
+    str = str.slice(prefix.length);
+
+    // Looks through command names
+    let possibilities = commands.filter(({ name }) => str.startsWith(name));
+
+    // If more than one command found, alert
+    if(possibilities.length > 1)
+      console.warn(`Conflicting command names found for string "${str}": ` + list(possibilities.map(c => c.name)));
+
+    // Else if no commands were found, conduct a harder search
+    else if(!possibilities.length) {
+
+      // Finds commands based on aliases
+      possibilities = commands.filter(({ a }) => !!a && Array.isArray(a) ? a.find(al => str.startsWith(al)) : str.startsWith(a));
+
+      // If we found two commands that match in alias search, alert creator to fix
+      if(possibilities.length > 1)
+        console.warn(`Conflicting command aliases found for string "${str}": ` + list(possibilities.map(c => c.name + ` [${c.a}]`)));
+
+      // Yea, if even this doesn't work, the command doesn't exist lmao
+      else if(!possibilities.length)
+        return {};
+    }
+
+    // Stores command
+    let command = possibilities[0];
+
+    // Cuts out the command name since we already know it
+    str = str.slice(command.name.length);
+
+    // Exit early if there are no flags or arguments anyways
+    if(!str.length)
+      return { command };
+
+    // Splits the remaining string by spaces
+    str = str.split(" ");
+
+    // Gets all flags and arguments
+    const flags = {}, args = []
+    for (let i in str)
+
+      // If its a flag...
+      if(str[i].startsWith("-")) {
+
+        // Trim the beginning "-"s
+        let flag = trim(str[i], "-", { back: false });
+
+        // If the next argument is meant to be the value of the flag
+        if(str[i + 1] && str[i + 1][0] !== "-")
+          flags[flag] = str[i + 1], str.splice(i, 2);
+
+        // Else if the flag is lonely
+        else {
+
+          // If you have an "=" in the flag, set the flag to that value
+          if(flag.includes("="))
+            flags[flag.slice(0, flag.indexOf("="))] = flag.slice(flag.indexOf("=") + 1);
+
+          // Else just set the flag to blank
+          else flags[flag] = "";
+
+          // Deletes the flag
+          str.splice(i, 1);
+        }
+      } else args.push(str.splice(i, 1));
+
+    // If there is a specific command argument that matches any of the ones found, make it the one being executed
+    if(command.args) {
+
+      // Get argument
+      let arg = command.args.find(({ name }) => Array.isArray(name) ? name.some(n => n === args[0]) : name === args[0])
+
+      // If there is somehow an argument
+      if(arg)
+
+        // If we still want the main one being executed, make a completely new function
+        if(arg.main) {
+
+          // Gets the command function and stores it
+          const { f: func } = command;
+
+          // Remaps the command function
+          command.f = function (...args) { arg.f.bind(this)(...args); func.bind(this)(...args); };
+        }
+        
+        // Else just overwrite the command function with the argument one
+        else command.f = arg.f.bind(command);
+    }
+
+    // Returns everything
+    return { command, args, flags };
   }
 }
