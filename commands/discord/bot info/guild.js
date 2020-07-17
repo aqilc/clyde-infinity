@@ -60,21 +60,18 @@ export default {
         return actions.list();
     },
   
-    // Aliases (Array<String>)
-    a: [],
-  
     // Description
-    d: "This command does things",
+    desc: "This command does things",
   
     // Examples (String`example1,example2`)
-    e: "cmdname,cmdname hello",
+    ex: "cmdname,cmdname hello",
   
     // All permission things
     perms: "BOT_ADMIN",
   
     // How to use the command
-    u: "commandname [username]",
+    use: "commandname [username]",
   
     // Hidden from a regular user (Optional)
-    h: true,
+    hid: true,
 };

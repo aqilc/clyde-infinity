@@ -17,17 +17,8 @@ export default {
   },
   
   // Description
-  d: "Displays latency for the normal commands of the bot.",
+  desc: "Displays latency for the normal commands of the bot.",
   
   // Example
-  e: "ping",
-  
-  // Channels it works in(a for all, d for dms, and t for guild channels) 
-  c: "a",
-  
-  // Delete triggering message?
-  del: false,
-  
-  // Default version(version it defaults when no specific version is requested)
-  dver: "basic",
+  ex: "ping"
 }

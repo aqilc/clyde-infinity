@@ -66,14 +66,15 @@ export default {
         
         // Gets user based on message mentions
         let mention = mentions(content)[0];
-        if(mention) content = (await this.redis.get(`discord.users[${mention}]:osu.username`)) || "";
+        if(mention) content = (await this.apis.redis.get(`discord.users[${mention}]:osu.username`)) || "";
         
         // Returns for now since there is no db currently
         if(!content)
-          content = (await this.redis.get(`discord.users[${m.author.id}]:osu.username`)) || "";
+          content = (await this.apis.redis.get(`discord.users[${m.author.id}]:osu.username`)) || "";
         
+        // If you don't even have a default username setup, just return a message saying you should
         if(!content)
-          return m.channel.send(embed.a("Please set up a default username!", m.author.avatarURL()).d(`You can set one up easily with \`${this.prefix}osu su\``))
+          return m.channel.send(embed.a("Please set up a default username!", m.author.avatarURL()).d(`You can set one up easily with \`${this.prefix}osu su\`, or get quick stats with \`${this.prefix}osu [player name]\`.`))
         
         // Determines and executes command option things
         let option;
@@ -106,14 +107,14 @@ export default {
                 return m.channel.send(embed.a('Query Cancelled', m.author.avatarURL()).f(""))
 
               // Gets the user stats
-              const data = (await this.osu.user(user))[0];
+              const data = (await this.apis.osu.user(user))[0];
 
               // If user doesn't exist, return with a message.reply
               if(!data)
                 return await m.channel.send(embed.a(`User '${user}' doesn't exist!`, m.author.avatarURL()));
               
               // Sets default username in redis database
-              await this.redis.set(`discord.users[${m.author.id}]:osu.username`, data.username);
+              await this.apis.redis.set(`discord.users[${m.author.id}]:osu.username`, data.username);
               
               // Sends a message confirming save
               return await m.channel.send(embed.a(`Default username set to ${data.username}!`, "http://s.ppy.sh/a/" + data.user_id))
@@ -130,7 +131,7 @@ export default {
           }))[option]();
         
         // Gets the user stats
-        const user = (await this.osu.user(content))[0];
+        const user = (await this.apis.osu.user(content))[0];
         
         // If user doesn't exist, return with a message.reply
         if(!user)
@@ -147,11 +148,14 @@ export default {
   a: ["o"],
 
   // Description
-  d: "View your current osu! profile page!",
+  desc: "View your current osu! profile page!",
 
   // Examples (String`example1:desc,example2:desc`)
-  e: "osu,cmdname hello",
+  ex: "osu,cmdname hello",
 
   // How to use the command
-  u: "osu [username]",
+  use: "osu [username]",
+
+  // APIs required
+  apis: ["osu", "redis"]
 };

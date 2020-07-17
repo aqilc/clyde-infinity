@@ -25,19 +25,13 @@ export default {
   },
   
   // Description
-  d: "Displays basic commands and help",
+  desc: "Displays basic commands and help",
   
   // How to utilize
-  u: " [command_name]",
+  use: " [command_name]",
   
   // Example
-  e: "help,help purge",
-  
-  // Channels it works in(a for all, d for dms, and t for guild channels) 
-  c: "a",
-  
-  // Delete triggering message?
-  del: false,
+  ex: "help,help purge",
   
   // Default version(version it defaults when no specific version is requested)
   dver: "basic",

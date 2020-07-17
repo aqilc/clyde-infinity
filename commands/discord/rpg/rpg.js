@@ -124,16 +124,16 @@ export default {
 	a: [],
 
 	// Description
-	d: "This command does things",
+	desc: "This command does things",
 
 	// Examples (String`example1,example2`)
-	e: "cmdname,cmdname hello",
+	ex: "cmdname,cmdname hello",
 
 	// How to use the command
-	u: "commandname [username]",
+	use: "commandname [username]",
 
 	// Hidden from a regular user (Optional)
-	h: false,
+	hid: false,
 
 	// Delete (Optional)
 	del: false,
