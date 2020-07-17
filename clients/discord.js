@@ -22,11 +22,17 @@ const { codify, similarity, fetch } = f;
 // Imports Discord :D
 import Discord, { Client, Permissions } from "discord.js";
 
-// Exports the bot client
-export default function (c, cmds, { redis, osu }) {
+// Imports this for the 'find' function thats so op
+import Command from "../func/command.js";
+
+// Exports the bot client with basic functionality
+export default function (c, cmds) {
 
   // Sets up Client
-  let client = new Client();
+  let client = new Client(),
+
+      // Gets all native objects
+      { apis, dbs, worker } = this;
 
   // Stores eval attributes
   let aval = {}; // Attributes: (p: Prefix, o: Output, i: Input)
@@ -74,8 +80,8 @@ export default function (c, cmds, { redis, osu }) {
     let perms = new Perms(), botperms = new Perms("BOT_ADMIN", "BOT_MODERATOR");
 
     // Adds permissions based on user privileges in the bot
-    c.a.includes(m.author.id) && perms.push("BOT_ADMIN");
-    c.m.includes(m.author.id) && perms.push("BOT_MODERATOR");
+    c.a.includes(m.author.id) && perms.add("BOT_ADMIN");
+    c.m.includes(m.author.id) && perms.add("BOT_MODERATOR");
 
     // Determines member and bot permissions
     if(m.member) {
@@ -109,16 +115,19 @@ export default function (c, cmds, { redis, osu }) {
       // Sends embed after adding a footer
       if(d !== "")
         m.channel.send(e.d(d).f(`Input Length: ${code.length} | Time Taken: ${time}`));
+
+      // heh im not risking something weird happening
+      return;
     }
 
     // Checks if the message is issuing a command
-    if(c.p && m.content.startsWith(c.p)) {
+    if(c.pre && m.content.startsWith(c.pre)) {
 
       // Variable for storing a command match
-      let command;
+      let { command, flags, args } = Command.find(cmds, m.content, c.pre);
 
       // If the command exists, proceed
-      if(command = cmds.find(com => m.content.slice(c.p.length).startsWith(com.name))) {
+      if(command) {
         
         // If command specifies to delete the message, delete it before executing command
         if(command.del)
@@ -127,116 +136,26 @@ export default function (c, cmds, { redis, osu }) {
         // Command permissions stuff
         if(command.perms) {
 
-          // Stuff predefined for permissions(messages sent then)
-          let permsg = {
+          // Checks through bot permissions
+          for(let i in command.perms.b)
+            if(!botperms.has(i))
+              return m.channel.send(command.perms.b[i]);
 
-            // If the user doesn't have a specific permission
-            user: perm => new embed().t(`You don't have the permission to do this!`).d(`You need the permission ${perm} to do command \`${command.name}\``),
-
-            // If the bot doesn't have a specific permission
-            bot: perm => new embed().t(`I don't have the permission to do this!`).d(`I need the permission ${perm} to do command \`${command.name}\``)
-          },
-              // Function for checking who doesn't have the permissions
-              check = perm => !perms.has(perm) ? "user" : !botperms.has(perm) ? "bot" : false;
-
-          // If command.perms is an string, check bot and client perms directly with the string
-          if(typeof command.perms === "string") {
-
-            // Get who doesn't have perms
-            let noperms = check(command.perms);
-
-            // If someone doesn't have perms, send corresponding message
-            if(noperms)
-              return m.channel.send(permsg[noperms](command.perms));
-          }
-          
-          // else if its an array, loop through and check
-          else if(Array.isArray(command.perms)) {
-
-            // predefine 'noperms'
-            let noperms;
-
-            // Loop through the permissions
-            for(let i = 0; i < command.perms.length; i ++)
-
-              // Check if anyone is missing permissions, while setting noperms to the result
-              if(noperms = check(command.perms[i]))
-
-                // Send message if someone is, message determined by 'noperms'
-                return m.channel.send(permsg[noperms](command.perms[i]))
-          }
-          
-          // or if it's an object
-          else if(typeof command.perms === "object" && (command.perms.bot || command.perms.user)) {
-
-            // Bot permission requirements
-            if (command.perms.bot)
-
-              // If the current permission is only a string, check the bot perms for it directly
-              if (typeof command.perms.bot === "string" && !botperms.has(command.perms.bot))
-
-                // Sends default message if bot doesn't have a permission
-                return m.channel.send(permsg.bot(command.perms.bot));
-
-              else if (typeof command.perms.bot === "object") {
-
-                // Creates variable for storing the missing permission
-                let noperms;
-
-                // if the bot commands are listen as an Array, check if the user has every permission and send a disapproval message if they don't
-                if(Array.isArray(command.perms.bot) && (noperms = command.perms.bot.find(perm => !botperms.has(perm))))
-
-                  // Rejection message for your invalid command doing attempt
-                  return m.channel.send(permsg.bot(noperms));
-
-                // If it isn't an array or null, its an object so get the values and do the crap
-                else if(noperms = Object.keys(command.perms.bot).find(perm => !botperms.has(perm)))
-
-                  // Sends custom message
-                  return m.channel.send(command.perms.bot[noperms]);
-              } else console.warn(` Required bot permissions listed for ${command.name} are of unknown type. `.bgYellow.bold)
-
-            // Same thing as bot, except for user
-            if (command.perms.user)
-
-              // If the current permission is only a string, check the user perms for it directly
-              if (typeof command.perms.user === "string" && !perms.has(command.perms.user))
-
-                // Sends default message if user doesn't have a permission
-                return m.channel.send(permsg.bot(command.perms.user));
-
-              else if (typeof command.perms.user === "object") {
-
-                // Creates variable for storing the missing permission
-                let noperms;
-
-                // If the user commands are listed as an Array, check if the user has every permission and send a disapproval message if they don't
-                if(Array.isArray(command.perms.user) && (noperms = command.perms.user.find(perm => !perms.has(perm))))
-
-                  // Rejection message for your invalid command doing attempt
-                  return m.channel.send(permsg.bot(noperms));
-
-                // If it isn't an array or null, its an object so get the values and do the crap
-                else if(noperms = Object.keys(command.perms.user).find(perm => !perms.has(perm)))
-
-                  // Sends custom message
-                  return m.channel.send(command.perms.user[noperms]);
-              } else console.warn(` Required bot permissions listed for ${command.name} are of unknown type. `.bgYellow.bold)
-          } else console.warn(` command permissions for ${command.name} is an object but doesn't have properties specific to bot or user(needed for permission checking) `.bgYellow.bold);
+          // Checks through user permissions
+          for(let i in command.perms.u)
+            if(!perms.has(i))
+              return m.channel.send(command.perms.u[i])
         }
 
         // Executing command with all necessary APIs and customizations
-        return command.f.call({ config: c, client, m, Discord, redis, commands: cmds, bots: this.bots, osu, prefix: c.p }, m, { embed: new embed().c(c.dc), content: m.content.slice((c.p + command.name).length).trim(), perms, botperms });
+        return command.f.call({ worker, config: c, client, m, Discord, commands: cmds, apis, prefix: c.pre }, m, { embed: new embed().c(c.dc), content: m.content.slice((c.pre + command.name).length).trim(), perms, botperms, args, flags });
       }
     }
-    
-    // Increments user messagecount if user is not issuing a command
-    await redis.hincrby(`discord.users[${m.author.id}]:messages`, c.name, 1);
   });
 
   // Sets up a custom login function
   const { login } = client;
-  client.login = () => login.call(client, c.t);
+  client.login = () => login.call(client, c.token);
 
   // Pushes the client object into the bots object to be exported.
   return client;
