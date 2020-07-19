@@ -94,7 +94,9 @@ else try {
     return true;
   });
 
-  (await import(project.dir.append("/clients/" + (config.bt || "discord") + ".js").url)).default.call({ worker: cluster.worker, apis }, Object.assign(config, { name: process.env.bot, a, m, keys }), commands).login();
+  // Imports and calls the client for the bot.
+  (await import(project.dir.append("/clients/" + (config.bt || "discord") + ".js").url)).default
+    .call({ worker: cluster.worker, apis }, Object.assign(config, { name: process.env.bot, a, m, keys }), commands).login();
 
   // Listens for messages from the main process
   process.on("message", async ([event, ...data]) => (console.log("event happened", event), await events[event](...data)));
@@ -102,5 +104,5 @@ else try {
 
 // Handles ~~unhandled~~ Promise rejections
 process.on('unhandledRejection', error => {
-  console.error((' ' + 'UNHANDLED'.strikethrough + ' PROMISE REJECTION ').bgRed.bold, error);
+  console.error((' ' + 'UNHANDLED'.strikethrough + ' PROMISE REJECTION ').bgRed.bold.trap, error);
 });
