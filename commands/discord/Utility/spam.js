@@ -5,6 +5,6 @@ export default {
       await m.channel.send("spam");
   },
 
-  perms: "BOT_ADMIN", hid: true
+  perms: "BOT_ADMIN", hide: true
 
 }

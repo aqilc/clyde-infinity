@@ -73,5 +73,5 @@ export default {
     use: "commandname [username]",
   
     // Hidden from a regular user (Optional)
-    hid: true,
+    hide: true,
 };

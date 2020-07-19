@@ -20,5 +20,5 @@ export default {
 	perms: "BOT_ADMIN",
 
 	// Only developers and mods should have access to this so we hide the command and delete the message invoking it
-	h: true,	del: true,
+	hide: true,	del: true,
 }

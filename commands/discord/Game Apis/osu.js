@@ -12,7 +12,7 @@ const osu = {
     const join = new Date(user.join_date),
 
           // User level progress bar constructor
-          max = 8, progress = Math.round((user.level - Math.floor(user.level))/1 * max),
+          max = 9, progress = Math.round((user.level - Math.floor(user.level))/1 * max),
 
           // Calculates total circles tapped by user
           circles = Number(user.count300) + Number(user.count100) + Number(user.count50)
@@ -27,10 +27,17 @@ const osu = {
       .t(`:flag_${user.country.toLowerCase()}: ` + user.username + "'s osu! Profile").url("https://osu.ppy.sh/u/" + encodeURIComponent(user.username))
 
       // Description
-      .d((progress >= 1 ? " <:pog1:714449801319546930>" + "<:pog2:714449801030270979>".repeat(progress - 1) : "<:pog4:714449801269346334>") + ((progress >= 1 && max - progress > 1 && "<:pog3:714449801147711519>") || (max - progress <= 1 && "<:pog2:714449801030270979>") || "<:pog6:714449801269477428>") + (max - progress > 1 ? "<:pog6:714449801269477428>".repeat(max - progress - 1) + "<:pog5:714449801294512158>" : "<:pog7:714454553470173274>") + ` **Lvl ${Math.floor(user.level)}**`)
+      .d(
+
+        // The first parts
+        (progress >= 1 ? "<:bar1:733890019382657035>" + "<:bar4:733895993631834114>".repeat(progress - 1) : "<:bar2:733893420656885771>") +
+        
+        (progress >= 1 && max - progress > 1 ? "<:bar3:733893342491836428>" : max - progress <= 1 ? "<:bar4:733895993631834114>" : "<:pog6:714449801269477428>") +
+        
+        (max - progress > 1 ? "<:bar5:733899071076696074>".repeat(max - progress - 2) + "<:bar6:733898929967726634>" : "<:bar7:733897821224304652>") + ` **Lvl ${Math.floor(user.level)}**`)
 
       // Shows PP
-      .af("PP", user.pp_raw, true).af("Accuracy", Number(user.accuracy).toFixed(2), true)
+      .af("PP", user.pp_raw, true).af("Accuracy", Number(user.accuracy).toFixed(2) + "%", true)
 
       // Shows your plays and playtime
       .af(Number(user.playcount).toLocaleString() + " Plays", `in ${(Number(user.total_seconds_played)/3600).toFixed(2)} hours`, true)
@@ -46,7 +53,7 @@ const osu = {
 
       // Shows how many circles you clicked
       .af(`Clicked on ${circles.toLocaleString()} circles`, `${Number(user.count300).toLocaleString()}<:hit300:714227924890288220>  ${Number(user.count100).toLocaleString()}<:hit100:714227924768784384>  ${Number(user.count50).toLocaleString()}<:hit50:714227924387233924>`)
-
+      
       // Sets footer which shows month you joined osu
       .f(`Joined in ${["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][join.getMonth()]} ${join.getFullYear()}`));
   }
@@ -93,7 +100,7 @@ export default {
               if(!user) {
                 
                 // Send a message in the channel to tell the user what to do
-                let start = await m.channel.send(embed.a("Send a message containing your osu username, or 'c' to cancel", m.author.avatarURL()).f("Specified username should at least be greater than 2 characters"));
+                let start = await m.channel.send(embed.t("Send a message containing your osu username, or 'c' to cancel").f("Specified username should at least be greater than 2 characters"));
                 
                 // Start a message collector
                 try { user = (await m.channel.awaitMessages(msg => msg.author.id === m.author.id && (msg.content === "c" || msg.content.length > 2), { max: 1, time: 20000, errors: ["time"] })).first().content; }
@@ -111,13 +118,13 @@ export default {
 
               // If user doesn't exist, return with a message.reply
               if(!data)
-                return await m.channel.send(embed.a(`User '${user}' doesn't exist!`, m.author.avatarURL()));
+                return m.channel.send(embed.a(`User '${user}' doesn't exist!`, m.author.avatarURL()).f(''));
               
               // Sets default username in redis database
               await this.apis.redis.set(`discord.users[${m.author.id}]:osu.username`, data.username);
               
               // Sends a message confirming save
-              return await m.channel.send(embed.a(`Default username set to ${data.username}!`, "http://s.ppy.sh/a/" + data.user_id))
+              return m.channel.send(embed.t(`Default username set to ${data.username}!`).url("https://osu.ppy.sh/u/" + data.user_id).f("Now you only have to do '" + this.prefix + "osu' to see your osu! profile :D"))
             }
           }, {
             get(t, p) {
@@ -135,17 +142,17 @@ export default {
         
         // If user doesn't exist, return with a message.reply
         if(!user)
-          return await m.channel.send(embed.a("User doesn't exist!", m.author.avatarURL()));
+          return m.channel.send(embed.t("User doesn't exist!"));
         
         // Creates an osu user embed
-        return osu.embed(m, user, embed)
+        return osu.embed(m, user, embed);
         
       }
     }
   },
 
   // Aliases (Array<String>)
-  a: ["o"],
+  alt: ["o"],
 
   // Description
   desc: "View your current osu! profile page!",

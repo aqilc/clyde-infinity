@@ -49,6 +49,9 @@ export default {
   // Aliases (Array<string>)
   alt: [],
 
+  // Channels the command can be used in
+  chnl: "text",
+
   // Description
   desc: "This command does things",
 
@@ -96,9 +99,9 @@ export default {
     - `main`:`boolean` Whether we should still execute the main command function or not.
     - `ParentProperties`:`any` You can also redefine anything from the parent command during runtime.
 - `chnl`:`string` Channel the command works in
-  - "a": All
-  - "d": DMs
-  - "t": TextChannels(servers)
+  - "all"(default): All
+  - "dm": DMs
+  - "text": TextChannels(servers)
 - `cd`:`Number` Command cooldown(how long you need to wait before reusing a command)(milliseconds)
 - `esc`:`string||Object` Description of the command.
   - `Object` Properties
@@ -133,7 +136,7 @@ export default {
   - `" ()"` means required
   - `" []"` means optional
   - `" {}"` means a list(can add items indefinitely)
-- `hid`:`Boolean` Hidden from help
+- `hide`:`Boolean` Hidden from help
 - `del`:`Boolean` Auto-delete the original message
 - `dver`:`string` Default Version
 - `versions`:`Object<name:CommandObject>` Holds versions of that command

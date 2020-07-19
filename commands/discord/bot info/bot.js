@@ -15,7 +15,7 @@ export default {
     },
 
     // Aliases (Array<String>)
-    a: [],
+    alt: [],
   
     // Description
     desc: "This command does things",
@@ -30,5 +30,5 @@ export default {
     use: "commandname [username]",
   
     // Hidden from a regular user (Optional)
-    hid: true,
+    hide: true,
 }

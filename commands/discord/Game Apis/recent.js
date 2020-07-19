@@ -1,7 +1,9 @@
 export default {
 
   // Function executed
-  f(m, { embed }) {},
+  f(m, { embed }) {
+    
+  },
 
   // 
 }
