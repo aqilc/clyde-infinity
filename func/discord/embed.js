@@ -36,6 +36,10 @@ export default class Embed extends MessageEmbed {
   
   // Adds field
   af(title, desc, inline) {
+
+    // Small check for invalid params
+    if (!title)
+      return this;
     
     // If invoking the addition of multiple fields, add them appropriately
     if(Array.isArray(title))
@@ -68,4 +72,84 @@ export default class Embed extends MessageEmbed {
     teal:    0x008080,
     navy:    0x000080
   };
+}
+
+export class Pages extends Embed {
+
+  // Current page number
+  page = 0;
+
+  // The constructor
+  constructor({ data, items = 10, title, value, inline = false }) {
+
+    // Checks for the correct arguments
+    if (!Array.isArray(data) || typeof title !== "function" || typeof desc !== "function")
+      throw new Error("Please specify the valid parameters!");
+    
+    // Stores parameters
+    this.data = data;
+    this.items = items;
+    this.inline = inline;
+    this.head = title;
+    this.value = value;
+  }
+
+  // Increments page
+  next() {
+
+    // Stores page so we know to render or not
+    const page = this.page;
+
+    // If the page is o
+    if(this.page >= Math.floor(this.data.length / this.items))
+      this.page = 0;
+    else this.page ++;
+
+    // Loads the page if the page number changed
+    if(this.page !== page)
+      this.render();
+
+    // For chainability
+    return this;
+  }
+
+  // Decrements page
+  last() {
+
+    // Stores page so we know to render or not
+    const page = this.page;
+
+    // If there is a page 
+    if (this.page >= 0)
+      this.page --;
+    else page = Math.floor(this.data.length / this.items)
+
+    // Loads the page if the page number changed
+    if(this.page !== page)
+      this.render();
+
+    // For chainability
+    return this;
+  }
+
+  // Renders fields
+  render() {
+
+    // Holds all fields
+    const fields = [];
+
+    // Loops through the data, adding a field for each point
+    for(let i = this.page * this.items; i < Math.min(this.data.length, this.page * this.items + this.items); i ++)
+      fields.push({
+        title: this.head(this.data[i]),
+        value: this.value(this.data[i]),
+        inline: this.inline
+      });
+
+    // Sets the fields of this embed to the array of fields we just made
+    this.fields = fields;
+
+    // ...anddd for chainability:
+    return this;
+  }
 }
