@@ -1,12 +1,9 @@
 import Events from "./events.js";
 
 /**
- * Starts an animation that is run completely by events :D
+ 
  * @class
  * @extends Events
- * @param {number} $0.framerate - Framerate of the animation
- * @param {number} $0.delay - How long to delay the start of the animation
- * @fires Animation#start
  */
 export class Animation extends Events {
 
@@ -19,7 +16,12 @@ export class Animation extends Events {
     // Tells if the animation is done or not
     #ended = false;
 
-    // Constructor
+    /**
+     * Starts an animation that is run completely by events :D
+     * @param {Object} opts
+     * @param {number} opts.framerate - Framerate of the animation
+     * @param {number} opts.delay - How long to delay the start of the animation
+     */
     constructor ({ framerate = 1500, delay } = {}) {
 
         // Sets framerate
@@ -36,7 +38,7 @@ export class Animation extends Events {
 
     /**
      * Starts the 'animation' based on framerate set at start
-     * @returns {Animation}
+     * @returns {this}
      */
     start() {
 
@@ -54,7 +56,7 @@ export class Animation extends Events {
 
     /**
      * Pauses the animation
-     * @returns {Animation}
+     * @returns {this}
      */
     stop() {
 
@@ -68,7 +70,7 @@ export class Animation extends Events {
 
     /**
      * Ends the Animation
-     * @returns {Animation}
+     * @returns {this}
      */
     end() {
 
@@ -94,24 +96,23 @@ export class Animation extends Events {
 
     /**
      * Pauses or resumes the animation
-     * @public
-     * @param {Boolean} bool - Determines state of animation
+     * @param {boolean} bool - Determines state of animation
      */
     set paused(bool) {
 
         // Stop or start based on what 'bool' is
-        !!bool && this.stop() || this.start();
+        bool ? this.stop() : this.start();
     }
 
     /**
      * Returns if the animation is paused or not
-     * @returns {Boolean}
+     * @returns {boolean}
      */
-    get paused() { return !!this.#interval }
+    get paused() { return this.#interval }
 
     /**
      * Returns if the animation ended or not
-     * @returns {Boolean}
+     * @returns {boolean}
      */
     get ended() { return this.#ended }
 }

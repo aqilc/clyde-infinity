@@ -29,11 +29,11 @@ export async function get(type = "discord", commands) {
   for(let i of commands)
     if(i.includes(":"))
       try { cmds.push(await (new Command(i.slice(i.indexOf(":") + 1), i.slice(0, i.indexOf(":")), type)).load());
-      } catch (err) { console.error(err); continue; }
+      } catch (err) { console.error(err); }
 
     else for (let j of category(type, i))
       try { cmds.push(await (new Command(j, i, type)).load());
-      } catch (err) { console.error(err); continue; }
+      } catch (err) { console.error(err); }
 
   // Returns the constructed commands object
   return cmds;

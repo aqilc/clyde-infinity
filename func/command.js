@@ -90,7 +90,7 @@ export default class Command {
     // Various checks to make sure nothing goes wrong
     if(this.versions[v] && this.#version !== v)
       this.#version = v;
-    else return this.#version;
+    else return;
     
     // Sets the object attributes(oh crap i just found out theres no way to revert... fixing soon™️)
     Object.assign(this, this.versions[this.#version]);
@@ -98,9 +98,6 @@ export default class Command {
     // Parses permissions
     if(this.perms)
       this.perms = Command.perms(this.perms, this.type);
-    
-    // Returns new version
-    return this.#version;
   }
 
   // Permission Parser
@@ -193,7 +190,7 @@ export default class Command {
     }
 
     // Stores command
-    let command = possibilities[0];
+    let command = Object.assign({}, possibilities[0]);
 
     // Cuts out the command name since we already know it
     str = str.slice(command.name.length);

@@ -13,10 +13,10 @@ export default class Events {
    * Creates an event
    * @param {string} event - What the name of the event is
    * @param {function(...args)} listener - A listener function
-   * @param {number} [uses] - 
-   * @returns {Events}
+   * @param {number} [uses] - How many uses you want it to have
+   * @returns {this}
    */
-  on(event, listener, uses) {
+  on(event, listener, uses = -1) {
 
 		// fn needs to be a function lol
     if(typeof fn !== "function")
@@ -28,12 +28,10 @@ export default class Events {
     
     // Adds an event
     if(!this.#events[event])
-      this.#events[event] = {
-        listeners: new Events.Listeners({ uses: uses || -1, listener }), calls: 0
-      };
+      this.#events[event] = new Listeners({ uses, listener });
       
     // Adds to the list of listeners if event already exists
-    else this.#events[event].listeners.push({ uses: uses || -1, listener })
+    else this.#events[event].listeners.push({ uses, listener })
 
 		// Returns this instance if you need to continue
     return this;
@@ -42,8 +40,8 @@ export default class Events {
   /**
    * Takes off a listener of the event or completely removes the whole event
    * @param {string} event - Event to demolish
-   * @param {function|number} listener - Listener index or function to take off of the event
-   * @returns {Events}
+   * @param {function|number} [listener] - Listener index or function to take off of the event
+   * @returns {this}
    */
   off(event, listener) {
 
@@ -53,10 +51,10 @@ export default class Events {
 
     // If event doesn't exist anyways
     if(!this.#events[event])
-      return (console.warn("Tried to remove an already non-existent event '" + event + "'"), this);
+      return console.warn("Tried to remove an already non-existent event '" + event + "'"), this;
     
     // Stores referenced listeners so we don't have to get them over and over again
-    const listeners = this.#events[event].listeners;
+    const listeners = this.#events[event];
     
     // If the listener is a function, find it and remove it
     if(typeof listener === "function")
@@ -77,7 +75,7 @@ export default class Events {
    * Makes an event that only gets called once
    * @param {string} event
    * @param {function(...args)} listener
-   * @returns {Events}
+   * @returns {this}
    */
   once(event, listener) {
 
@@ -89,51 +87,57 @@ export default class Events {
    * Executes event
    * @param {string} event - A string containing the name of the event
    * @param {...} args
-   * @returns {Events}
+   * @returns {this}
    */
   emit(event, ...args) {
     
     // Calls all listeners
-    if(this.#events[event])
-      this.#events[event].listeners.call(), this.#events[event].calls ++;
+    if(event in this.#events)
+      this.#events[event].call(...args);
 
     // Returns the object
     return this;
   }
 
   /**
-   * Getter for the `_events` variable
+   * Gets all events being listened to
    * @returns {Object}
    */
   get events() {
 
-    // Returns a version of the private events property without the functions so they are less accessible
-    return this.#events.map(e => { delete e.fn; return e; });
+    // Returns everything
+    return this.#events;
 	}
-	
-	/**
-	 * Listener class for holding functions listening to events
-	 * @extends Array
-	 */
-	static Listeners = class Listeners extends Array {
-		constructor() {
-			super(...arguments);
-		}
+}
 
-		/**
-		 * Calls all listener functions
-		 * @returns {Listeners}
-		 */
-		call() {
+/**
+ * Listener class for holding functions listening to events
+ * @extends Array
+ */
+export class Listeners extends Array {
+  constructor() {
+    super(...arguments);
 
-			// Calls all functions
-      for(let i in this)
-        if(i.uses)
-          this[i].listener(), this[i].uses --;
-        else this.splice(i, 1);
+    // Stores how much this was called upon
+    this.calls = 0;
+  }
 
-			// Returns the class instance
-			return this;
-		}
-	}
+  /**
+   * Calls all listener functions
+   * @returns {Listeners}
+   */
+  call() {
+
+    // Adds to calls
+    this.calls ++;
+
+    // Calls all functions
+    for(let i in this)
+      if(i.uses)
+        this[i].listener(...arguments), this[i].uses --;
+      else this.splice(i, 1);
+
+    // Returns the class instance
+    return this;
+  }
 }

@@ -7,9 +7,9 @@ import { readdirSync } from "fs";
 /**
  * Finds all mentions in a string
  * @param {string} str - The string to get mentions from
- * @returns {string} All the mentions :D
+ * @returns {string[]} All the mentions :D
 */
-export const mentions = str => str.replace(/\D/g, "").replace(/\s/g, " ").split(" ").filter(v => v.length === 18);
+export const mentions = str => str.replace(/\D/g, "").replace(/\s*/g, " ").split(" ").filter(v => v.length === 18);
 
 /**
  * Finds words(with optional prefixes and suffixes) in a string
