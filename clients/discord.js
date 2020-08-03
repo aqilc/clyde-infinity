@@ -6,7 +6,8 @@
 // Colorful logs :3
 await import("colors");
 
-import { performance } from "perf_hooks"
+// For benchmarks :D
+import { performance } from "perf_hooks";
 
 // Discord API stuff
 import msg from "../func/discord/message.js";
@@ -121,34 +122,46 @@ export default function (c, cmds) {
     }
 
     // Checks if the message is issuing a command
+    let pre = "<@" + client.user.id + ">"
     if(c.pre && m.content.startsWith(c.pre)) {
 
       // Variable for storing a command match
-      let { command, flags, args } = Command.find(cmds, m.content, c.pre);
+      const { command, flags, args } = Command.find(cmds, m.content, c.pre);
 
       // If the command exists, proceed
       if(command) {
+
+        // You need to be in a valid channel to use this command
+        if (command.chnl && command.chnl !== "all" && command.chnl !== m.channel.type)
+          return m.channel.send(new embed("This command can't be used in this channel!").c("red").f(`Only allowed in ${{ text: "servers", dm: "DMs" }[command.chnl]}.`));
         
         // If command specifies to delete the message, delete it before executing command
-        if(command.del)
+        if (command.del)
           await m.delete();
         
         // Command permissions stuff
-        if(command.perms) {
+        if (command.perms) {
+
+          // Gets the permissions and stores them
+          const { u, b } = command.perms;
 
           // Checks through bot permissions
-          for(let i in command.perms.b)
+          for(let i in b)
             if(!botperms.has(i))
-              return m.channel.send(command.perms.b[i]);
+              return m.channel.send(b[i]);
 
           // Checks through user permissions
-          for(let i in command.perms.u)
+          for(let i in u)
             if(!perms.has(i))
-              return m.channel.send(command.perms.u[i])
+              return m.channel.send(u[i])
         }
 
         // Executing command with all necessary APIs and customizations
-        return command.f.call({ worker, config: c, client, m, Discord, commands: cmds, apis, prefix: c.pre }, m, { embed: new embed().c(c.dc), content: m.content.slice((c.pre + command.name).length).trim(), perms, botperms, args, flags });
+        return command.f.call({ worker, config: c, client, m, Discord, commands: cmds, apis, prefix: c.pre }, m, {
+          embed: new embed().c(c.dc),
+          content: m.content.slice((c.pre + command.name).length).trim(),
+          perms, botperms, args, flags
+        });
       }
     }
   });
