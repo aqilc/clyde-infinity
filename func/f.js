@@ -232,7 +232,7 @@ export const rand = {
     let str = "",
 
     // Determines letters
-    letters = (nums && "1234567890") || "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890" + (special && "!@#$%^&*()_+-=\\/?[]{}<>'\";:.,`~" || "");
+    letters = (nums && "1234567890") || "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890" + (special ? "!@#$%^&*()_+-=\\/?[]{}<>'\";:.,`~" : "");
 
     // Gets a random letter and adds it
     for (let i = 0; i < len; i ++)
@@ -243,106 +243,49 @@ export const rand = {
   }
 };
 
-// Calculates similarity between strings/an array of strings (https://glench.github.io/fuzzyset.js/)
-export const similarity = {
-  
-  // Levenshtein Algorithm: Computes the steps it takes to get from string a to string b and then returns a percentage based on that. Stolen from js-levenshtein
-  l: (function() {
-    function _min(d0, d1, d2, bx, ay) {
+/**
+ * Reverses a string
+ * @param {string} str The string to reverse
+ * @returns {string} The reversed string
+ */
+export const reverse = str => {
 
-      // Custom comparison algorithm for efficient parsing
-      return d0 < d1 || d2 < d1
-          ? d0 > d2
-              ? d2 + 1
-              : d0 + 1
-          : bx === ay
-              ? d1
-              : d1 + 1;
-    }
-    
-    // Returns custom levenshtein algorithm function
-    return function(a, b) {
-      if (a === b)
-        return 0;
+  // Makes and stores new string
+  let nstr = "", i = str.length - 1;
 
-      if (a.length > b.length) {
-        let tmp = a;
-        a = b;
-        b = tmp;
-      }
+  // Loops through the inputted string from end to start, adding characters as it goes
+  while (i >= 0)
+    nstr += str[--i];
 
-      let la = a.length,
-          lb = b.length;
+  // Returns the new, reversed string
+  return nstr;
+}
 
-      while (la > 0 && (a.charCodeAt(la - 1) === b.charCodeAt(lb - 1)))
-        la--, lb--;
 
-      let offset = 0;
+/**
+ * Counts which values occur how much in an array
+ * @param {Array} vals 
+ * @returns {[any, number][]}
+ */
+export const count = vals => {
 
-      while (offset < la && (a.charCodeAt(offset) === b.charCodeAt(offset)))
-        offset ++;
+  // Stores counts, and stores things already passed over
+  const counts = [], used = {};
 
-      la -= offset;
-      lb -= offset;
+  // Counts everything, making new keys for new values and incrementing existing ones
+  for (let i of vals)
+    if(typeof used[i] === "number")
+      counts[used[i]][1] ++;
+    else used[i] = counts.push([i, 1]);
 
-      if (la === 0 || lb < 3)
-        return lb;
+  // Finally, returns the counts
+  return counts;
+}
 
-      let x = 0;
-      let y;
-      let d0;
-      let d1;
-      let d2;
-      let d3;
-      let dd;
-      let dy;
-      let ay;
-      let bx0;
-      let bx1;
-      let bx2;
-      let bx3;
-
-      let vector = [];
-
-      for (y = 0; y < la; y++) {
-        vector.push(y + 1);
-        vector.push(a.charCodeAt(offset + y));
-      }
-
-      let len = vector.length - 1;
-
-      for (; x < lb - 3;) {
-        bx0 = b.charCodeAt(offset + (d0 = x));
-        bx1 = b.charCodeAt(offset + (d1 = x + 1));
-        bx2 = b.charCodeAt(offset + (d2 = x + 2));
-        bx3 = b.charCodeAt(offset + (d3 = x + 3));
-        dd = (x += 4);
-        for (y = 0; y < len; y += 2) {
-          dy = vector[y];
-          ay = vector[y + 1];
-          d0 = _min(dy, d0, d1, bx0, ay);
-          d1 = _min(d0, d1, d2, bx1, ay);
-          d2 = _min(d1, d2, d3, bx2, ay);
-          dd = _min(d2, d3, dd, bx3, ay);
-          vector[y] = dd;
-          d3 = d2;
-          d2 = d1;
-          d1 = d0;
-          d0 = dy;
-        }
-      }
-
-      while (x < lb) {
-        bx0 = b.charCodeAt(offset + (d0 = x));
-        dd = ++x;
-        for (y = 0; y < len; y += 2) {
-          dy = vector[y];
-          vector[y] = dd = _min(dy, d0, dd, bx0, vector[y + 1]);
-          d0 = dy;
-        }
-      }
-
-      return dd;
-    };
-  })()
-};
+/**
+ * Splits a string in 2
+ * @param {string} str The string to halven
+ * @param {number} [index] The index to half at
+ * @returns {[string, string]} An array containing the 2 halves of the string
+ */
+export const half = (str, index = Math.ceil(str.length / 2)) => [str.slice(0, index), str.slice(index)]
