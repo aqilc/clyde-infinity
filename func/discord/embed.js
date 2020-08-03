@@ -100,7 +100,7 @@ export class Pages extends Embed {
     // Stores page so we know to render or not
     const page = this.page;
 
-    // If the page is o
+    // If the page is the last page, go back to the beginning or else just 
     if(this.page >= Math.floor(this.data.length / this.items))
       this.page = 0;
     else this.page ++;
@@ -114,7 +114,7 @@ export class Pages extends Embed {
   }
 
   // Decrements page
-  last() {
+  previous() {
 
     // Stores page so we know to render or not
     const page = this.page;
