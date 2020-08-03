@@ -1,17 +1,19 @@
-# Redis Databases
+# Database Plans
+
+## Redis Databases
 
 **Format:**
 
 ```md
 
-## Classification of data and keys
+### Classification of data and keys
 
 (Description)
 
 [Table containing key formats, their values and descriptions]
 ```
 
-## Discord Users
+### Discord Users
 
 - `discord.users[<user id>]:messages`:`Hash`
   - Hash format:
@@ -27,36 +29,34 @@
 - `discord.users[<user id>]:prefixes`:`Hash` User custom prefixes for certain bots
   - Hash format:
     - Field: `<bot name>` or `global` for all bots
-    - Value: `<String(22)>`
+    - Value: `<string>`
 - `discord.users[<user id>]:osu.username`:`<String>` osu! username for osu commands
-- `discord.users[<user id>]:osu.mode`:`<String('fruits' || 'osu' || 'mania' || 'taiko')>` osu! user default game mode
-- `discord.users[<user id>]:osu.command.defaultfunc`:`String('r' || 'p')`
+- `discord.users[<user id>]:osu.mode`:`<'fruits' | 'osu' | 'mania' | 'taiko'>` osu! user default game mode
 - `discord.users[<user id>]:osu.replays.skin`
 
-## RPG
+### RPG
 
-- `rpg[<username>]:password` A SHA-256 hashed password.
-- 
+- `rpg[<username>]:password` A SHA-512 hashed password with config random password appended.
 
-# SQL Databases
+## SQL Databases
 
 **Format:**
 
 ```md
-## Database Name
+### Database Name
 
-### Table Name
+#### Table Name
 
 [Table containing table attributes]
 
-### Table 2 Name
+#### Table 2 Name
 
 ...
 ```
 
-## Settings
+### Settings
 
-### GuildSettings
+#### GuildSettings
 
 | Attribute   |                   Content                    |                                            Description |
 | :---------- | :------------------------------------------: | -----------------------------------------------------: |
@@ -68,12 +68,9 @@
 | `logid`     |                 `String(18)`                 |              ID of Channel where Clyde logs everything |
 | `logtype`   |    `everything` or `minimal` or `medium`     | Stores how much information to log in said log channel |
 
-### ChannelSettings
+#### ChannelSettings
 
 | Attribute   |      Content       |                          Description |
 | :---------- | :----------------: | -----------------------------------: |
 | `id`        |    `String(18)`    |    Channel ID for row identification |
 | `blacklist` | `(Bot Name) | ...` | Disables use of bots in this channel |
-
-## RPG
-
