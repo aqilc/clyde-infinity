@@ -50,7 +50,7 @@ export default {
   alt: [],
 
   // Channels the command can be used in
-  chnl: "text",
+  chnl: "all",
 
   // Description
   desc: "This command does things",
@@ -67,6 +67,9 @@ export default {
     // Permissions needed *for user* (Object || Array<string>)
     user: ["BOT_ADMIN"] | { BOT_ADMIN: "xP you aren't the bot admin so why should you be executing this?" }
   },
+
+  // Command *c*ool*d*own
+  cd: 0,
 
   // How to use the command
   use: "commandname [username]",
@@ -97,7 +100,8 @@ export default {
     - `name`:`string | string[]` Name(s) of the command
     - `f`:`function` Function executed for this argument
     - `main`:`boolean` Whether we should still execute the main command function or not.
-    - `ParentProperties`:`any` You can also redefine anything from the parent command during runtime.
+    - `desc`:`string` Description of the argument's function.
+    - `(ParentProperties)`:`any` You can also redefine anything from the parent command during runtime.
 - `chnl`:`string` Channel the command works in
   - "all"(default): All
   - "dm": DMs
@@ -159,6 +163,8 @@ export default {
 
 ### Discord
 
-| Name | Usage | Description | Arguments |
-| :- | :-: | :-: | -: |
-| help | `help [command name]` | Shows a helpful message for navigating the bot | `command name` |
+#### help.js
+
+- `help [command name]`
+
+Shows a helpful message for navigating the bot
