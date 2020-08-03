@@ -1,15 +1,63 @@
 # Clyde TODO
 
-- Finish Permission system
-- Cooldowns pog
-- Individual bot workers
-- Website
-- The Game of Ur
-- osu command
-- RPG Plans
-- Moderation
-- Tetris
-- Purge Fixes
-- User subscription to bot updates
-- BrainFuck library, upload, and parser
-  - Maybe include BrainFuck skinning that replaces characters based on skin
+## Need to finish
+
+- [ ] JSON to html
+- [ ] Cooldowns
+- [ ] Dyno-style server role control
+  - [ ] "Queues" and "Current Task" handlers, global to the guild only
+  - [ ] Ability to abort/cancel ongoing bulk operations
+  - [ ] (maybe) Paid
+- [ ] Custom commands
+  - [ ] A website interface per bot
+  - [ ] Paid feature(maybe?)
+- [ ] Stories
+  - [ ] AI for suggestions and rank
+  - [ ] Proper UI
+  - [ ] Maybe some AI that also auto-generates them based on prompts
+- [ ] Website
+- [ ] The Game of Ur
+- [ ] osu
+  - [ ] The main thing
+  - [ ] Recents
+  - [ ] Best scores
+  - [ ] Map checking
+  - [ ] Image manipulation for some commands
+- [ ] RPG
+  - [ ] Animations?
+  - [ ] UI?
+  - [ ] Buttons?
+  - [ ] Combat
+- [ ] Fun Stuff
+  - [ ] Animal pictures!
+  - [ ] Google search
+  - [ ] Tags
+  - [ ] Rock-Paper-Scissors
+- [ ] Moderation
+  - [ ] WARNINGS!!!!!!!
+  - [ ] Logs
+  - [ ] Purge
+    - [ ] FIX IT FIRST
+    - [ ] Filters:
+      - [ ] User ID
+      - [ ] "STARTSWITH / ENDSWITH (text)": Filters messages that start with or end with the text provided
+      - [ ] "NOT (text)": Filters message containing the text provided
+      - [ ] "MATCH (text)": Filters message not containing the text provided
+      - [ ] Humans
+      - [ ] Bots
+      - [ ] Links
+      - [ ] Invites
+      - [ ] Images
+      - [ ] Mentions
+      - [ ] Embeds
+- [ ] Tetris
+- [ ] User subscription to bot updates
+- [ ] BrainFuck library, upload, and parser
+  - [ ] Skinning
+  - [ ] An interface for all of this
+- [ ] Game of Life
+
+## Done
+
+- [x] Individual bot workers
+- [x] Finish Permission system

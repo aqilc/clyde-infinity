@@ -7,8 +7,8 @@ Trash/inefficient code that I don't completely want to discard forever because o
 ```js
 /**
  * Benchmarking function
- * @param {function} setup 
- * @param  {...Object|function} funcs 
+ * @param {function} setup
+ * @param  {...Object|function} funcs
  */
 export const bench = (setup, ...funcs) => {
 
@@ -36,7 +36,6 @@ export const bench = (setup, ...funcs) => {
       start = performance.now(), ops[i] = 0, f = func.f || func.do || func;
       while (performance.now() - start < 1000)
         f(), ops[i] ++;
-      
     }
     Object.assign(func)
   }
@@ -61,6 +60,7 @@ function l(a, b) {
   // If a and b are the same, the edit distance will be 0 anyways
   if(a === b) return 0;
 
+  // Stores length
   let al = a.length, bl = b.length;
 
   // Checks if a and b are valid strings
@@ -72,33 +72,30 @@ function l(a, b) {
   if(al > bl)
     tmp = a, a = b, b = tmp;
 
-  // Holds values so we don't have to do calculations again
-  let t, min, cost, ai, bi;
-
   // Loops through both words, filling in the matrix with the step values.
   for(let i = 1; i <= bl; i ++) {
 
     // Gets and stores b[i - 1] so we don't have to get it over and over
-    bi = b[i - 1];
+    let bi = b[i - 1];
 
     for(let j = 1; j <= al; j ++) {
 
       // Gets and stores a[i - 1] so we don't have to get it over and over
-      ai = a[i - 1];
+      let ai = a[i - 1];
 
       // Defines cost
-      cost = ai === bi ? 0 : 1;
+      let cost = ai === bi ? 0 : 1;
 
       // else calculate whether it was a substitution(first), insertion(second) or deletion(last one)
-      min = arr[i - 1][j - 1] + 1;
-      if((t = arr[i][j - 1] + 1) < min)
+      let min = arr[i - 1][j - 1] + 1, t = arr[i][j - 1] + 1;
+      if(t < min)
         min = t;
       if((t = arr[i - 1][j] + cost) < min)
         min = t;
 
       // Damerau transposition
-      //if(i > 1 && j > 1 && ai === b[i - 2] && a[i - 2] === bi && (t = arr[i - 2][j - 2] + cost) < min)
-        //min = t;
+      if(i > 1 && j > 1 && ai === b[i - 2] && a[i - 2] === bi && (t = arr[i - 2][j - 2] + cost) < min)
+        min = t;
 
       arr[i][j] = min;
     }
@@ -119,7 +116,6 @@ export default class Commands extends Collection {
   constructor({ categories, messages, permissions } = {}) {
     super();
     this._cooldowns = new Collection();
-    
     if(!categories)
       console.warn("Advisable: For commands to be shown and work, please include a list of categories through `options`");
     else {
@@ -127,7 +123,6 @@ export default class Commands extends Collection {
       for(let i in categories) {
         let obj = {}, c = categories[i].split(" ");
         obj.name = c[0];
-        
         if(c.length > 1)
           for(let j of c.splice(0, 1))
             if(!j.includes(":"))
@@ -136,7 +131,6 @@ export default class Commands extends Collection {
               obj[j.split(":")[0]] = f.astr(j.split(":"));
         else if(c.length === 0)
           throw new Error("Empty Category string");
-        
         this._categories[i] = obj;
       }
     }
@@ -173,7 +167,6 @@ export default class Commands extends Collection {
       return;
     let command = msg.content.slice(pre.length).split(separator)[0].trim(), cmd = this.command(command), pmsg,
         content = msg.content.slice(pre.length + command.length), args = content.split(splitter);
-    
     if(!cmd)
       return;
     if(cmd.cd) {
@@ -185,7 +178,6 @@ export default class Commands extends Collection {
       else
         cds.set(msg.author.id, Date.now() + cmd.cd), setTimeout(() => this._cooldowns.get(command).delete(msg.author.id), Date.now() + cmd.cd);
     }
-    
     if(cmd.del)
       msg.delete();
     if(success)
@@ -203,8 +195,6 @@ export default class Commands extends Collection {
       for(let i of cmd.p.split(","))
         if(pmsg = this.checkperm(i, msg.mem))
           return msg.reply(pmsg || "You do not have permissions to access this command ⚠");
-    
-    
     cmd.do.call(this, msg, content, { Discord, client });
   }
   command(name) {
