@@ -140,7 +140,7 @@ export const c = {
     dc: "blue",
     
     // Commands
-    c: ["Support", "Utility", "Bot Info", "Game Apis", "RPG"],
+    c: ["Support", "Utility", "Bot Info", "Game Apis", "RPG", "Moderation"],
     
     // Special eval prefix
     eval: "main:",
@@ -174,7 +174,7 @@ export const c = {
     dc: "red",
     
     // Commands
-    c: ["utility", "support", "bot info"],
+    c: ["utility", "support", "bot info", "moderation"],
     
     // Special eval prefix
     eval: "reaper:"

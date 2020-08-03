@@ -104,5 +104,5 @@ else try {
 
 // Handles ~~unhandled~~ Promise rejections
 process.on('unhandledRejection', error => {
-  console.error((' ' + 'UNHANDLED'.strikethrough + ' PROMISE REJECTION ').bgRed.bold.trap, error);
+  console.error((' ' + 'UNHANDLED'.trap + ' PROMISE REJECTION ').bgRed.bold, error);
 });
