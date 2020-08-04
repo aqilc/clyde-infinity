@@ -164,7 +164,7 @@ export const fetch = {
         opts.before = m.reduce((a, b) => Math.min(a.createdTimestamp, b.createdTimestamp)).id;
       
       // Fetches as many messages as needed before the last message we currently have :D
-      m = m.concat((await manager.fetch(opts)));
+      m = m.concat(Array.from((await manager.fetch(opts)).values()));
       
       // If undeletable messages are encountered, filter them out of the cache and exit the loop
       if(m.find(mes => !mes.deletable))
@@ -215,7 +215,7 @@ export const arr = {
       return array.reduce((a, b) => Math.min(fn(a), fn(b)))
     
     // else, just do it normally
-    else return array.reduce((a, b) => Math.min(a, b))
+    return array.reduce((a, b) => Math.min(a, b))
   }
 };
 
@@ -264,7 +264,7 @@ export const reverse = str => {
 
 /**
  * Counts which values occur how much in an array
- * @param {Array} vals 
+ * @param {array} vals 
  * @returns {[any, number][]}
  */
 export const count = vals => {
@@ -283,9 +283,9 @@ export const count = vals => {
 }
 
 /**
- * Splits a string in 2
- * @param {string} str The string to halven
+ * Splits a string or array in 2
+ * @param {string | array} str The string to halven
  * @param {number} [index] The index to half at
- * @returns {[string, string]} An array containing the 2 halves of the string
+ * @returns {[any, any]} An array containing the 2 halves of the string
  */
 export const half = (str, index = Math.ceil(str.length / 2)) => [str.slice(0, index), str.slice(index)]
