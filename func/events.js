@@ -31,7 +31,7 @@ export default class Events {
       this.#events[event] = new Listeners({ uses, listener });
       
     // Adds to the list of listeners if event already exists
-    else this.#events[event].listeners.push({ uses, listener })
+    else this.#events[event].push({ uses, listener })
 
 		// Returns this instance if you need to continue
     return this;
@@ -124,7 +124,7 @@ export class Listeners extends Array {
 
   /**
    * Calls all listener functions
-   * @returns {Listeners}
+   * @returns {this}
    */
   call() {
 
@@ -133,7 +133,7 @@ export class Listeners extends Array {
 
     // Calls all functions
     for(let i in this)
-      if(i.uses)
+      if(this[i].uses)
         this[i].listener(...arguments), this[i].uses --;
       else this.splice(i, 1);
 
