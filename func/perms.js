@@ -9,7 +9,7 @@ export default class Permissions extends Set {
             has = this.has.bind(this);
 
         // Remaps has and add for array and support
-        this.has = function(perms) { return typeof perms === "object" ? Array.isArray(perms) ? perms.every(p => has(p)) : perms instanceof Set ? Array.from(perms).every(p => perms.has(p)) : Object.keys(perms).every(p => has(p)) : has(perm); }
+        this.has = function(perms) { return typeof perms === "object" ? Array.isArray(perms) ? perms.every(p => has(p)) : perms instanceof Set ? Array.from(perms).every(p => perms.has(p)) : Object.keys(perms).every(p => has(p)) : has(perms); }
         this.add = function(perms) { return typeof perms === "object" ? Array.isArray(perms) || perms instanceof Set ? perms.forEach(p => add(p)) : Object.keys(perms).forEach(p => add(p)) : add(perms); }
     }
 
