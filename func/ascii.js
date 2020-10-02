@@ -132,8 +132,9 @@ export default class ASCII {
     toString() {
         
         // Loops through drawings and actually draws them
-        let i, b = Array.from(this.background); for (let d of this.drawings)
-            for (let y = 0; y < d.length; y ++)
+        let b = Array.from(this.background);
+        for (let d of this.drawings)
+            for (let i, y = 0; y < d.length; y ++)
                 i = b[y + d.y], b[y + d.y] = i.slice(0, d.x) + d[y] + i.slice(d.x + d[y].length, i.length);
 
         // Joins the canvas into one string and returns
@@ -167,10 +168,6 @@ export default class ASCII {
         if(!str || !dir)
             throw new Error("You need to define the string('str') and direction('dir') for string rotation!");
 
-        // You can't have 0 as a direction
-        if(typeof dir === "number" && dir == 0)
-            throw new Error("The content of the numerical input format for 'dir' can't be 0!");
-
         // If input is a string store that it was, and then turn it into an array
         let string = false;
         if(typeof str === "string")
@@ -183,9 +180,10 @@ export default class ASCII {
               widest = arr[i].length;
 
         // Now for the actual rotation...
-        let returned = [], s;
+        let returned = [];
         for(let x = 0; x < widest; x ++) {
-            s = ""; for(let y = 0; y < str.length; y ++)
+            let s = "";
+            for(let y = 0; y < str.length; y ++)
                 s += str[y][x] || "";
             returned[x] = s;
         }
