@@ -18,13 +18,14 @@ import Perms from "../func/perms.js";
       
 // Custom functions to make some tasks easier
 import * as f from "../func/f.js";
-const { codify, similarity, fetch } = f;
+const { codify, fetch } = f;
 
 // Imports Discord :D
 import Discord, { Client, Permissions } from "discord.js";
 
 // Imports this for the 'find' function thats so op
 import Command from "../func/command.js";
+const { find: cfind } = Command;
 
 // Exports the bot client with basic functionality
 export default function (c, cmds) {
@@ -33,7 +34,7 @@ export default function (c, cmds) {
   let client = new Client(),
 
       // Gets all native objects
-      { apis, dbs, worker } = this;
+      { apis, worker } = this;
 
   // Stores eval attributes
   let aval = {}; // Attributes: (p: Prefix, o: Output, i: Input)
@@ -122,11 +123,11 @@ export default function (c, cmds) {
     }
 
     // Checks if the message is issuing a command
-    let pre = "<@" + client.user.id + ">"
-    if(c.pre && m.content.startsWith(c.pre)) {
+    let { content } = m, pre = "<@" + client.user.id + ">";
+    if((c.pre && content.startsWith(c.pre) && (content = content.slice(c.pre))) || (content.startsWith(pre) && (content = content.slice(pre)))) {
 
       // Variable for storing a command match
-      const { command, flags, args } = Command.find(cmds, m.content, c.pre);
+      const { command, flags, args } = cfind(cmds, content, c.pre);
 
       // If the command exists, proceed
       if(command) {
@@ -143,23 +144,23 @@ export default function (c, cmds) {
         if (command.perms) {
 
           // Gets the permissions and stores them
-          const { u, b } = command.perms;
+          const { user, bot } = command.perms;
 
           // Checks through bot permissions
-          for(let i in b)
+          for(let i in bot)
             if(!botperms.has(i))
-              return m.channel.send(b[i]);
+              return m.channel.send(bot[i]);
 
           // Checks through user permissions
-          for(let i in u)
+          for(let i in user)
             if(!perms.has(i))
-              return m.channel.send(u[i])
+              return m.channel.send(user[i]);
         }
 
         // Executing command with all necessary APIs and customizations
         return command.f.call({ worker, config: c, client, m, Discord, commands: cmds, apis, prefix: c.pre }, m, {
           embed: new embed().c(c.dc),
-          content: m.content.slice((c.pre + command.name).length).trim(),
+          content: content.slice(command.name.length).trim(),
           perms, botperms, args, flags
         });
       }
