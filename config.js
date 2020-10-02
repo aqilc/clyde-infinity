@@ -90,8 +90,9 @@ export const dbs = {
 
 // Admins
 export const a = [
-  "294115380916649986", // aqil#0001
+  "294115380916649986", // aqil#7532
   "340215110784122881", // Pikachu#8519
+  "328641116884959235", // TheLuckyRobot#7381
 ];
 
 // Moderators(or People in bigger servers managing bot with lower perms than Admin)
