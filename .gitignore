@@ -65,3 +65,6 @@ typings/
 
 # Modules code and other things
 package-lock.json
+
+# VSCode crap
+.history
