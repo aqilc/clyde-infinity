@@ -1,11 +1,15 @@
 const fs = require("fs");
 export default class JSONDB {
   constructor(file, indent) {
+
+    // Small checks for incorrect inputs
     if(typeof file !== "string")
       throw new TypeError("File must be a string");
     if(!file.endsWith(".json"))
-      throw new Error("File must be a JSON file.")
-    this._filename = file; this._file;
+      throw new Error("File must be a JSON file.");
+
+    // Stores filename
+    this._filename = file;
     
     // Sets everything up
     this._update();
@@ -36,10 +40,10 @@ export default class JSONDB {
     return new Proxy(this, {
       set(obj, prop, val) {
         if(prop.startsWith("_"))
-          return true;
-        return obj._edit(prop, val);
+          throw new Error("Properties starting with \"_\" aren't allowed!")
+        obj._edit(prop, val);
       },
-      deleteProperty(obj, prop) { obj._edit(prop) }
+      deleteProperty(obj, prop) { obj._edit(prop); }
     })
   }
   _edit(name, val) {
@@ -47,19 +51,22 @@ export default class JSONDB {
     return true;
   }
   get _update() {
+    const self = this;
     function update() {
-      delete require.cache[require.resolve(this._filename)]
-      this._file = require(this._filename);
-      for (let i in this._file)
-        if (!(i in this))
-          this._configVal(i);
+      delete require.cache[require.resolve(self._filename)];
+      self._file = require(self._filename);
+      for (let i in self._file)
+        if (!(i in self))
+          self._configVal(i);
     }
     update.file = () => {
-      this._actions.doing = true;
-      fs.writeFileSync(this._filename, JSON.stringify(this._file, null, this._indent || 0));
-      this._actions.doing = false;
+      self._actions.doing = true;
+      fs.writeFile(self._filename, JSON.stringify(self._file, null, self._indent || 0), err =>{
+        if (err) throw err;
+        self._actions.doing = false;
+      });
     }
-    return update.bind(this);
+    return update;
   }
   _configVal(v) {
     let t = this;
