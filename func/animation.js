@@ -46,7 +46,7 @@ export class Animation extends Events {
         if (!this.#interval) {
             if (!this.started)
                 this.emit("start"), this.started = true;
-            else this.emit("unpaused");
+            else this.emit("unpause");
             this.#interval = setInterval(() => this.emit("draw"), this.framerate);
         }
 
@@ -62,7 +62,7 @@ export class Animation extends Events {
 
         // Stops the animation if the animation is running
         if(this.#interval)
-            this.emit("paused"), clearInterval(this.#interval), this.#interval = false;
+            this.emit("pause"), clearInterval(this.#interval), this.#interval = false;
 
         // Returns instance so you can chain more crap
         return this;
