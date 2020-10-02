@@ -8,7 +8,7 @@ import { Collection } from "discord.js";
 const filters = {
   
   // If you only specify a number
-  "(\\d+)": (i, m) => fetch.messages(m.channel.messages, Number(i)),
+  "(\\d+)": (i, m) => fetch.messages(m.channel.messages, Number(i[0])),
 
   // If you specify you want to delete bot messages too
   "bot (\\d+)": async (i, m) => m.channel.messages.cache.filter(msg => msg.author.bot)
@@ -18,7 +18,7 @@ const filters = {
 export default {
   async f(m, { embed, content }) {
     
-    // If the message amount wasn't specified, return an autodeleted message saying they should specify it
+    // If the message amount wasn't specified, return an auto-deleted message saying they should specify it
     if (!content)
       return await (await m.channel.send(embed.a("Purge: Error", m.author.avatarURL()).d(`\`\`\`diff\n- Error: Amount of messages to delete not specified or of not proper type (do ${this.prefix}help purge to learn more about this command)\`\`\``))).delete({ timeout: 10000 });
     
