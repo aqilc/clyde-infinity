@@ -100,7 +100,7 @@ else try {
 
   // Listens for messages from the main process
   process.on("message", async ([event, ...data]) => (console.log("event happened", event), await events[event](...data)));
-} catch (err) { console.log(process.env.bot.red, err)}
+} catch (err) { console.log(process.env.bot.red, err); }
 
 // Handles ~~unhandled~~ Promise rejections
 process.on('unhandledRejection', error => {
