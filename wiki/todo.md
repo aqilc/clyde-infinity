@@ -5,6 +5,7 @@
 - [ ] JSON to html
 - [ ] Cooldowns
 - [ ] Dyno-style server role control
+  - [ ] Role change limiters(based on usage plan)
   - [ ] "Queues" and "Current Task" handlers, global to the guild only
   - [ ] Ability to abort/cancel ongoing bulk operations
   - [ ] (maybe) Paid
@@ -56,6 +57,16 @@
   - [ ] Skinning
   - [ ] An interface for all of this
 - [ ] Game of Life
+- [ ] Global EXP System
+  - No levels
+  - [ ] Maybe a store
+  - [ ] EXP earned only by bot usage(not talking)
+- [ ] Command creation language
+  - [ ] No access to the system, only `readonly` information
+  - [ ] Short and descriptive
+  - [ ] Functional
+  - [ ] Parser
+- Global Among Us games.
 
 ## Done
 
