@@ -136,7 +136,7 @@ export default class Command {
             // Gets the permission and stores it
             const perm = obj[i];
 
-            // If the permission is a string, just 
+            // If the permission is a string, just add it.
             if (typeof perm === "string")
               basic[i][perm] = msgs[i](perm);
 
@@ -162,10 +162,11 @@ export default class Command {
    * @param {string} str - The string possibly invoking a command
    * @param {string} prefix - The possible prefix of the command
   */
-  static find(commands, str, prefix = "") {
+  static find(commands, str, prefix) {
 
     // Slices the prefix off
-    str = str.slice(prefix.length);
+    if(prefix)
+      str = str.slice(prefix.length);
 
     // Looks through command names
     let possibilities = commands.filter(({ name }) => str.startsWith(name));
@@ -178,7 +179,7 @@ export default class Command {
     else if(!possibilities.length) {
 
       // Finds commands based on aliases
-      possibilities = commands.filter(({ a }) => !!a && Array.isArray(a) ? a.find(al => str.startsWith(al)) : str.startsWith(a));
+      possibilities = commands.filter(({ alt }) => !!alt && Array.isArray(alt) ? a.find(al => str.startsWith(al)) : str.startsWith(alt));
 
       // If we found two commands that match in alias search, alert creator to fix
       if(possibilities.length > 1)
