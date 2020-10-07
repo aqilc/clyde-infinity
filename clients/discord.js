@@ -66,8 +66,14 @@ export default function (c, cmds) {
     client.user.username !== c.u && await client.user.setUsername(c.u);
 
     // Logs what bot is logged in and when with all available commands loaded onto the bot
-    console.log(`Bot "${c.name}" (${client.user.tag}) Online (${new Date().toLocaleString()})\ncmds available for "${c.name}": (${cmds.length}) ${cmds.map(v => v.name).join(", ")}`);
+    console.log(`Bot "${c.name}" (${client.user.tag}) Online (${new Date().toLocaleString()})\ncmds available for "${c.name}": (${Object.keys(cmds).length}) ${Object.keys(cmds).join(", ")}`);
   });
+
+  // Client Invalidation handler
+  client.on("invalidated", () => { console.error(("(ID: " + worker.id + ") INVALIDATED".zalgo + "FOR SOME REASON").bgRed); worker.send("die"); });
+
+  // Client Error handler
+  client.on("error", err => { console.error(`An error occurred on bot "${c.name}": ${err}\n\n\tKilling...`); worker.send("die"); })
 
   // Messages
   client.on("message", async m => {
@@ -116,21 +122,21 @@ export default function (c, cmds) {
 
       // Sends embed after adding a footer
       if(d !== "")
-        m.channel.send(e.d(d).f(`Input Length: ${code.length} | Time Taken: ${time}`));
+        m.channel.send(e.d(d).f(`Input Length: ${code.length}  |  Time Taken: ${time.toFixed(4)}ms`));
 
       // heh im not risking something weird happening
       return;
     }
 
     // Checks if the message is issuing a command
-    let { content } = m, pre = "<@" + client.user.id + ">";
-    if((c.pre && content.startsWith(c.pre) && (content = content.slice(c.pre))) || (content.startsWith(pre) && (content = content.slice(pre)))) {
+    let { content } = m, pre = new RegExp("^(<@!?" + client.user.id + ">)");
+    if(c.pre && content.startsWith(c.pre) ? (content = content.slice(c.pre.length)) : (pre.test(content) && (content = content.slice(content.match(pre)[0].length)))) {
 
       // Variable for storing a command match
-      const { command, flags, args } = cfind(cmds, content, c.pre);
+      const { command, flags, args, name } = cfind(cmds, content);
 
       // If the command exists, proceed
-      if(command) {
+      if (command) {
 
         // You need to be in a valid channel to use this command
         if (command.chnl && command.chnl !== "all" && command.chnl !== m.channel.type)
@@ -160,7 +166,7 @@ export default function (c, cmds) {
         // Executing command with all necessary APIs and customizations
         return command.f.call({ worker, config: c, client, m, Discord, commands: cmds, apis, prefix: c.pre }, m, {
           embed: new embed().c(c.dc),
-          content: content.slice(command.name.length).trim(),
+          content: content.slice(name.length).trim(),
           perms, botperms, args, flags
         });
       }
