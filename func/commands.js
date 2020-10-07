@@ -23,16 +23,19 @@ export async function get(type = "discord", commands) {
     throw new Error("Commands need to be of correct type! (string or Array)");
 
   // Holds the actual commands
-  let cmds = [];
+  let cmds = {};
 
   // Loops through the inputted commands and imports them
   for(let i of commands)
     if(i.includes(":"))
-      try { cmds.push(await (new Command(i.slice(i.indexOf(":") + 1), i.slice(0, i.indexOf(":")), type)).load());
+      try {
+        let name = i.slice(i.indexOf(":") + 1);
+        cmds[name] = await (new Command(name, i.slice(0, i.indexOf(":")), type)).load();
       } catch (err) { console.error(err); }
 
     else for (let j of category(type, i))
-      try { cmds.push(await (new Command(j, i, type)).load());
+      try {
+        cmds[j] = await (new Command(j, i, type)).load();
       } catch (err) { console.error(err); }
 
   // Returns the constructed commands object
@@ -47,4 +50,4 @@ export function category(type = "discord", category) {
 
   // Returns the read category
   return readdir(project.commands.append("/" + type + "/" + category).path).files.map(f => f.name);
-}
+};
