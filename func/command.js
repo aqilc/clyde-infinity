@@ -158,9 +158,10 @@ export default class Command {
 
   /** 
    * Parses a string/message into a command
-   * @param {Command[]} commands - All commands to find the command from
+   * @param {{ [key: string]: Command }} commands - All commands to find the command from
    * @param {string} str - The string possibly invoking a command
    * @param {string} prefix - The possible prefix of the command
+   * @returns {Command} - The command that was found
   */
   static find(commands, str, prefix) {
 
@@ -169,17 +170,22 @@ export default class Command {
       str = str.slice(prefix.length);
 
     // Looks through command names
-    let possibilities = commands.filter(({ name }) => str.startsWith(name));
+    let possibilities = Object.keys(commands).filter(name => str.startsWith(name)), name;
 
     // If more than one command found, alert
     if(possibilities.length > 1)
-      console.warn(`Conflicting command names found for string "${str}": ` + list(possibilities.map(c => c.name)));
+      console.warn(`Conflicting command names found for string "${str}": ` + list(possibilities));
 
     // Else if no commands were found, conduct a harder search
     else if(!possibilities.length) {
 
+      // Function for setting name to the first match(simplification)
+      function setn(str) { if (!name) name = str; return true; }
+
       // Finds commands based on aliases
-      possibilities = commands.filter(({ alt }) => !!alt && Array.isArray(alt) ? a.find(al => str.startsWith(al)) : str.startsWith(alt));
+      for(let [key, { alt }] of Object.entries(commands))
+        if (alt && Array.isArray(alt) ? alt.find(al => str.startsWith(al) && setn(al)) : (str.startsWith(alt) && setn(alt)))
+          possibilities.push(key);
 
       // If we found two commands that match in alias search, alert creator to fix
       if(possibilities.length > 1)
@@ -190,15 +196,18 @@ export default class Command {
         return {};
     }
 
+    // Set name to command name
+    else name = possibilities[0];
+
     // Stores command
-    let command = Object.assign({}, possibilities[0]);
+    let command = Object.assign({}, commands[possibilities[0]]);
 
     // Cuts out the command name since we already know it
-    str = str.slice(command.name.length);
+    str = str.slice(name.length);
 
     // Exit early if there are no flags or arguments anyways
     if(!str.length)
-      return { command };
+      return { command, name };
 
     // Splits the remaining string by spaces
     str = str.split(" ");
@@ -256,6 +265,6 @@ export default class Command {
     }
 
     // Returns everything
-    return { command, args, flags };
+    return { command, args, flags, name };
   }
 }
