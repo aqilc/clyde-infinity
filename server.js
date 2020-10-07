@@ -27,7 +27,7 @@ if (isMaster) {
     let setup = work => work.on("message", ([event, ...args]) => events[event](...args))
 
 	        // Exit(restarts bot) and Online(logs some complicated message) events
-          .on("exit", () => events.restart()).on("online", () =>
+          .on("exit", () => events.restart()).on("online", () => 
           console.log("New Bot Process online".bold + "\n  " + "ID:".bgRed.bold.white + " " + worker.id + " ".repeat(3 - worker.id.toString().length) + "Bot:".bgRed.bold + " " + bot + " ".repeat(10 - bot.length) + "Type:".bgRed.bold + " " + (c[bot].bt || "discord"))),
 
         // Spawns a new worker :D
@@ -76,23 +76,22 @@ else try {
   }
 
   // Filters out commands that have incompatible API and database requirements
-  commands.filter(({ name, apis: a = [] }) => {
+  for (const name in commands) {
 
-    // If it doesn't exist, just return true
-    if(!a.length)
-      return true;
+    // Gets command info
+    let { apis: a = [] } = commands[name];
+
+    // If it doesn't exist, just skip
+    if (!a.length) continue;
 
     // If a is a string, make it an array
     if (typeof a === "string")
       a = [a];
 
     // Every requested API has to be available
-    if(!a.every(ap => !!apis[ap]))
-      return console.log(new Error(`Command '${name}' doesn't have the necessary APIs to be executed!`))
-
-    // If it couldn't find a non-available API, let it pass
-    return true;
-  });
+    if(!a.every(ap => apis[ap])) {
+      console.error(new Error(`Bot ${process.env.bot} doesn't have the necessary APIs to execute command '${name}'!`)); delete commands[name]; }
+  };
 
   // Imports and calls the client for the bot.
   (await import(project.dir.append("/clients/" + (config.bt || "discord") + ".js").url)).default
