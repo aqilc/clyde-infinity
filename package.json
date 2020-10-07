@@ -9,7 +9,7 @@
     "redis-node": "npm run redis && npm run node",
     "node": "node --experimental-top-level-await --experimental-json-modules --experimental-import-meta-resolve --title=\"Clyde Infinity Beta\" .",
     "start": "npm i && npm run redis-node",
-    "redis": "wsl bash redis.sh"
+    "redis": "wsl sudo bash redis.sh"
   },
   "dependencies": {
     "better-sqlite3": "^7.0.1",
