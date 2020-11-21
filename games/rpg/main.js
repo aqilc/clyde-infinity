@@ -1,3 +1,3 @@
 export default class RPG {
-  constructor(user) {}
+  constructor (user) {}
 }

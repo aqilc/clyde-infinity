@@ -1,2 +1,2 @@
 // Imports the message function
-import mess from "./message.js";
+import mess from './message.js'

@@ -5,8 +5,9 @@ Description for all self written equipment in our RPG. Planning to automate writ
 ## Format
 
 ```yaml
+# Type
+equipment:
 - name: Big Boi Weapon
-  type: equipment
   req:
     level: 3
   description: Lol

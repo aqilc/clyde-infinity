@@ -110,7 +110,7 @@ export default {
 - `esc`:`string||Object` Description of the command.
   - `Object` Properties
     - `d`:`string` Text description.
-    - `img`:`string` Image url, can be placed anywhere in the string and will be taken out after parsing.
+    - `img`:`string` Image URL, can be placed anywhere in the string and will be taken out after parsing.
 - `ex`:`string` Example showing how to use the command.
 - `perms`:`string<Permission> || Object || Array<string<Permission>>` Permissions required for the command.
   - `Object` Format
@@ -128,7 +128,7 @@ export default {
     - `client`: Bot client
     - `commands`: All bot commands (in `Command` classes)
     - `m`: The message, same as the `m` parameter
-    - `embed`: Embed class, different from whats in the `s` parameter
+    - `embed`: Embed class, different from what’s in the `s` parameter
     - `bots`: All bots that could be properly processed
   - `m`:`Message` Parameter: The message calling the command
   - `s`:`Object` Parameter: Handy, already processed info
@@ -161,7 +161,11 @@ export default {
 
 ## Command list
 
+Every command we have on board.
+
 ### Discord
+
+Discord-specific commands in the `commands/discord` folder.
 
 #### help.js
 

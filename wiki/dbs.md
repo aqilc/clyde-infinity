@@ -15,24 +15,28 @@
 
 ### Discord Users
 
-- `discord.users[<user id>]:messages`:`Hash`
-  - Hash format:
-    - Field: `<bot name>`
-    - Value: `<message number>`
-- `discord.users[<user id>]:blacklist`:`List` Bots the user is blacklisted in
-  - List value format: `<bot name>` or `global` for all bots
-- `discord.users[<user id>]:commands.blacklist`:`Hash` Commands the user is blacklisted from using
-  - Hash format:
-    - Field: `<bot name>` or `global` for all bots
-    - Value: `<command name(not aliases)>`
-- `discord.users[<user id>]:commands.remaps`:`Hash` Remapping command names(like custom aliases)
-- `discord.users[<user id>]:prefixes`:`Hash` User custom prefixes for certain bots
-  - Hash format:
-    - Field: `<bot name>` or `global` for all bots
-    - Value: `<string>`
-- `discord.users[<user id>]:osu.username`:`<String>` osu! username for osu commands
-- `discord.users[<user id>]:osu.mode`:`<'fruits' | 'osu' | 'mania' | 'taiko'>` osu! user default game mode
-- `discord.users[<user id>]:osu.replays.skin`
+- **User Data**
+  - `d:<user id>.messages`:`Hash`
+    - Hash format:
+      - Field: `<bot name>`
+      - Value: `<message number>`
+  - `d:<user id>.blacklist`:`List` Bots the user is blacklisted in
+    - List value format: `<bot name>` or `global` for all bots
+  - `d:<user id>.commands.blacklist`:`Hash` Commands the user is blacklisted from using
+    - Hash format:
+      - Field: `<bot name>` or `global` for all bots
+      - Value: `<command name(not aliases)>`
+  - `d:<user id>.commands.remaps`:`Hash` Remapping command names(like custom aliases)
+  - `d:<user id>.prefixes`:`Hash` User custom prefixes for certain bots
+    - Hash format:
+      - Field: `<bot name>` or `global` for all bots
+      - Value: `<string>`
+- **Guild Data**
+  - `d:<user id>.g:<server id>.bans` How many times the user has been banned on that server
+- **osu!**
+  - `d:<user id>.osu.username`:`<String>` osu! username for osu commands
+  - `d:<user id>.osu.mode`:`<'fruits' | 'osu' | 'mania' | 'taiko'>` osu! user default game mode
+  - `d:<user id>.osu.replays.skin`
 
 ### RPG
 

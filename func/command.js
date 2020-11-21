@@ -7,7 +7,7 @@ import { list, trim } from "./f.js";
 
 // This is the command(singular) handler, which imports commands and its properties
 export default class Command {
-  
+
   // Sets private version variable
   #version = "";
 
@@ -20,36 +20,36 @@ export default class Command {
     // Check for name and command
     if(typeof name !== "string" || typeof category !== "string")
       throw new Error("\"name\" or \"category\" not specified or of incorrect type for new command.\nGiven values: (name) " + name + ", (category)" + category);
-    
+
     // Command type
     this.type = type || "discord";
-    
+
     // Category
     this.category = category;
-    
+
     // Sets name and version based on what is inputted
     if(name.includes("@"))
       this.name = name.split("@")[0],
       this.#version = name.split("@")[1];
     else this.name = name;
-    
+
     // Path of the command
     this.path = project.commands.append(`/${this.type}/${this.category.toLowerCase()}/${this.name}.js`);
-    
+
     // throws an error if the command path is invalid
     if(!existsSync(this.path.path))
       throw new Error(`Command ${this.name} doesn't exist!`);
   }
-  
+
   // Loads the command
   async load() {
 
     // Gets the command and stores it
     this.cmd = (await import(this.path.url)).default;
-    
+
     // Merges both objects
     Object.assign(this, this.cmd);
-    
+
     // Delete all invalid versions
     for(let i in this.versions)
       if(!this.versions[i].f && !this.versions[i].args)
@@ -62,11 +62,11 @@ export default class Command {
       else if(this.versions.basic)
         this.#version = "basic";
       else this.#version = Object.keys(this.versions)[0]
-    
+
     // Merges based on version of command
     if(this.versions && (this.#version || this.dver))
       Object.assign(this, this.versions[this.#version || this.dver])
-    
+
     // Checks for execution function and throws an error if one doesn't exist
     if(!this.f) throw new Error(`The command '${this.name}' doesn't have any function for execution!`);
 
@@ -83,15 +83,15 @@ export default class Command {
 
   // Returns the version
   get version() { return this.#version }
-  
+
   // Sets version and updates command variables
   set version(v) {
-    
+
     // Various checks to make sure nothing goes wrong
     if(this.versions[v] && this.#version !== v)
       this.#version = v;
     else return;
-    
+
     // Sets the object attributes(oh crap i just found out theres no way to revert... fixing soon™️)
     Object.assign(this, this.versions[this.#version]);
 
@@ -102,7 +102,7 @@ export default class Command {
 
   // Permission Parser
   static perms(obj, type = "discord") {
-    
+
     // Defines the default, basic permissions object and the format of the output
     const basic = {
       bot: {}, user: {}
@@ -147,7 +147,7 @@ export default class Command {
               if (Array.isArray(perm))
                 for (let j of perm)
                   basic[i][j] = msgs[i](j);
-              
+
               // Else just assign all of the things to basic, then naturally return
               else Object.assign(basic[i], perm)
           }
@@ -156,7 +156,7 @@ export default class Command {
     return basic;
   }
 
-  /** 
+  /**
    * Parses a string/message into a command
    * @param {{ [key: string]: Command }} commands - All commands to find the command from
    * @param {string} str - The string possibly invoking a command
@@ -203,7 +203,7 @@ export default class Command {
     let command = Object.assign({}, commands[possibilities[0]]);
 
     // Cuts out the command name since we already know it
-    str = str.slice(name.length);
+    str = str.slice(name.length).trim();
 
     // Exit early if there are no flags or arguments anyways
     if(!str.length)
@@ -224,10 +224,10 @@ export default class Command {
 
         // If the next argument is meant to be the value of the flag
         if(str[i + 1] && str[i + 1][0] !== "-")
-          flags[flag] = str[i + 1], str.splice(i, 2);
+          flags[flag] = str[i + 1], i ++;
 
         // Else if the flag is lonely
-        else {
+        else
 
           // If you have an "=" in the flag, set the flag to that value
           if(flag.includes("="))
@@ -235,12 +235,10 @@ export default class Command {
 
           // Else just set the flag to blank
           else flags[flag] = "";
-
-          // Deletes the flag
-          str.splice(i, 1);
-        }
-      } else args.push(str.splice(i, 1));
-
+        
+        // Adds the argument in
+      } else args.push(str[i]);
+    
     // If there is a specific command argument that matches any of the ones found, make it the one being executed
     if(command.args) {
 
@@ -259,9 +257,9 @@ export default class Command {
           // Remaps the command function
           command.f = function (...args) { arg.f.bind(this)(...args); func.bind(this)(...args); };
         }
-        
+
         // Else just overwrite the command function with the argument one
-        else command.f = arg.f.bind(command);
+        else command.f = arg.f;
     }
 
     // Returns everything

@@ -1,5 +1,5 @@
 export default {
-  
+
   /* Format
     {
       bot: "id",
@@ -14,10 +14,10 @@ export default {
       started: 100000000
     }
   */
-  
+
   // Leave messages
   leave: [],
-  
+
   // Join messages
-  join: [],
-};
+  join: []
+}
