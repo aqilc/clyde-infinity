@@ -2,6 +2,9 @@
 // Gets the mentions in a message
 import { mentions } from '../../../func/f.js'
 
+// Gets osu api data
+import { get_osu } from '../../../func/discord/f.js';
+
 // Contains some handy osu functions
 const osu = {
 
@@ -70,24 +73,11 @@ export default {
       // Version function (Required)
       async f (m, { content, embed }) {
 
-        // Gets user based on message mentions
-        const mention = mentions(content)[0]
-        if (mention) content = (await this.apis.redis.get(`discord.users[${mention}]:osu.username`)) || ''
-
-        // Returns for now since there is no db currently
-        if (!content) content = (await this.apis.redis.get(`discord.users[${m.author.id}]:osu.username`)) || ''
-
-        // If you don't even have a default username setup, just return a message saying you should
-        if (!content) return m.channel.send(embed.a('Please set up a default username!', m.author.avatarURL()).d(`You can set one up easily with \`${this.prefix}osu se\`, or get quick stats with \`${this.prefix}osu [player name]\`.`))
-
-        // Gets the user stats
-        const user = (await this.apis.osu.user(content))[0]
-
-        // If user doesn't exist, return with a message.reply
-        if (!user) { return m.channel.send(embed.t("User doesn't exist!")) }
-
+        // User data fetch, with account checking and all the other crap
+        const { data: user } = await get_osu(this, m, { embed, content }, this.apis.osu.user);
+        
         // Creates an osu user embed
-        return osu.embed(m, user, embed)
+        return osu.embed(m, user[0], embed)
       }
     }
   },
@@ -99,6 +89,7 @@ export default {
     {
       name: 'se',
       async f (m, { content, embed }) {
+
         // Gets user to set your profile into
         let user = content.slice(2).trim()
 
@@ -124,7 +115,7 @@ export default {
         if (!data) { return m.channel.send(embed.a(`User '${user}' doesn't exist!`, m.author.avatarURL()).f('')) }
 
         // Sets default username in redis database
-        await this.apis.redis.set(`discord.users[${m.author.id}]:osu.username`, data.username)
+        await this.apis.redis.set(`d:${m.author.id}.osu.username`, data.username)
 
         // Sends a message confirming save
         return m.channel.send(embed.t(`Default username set to ${data.username}!`).url('https://osu.ppy.sh/u/' + data.user_id).f("Now you only have to do '" + this.prefix + "osu' to see your osu! profile :D"))
