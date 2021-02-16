@@ -103,13 +103,11 @@ export const jsleven = function() {
 export const damerau = (() => {
 
   // Holds the matrix containing step values
-  const arr = [];
-  for (var i = 0; i < 64; i++) {
+  const arr = [[0]], l = 64;
+  for (var i = 1; i < l; i++) {
       arr[i] = [i];
-      arr[i].length = 64;
-  }
-  for (var i = 0; i < 64; i++) {
       arr[0][i] = i;
+      arr[i].length = l;
   }
   return function (a, b) {
 
@@ -265,13 +263,10 @@ export class List {
     if(!str || typeof str !== "string")
       return [];
 
-    // New scope to save some variable names
-    {
-      // If there is an exact match, find it and just send it back
-      let index;
-      if((index = this.originals.indexOf(str)) > -1)
-        return [this.originals[index]]
-    }
+    // If there is an exact match, find it and just send it back. Obscure name so no accidental name conflicts are caused
+    { let indsrcpyihrpyuhrhdex = this.originals.indexOf(str);
+    if (indsrcpyihrpyuhrhdex > -1)
+      return [this.originals[indsrcpyihrpyuhrhdex]] }
 
     // Normalizes the word
     const word = wordify(str),

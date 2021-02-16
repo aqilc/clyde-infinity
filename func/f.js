@@ -59,7 +59,7 @@ export const readdir = dir => {
 }
 
 /**
- * Reads EVERYTHING in a directory :D\
+ * Reads EVERYTHING in a directory :D
  * WARNING: Could take a long time depending on the directory
  * @param {string} dir
  * @returns {Object<folders: Object|files: Array>}
@@ -71,7 +71,7 @@ export const readeverything = dir => {
   const folders = {}
 
   // Gets all the data in all folders
-  for (const i of directory.folders) { folders[i] = readeverything(dir.endsWith('/') || dir.endsWith('\\') ? dir + i : dir + '/' + i) }
+  for (const i of directory.folders) folders[i] = readeverything(dir.endsWith('/') || dir.endsWith('\\') ? dir + i : dir + '/' + i)
 
   // Sets the original directory's folders to the folders we just got
   directory.folders = folders
@@ -80,18 +80,22 @@ export const readeverything = dir => {
   return directory
 }
 
-// Converts a number into a human-readable byte system number
+/**
+ *  Converts a number into a human-readable byte system number
+ * @param {number} num - Number to convert
+ * @returns {string}
+ * @example byte(200002323) // => 200 mb
+ */
 export const byte = num => {
 
   // Levels of byte divisions
   const levels = ['bits', 'kb', 'mb', 'gb', 'tb', 'pb']; let level = 0
 
   // Loops through divisions of the numbers while also determining level
-  while (num >= 1024)
-    num /= 1024, level ++;
+  while (num >= 1024) num /= 1024, level++
 
   // Returns the rounded number + the level of byte division
-  return num.toFixed(2) + ' ' + levels[Math.max(level, levels.length - 1)]
+  return num.toFixed(2) + ' ' + levels[level]
 }
 
 // Turns an array into a proper, human-readable list
@@ -109,6 +113,7 @@ export const list = arr => {
 
 // Cleans up text for code for evalling. Returns an object
 export function codify (str) {
+
   str = str.trim()
 
   // Object for returning
@@ -118,11 +123,10 @@ export function codify (str) {
   }
 
   // Takes out code block stuff
-  if (str.search(/```[\w]*/) === 0 && str.endsWith('```'))
-    v.type = str.match(/```(\w)/)[1], str = str.slice(str.match(/```[\w]*/)[0].length, -3).trim();
+  if (str.search(/```[\w]*/) === 0 && str.endsWith('```')) { v.type = str.match(/```(\w)/)[1]; str = str.slice(str.match(/```[\w]*/)[0].length, -3).trim() }
 
   // Returns v + the code
-  return v.code = str, v;
+  return v.code = str, v
 };
 
 // Suite of functions for fetching stuff from the discord api
@@ -219,7 +223,8 @@ export const rand = {
     const letters = (nums && '1234567890') || 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890' + (special ? "!@#$%^&*()_+-=\\/?[]{}<>'\";:.,`~" : '')
 
     // Gets a random letter and adds it
-    for (let i = 0; i < len; i++) { str += letters[Math.floor(Math.random() * letters.length)] }
+    for (let i = 0; i < len; i++)
+      str += letters[Math.floor(Math.random() * letters.length)]
 
     // Returns constructed string
     return str
@@ -237,7 +242,7 @@ export const reverse = str => {
   let nstr = ''; let i = str.length - 1
 
   // Loops through the inputted string from end to start, adding characters as it goes
-  while (i >= 0) { nstr += str[--i] }
+  while (i >= 0) nstr += str[--i]
 
   // Returns the new, reversed string
   return nstr
@@ -254,8 +259,7 @@ export const count = vals => {
   const counts = []; const used = {}
 
   // Counts everything, making new keys for new values and incrementing existing ones
-  for (const i of vals)
-    if (typeof used[i] === 'number') counts[used[i]][1]++; else used[i] = counts.push([i, 1])
+  for (const i of vals) { if (typeof used[i] === 'number') counts[used[i]][1]++; else used[i] = counts.push([i, 1]) }
 
   // Finally, returns the counts
   return counts
@@ -268,3 +272,23 @@ export const count = vals => {
  * @returns {[any, any]} An array containing the 2 halves of the string
  */
 export const half = (str, index = Math.ceil(str.length / 2)) => [str.slice(0, index), str.slice(index)]
+
+/**
+ * Outputs a string of mods.
+ * @param {string[]} mods - The mods, all in order.
+ * @param {number} bitf - The bitfield that contains the mods.
+ * @return {string}
+ */
+export const mods = (mods, bitf) => {
+
+  // Holds the mods, and is the return value.
+  let str = '';
+
+  // Loops through the mods, subtracting from the bitfield and adding to the string if their bit is included.
+  for(let i = mods.length - 1; i >= 0; i --)
+    if(bitf - (1 << i) > 0)
+      str += mods[i], bitf -= (1 << i);
+  
+  // Returns what was calculated
+  return str;
+}

@@ -43,7 +43,7 @@ export async function get (type = 'discord', commands) {
 }
 
 export function category (type = 'discord', category) {
-
+  
   // You need to specify category xP
   if (typeof category !== 'string') { throw new Error('Please specify the category you want to get!') }
 

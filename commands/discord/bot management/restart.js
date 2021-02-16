@@ -1,6 +1,7 @@
 export default {
 
   f () {
+    
     // Process auto-restarts so xP
     this.worker.kill()
   },

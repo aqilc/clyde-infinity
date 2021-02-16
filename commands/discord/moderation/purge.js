@@ -17,7 +17,6 @@ const filters = {
 // Exports the command object
 export default {
   async f (m, { embed, content }) {
-    
     // If the message amount wasn't specified, return an auto-deleted message saying they should specify it
     if (!content) { return await (await m.channel.send(embed.a('Purge: Error', m.author.avatarURL()).d(`\`\`\`diff\n- Error: Amount of messages to delete not specified or of not proper type (do ${this.prefix}help purge to learn more about this command)\`\`\``))).delete({ timeout: 10000 }) }
 

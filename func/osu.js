@@ -1,11 +1,11 @@
 // Canvas graphics API
-import Canvas from "canvas";
+//import Canvas from "canvas";
 
 // HTTPS api
 import get from "./request.js";
 
 // The links to the osu API
-const { createCanvas } = Canvas,
+const //{ createCanvas } = Canvas,
 
   // API Urls for osu!
   apis = [

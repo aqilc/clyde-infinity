@@ -1,7 +1,6 @@
 const fs = require('fs')
 export default class JSONDB {
   constructor (file, indent) {
-
     // Small checks for incorrect inputs
     if (typeof file !== 'string') { throw new TypeError('File must be a string') }
     if (!file.endsWith('.json')) { throw new Error('File must be a JSON file.') }
@@ -19,8 +18,7 @@ export default class JSONDB {
         if (!isNaN(parseInt(prop))) {
           if (!obj.doing && obj.length === 0) { (typeof val[1] === 'undefined' ? delete db._file[val[0]] : db._file[val[0]] = val[1]), db._update.file() } else obj.push(val)
         } else if (prop === 'doing' && !val && obj.length) {
-          for (const i of obj)
-            if (typeof i[1] !== 'undefined') { db._file[i[0]] = i[1] } else delete db._file[i[0]]
+          for (const i of obj) { if (typeof i[1] !== 'undefined') { db._file[i[0]] = i[1] } else delete db._file[i[0]] }
           db._update.file()
         }
         return true

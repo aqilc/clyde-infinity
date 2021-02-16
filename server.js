@@ -36,7 +36,7 @@ if (isMaster) {
         // Houses all worker events.
         events = {
           restart: () => (console.log(`Bot ${bot} in process ${worker.id} restarting...`), worker.kill(), worker = setup(cluster.fork({ bot }))),
-          die: () => worker.process.kill()
+          die: () => worker.process.kill(), killall: () => process.exit()
         };
   }
 

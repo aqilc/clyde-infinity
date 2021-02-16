@@ -1,4 +1,5 @@
 export default class Permissions extends Set {
+  
   // Constructor that just makes an array :D
   constructor (...arr) {
     super(arr)
@@ -14,6 +15,7 @@ export default class Permissions extends Set {
 
   // Static method for getting permissions from a bitfield
   static find (bitfield, arr) {
+
     // First of all, convert 'perm' into a string of 1s and 0s
     bitfield = bitfield.toString(2)
 
@@ -21,13 +23,12 @@ export default class Permissions extends Set {
     const perms = new Set()
 
     // Then take care of various perm types
-    if (arr instanceof Object) { arr = Object.keys(arr) }
-    if (!Array.isArray(arr)) { throw new TypeError("'arr' not of applicable type!") }
+    if (arr instanceof Object) arr = Object.keys(arr)
+    if (!Array.isArray(arr)) throw new TypeError("'arr' not of applicable type!")
 
     // Loops through the bitfield string, adding a permission where it finds a '1'
-    for (let i = bitfield.length - 1; i >= 0; i++) {
-      if (bitfield[i] === '1') { perms.add(arr[i]) }
-    }
+    for (let i = bitfield.length - 1; i >= 0; i++)
+      if (bitfield[i] === '1') perms.add(arr[i])
 
     // Returns the resulting permissions array
     return perms
