@@ -6,7 +6,7 @@ import ASCII from '../../../func/ascii.js'
 export default {
 
   // Function executed
-  async f (m, { content, embed }) {
+  async f ({ content, embed , m }) {
     // Deny if you don't know how to use
     if (!content) { return m.channel.send('WIP xP') }
 

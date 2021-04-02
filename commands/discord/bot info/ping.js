@@ -1,7 +1,7 @@
 export default {
 
   // Main function for command
-  async f (m, { embed }) {
+  async f ({ embed , m }) {
     // Figures out what the current time is at the start of the command
     const time = Date.now()
 

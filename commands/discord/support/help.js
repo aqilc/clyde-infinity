@@ -12,13 +12,23 @@ export default {
     basic: {
 
       // Function for help
-      f (m, { embed, content } = {}) {
+      f ({ embed, content, send } = {}) {
+        
         // If the user just calls for basic help, use this embed
         if (!content) {
-          embed.a('Bot Commands', this.client.user.avatarURL)
-            .d(list(Object.keys(this.commands).map(c => `**\`${this.prefix + c}\`**`)))
-        } else this.commands.find()
-        m.channel.send(embed)
+          return send(embed.a('Bot Commands', this.client.user.avatarURL)
+            .d(list(Object.keys(this.commands).map(c => `**\`${this.prefix + c}\`**`))));
+        } else {
+
+          // Find the command
+          let cmd = Object.keys(this.commands).find(c => c.name.startsWith(content))[0];
+          
+          // If no command was found, just exit with that message.
+          if(!cmd)
+            return send(embed.a("No bot command that starts with " + content + " found."));
+
+          
+        }
       }
     }
   },

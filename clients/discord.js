@@ -164,8 +164,8 @@ export default function (c, cmds) {
         }
 
         // Executing command with all necessary APIs and customizations
-        return command.f.call({ worker, config: c, client, m, Discord, commands: cmds, apis, prefix: c.pre }, m, {
-          embed: new embed().c(c.dc),
+        return command.f.call({ worker, config: c, client, m, Discord, commands: cmds, apis, prefix: c.pre }, {
+          embed: new embed().c(c.dc), send: m.channel.send.bind(m.channel), m,
           content: content.slice(name.length).trim(),
           perms, botperms, args, flags
         });

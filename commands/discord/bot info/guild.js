@@ -4,7 +4,7 @@ import { list, mentions } from '../../../func/f.js'
 export default {
 
   // Function executed
-  f (m, { embed, content }) {
+  f ({ embed, content, m }) {
     // Determines user selected action
     const action = content.includes(' ') ? content.slice(0, content.indexOf(' ') + 1) : content
 

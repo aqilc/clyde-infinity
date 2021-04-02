@@ -2,7 +2,7 @@ import { mentions } from '../../../func/f.js'
 
 export default {
 
-  async f (m, { embed, args }) {
+  async f ({ embed, args, m }) {
     // You need to provide *something*!
     if (!args[0]) { return m.channel.send(embed.t('You need to specify who to ban!')) }
 

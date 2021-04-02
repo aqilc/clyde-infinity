@@ -1,7 +1,7 @@
 export default {
 
-  async f (m, { content }) {
-    for (let i = 0; i < Number(content) || 0; i++) { await m.channel.send('spam') }
+  async f ({ send, content }) {
+    for (let i = 0; i < Number(content) || 0; i++) { await send('spam') }
   },
 
   perms: 'BOT_ADMIN',
