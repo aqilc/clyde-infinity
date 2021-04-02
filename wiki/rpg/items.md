@@ -29,13 +29,13 @@ equipment:
     - `level`:`Number` Level required to equip this item
   - `fusion`:
     - `slots`:`Number` How many items you can fuse onto this one(no specification means it can't be fused with)
-    - 
+    -
   - `type`:`String` Type of item
     - Available types:
       - `equipment`
       - `potion`
       - `collectibles`
-  -  `rarity`:`String || Number` How rare this item's supposed to be(Number is how many items are available in the world)(for purposes meant to describe and help us to position the item and control how much to give out)
+  - `rarity`:`String || Number` How rare this item's supposed to be(Number is how many items are available in the world)(for purposes meant to describe and help us to position the item and control how much to give out)
     - `String` Options:
       - `rare`
       - `common`
@@ -59,10 +59,8 @@ equipment:
 - `buffs`:`List` Stats given to player when item is equipped
   - `name`:`String(buff name || prebuilt buff id(from`[`buffs.yaml`]('../../games/rpg/buffs.yaml')`))`
   - `description`:`String`
-  - 
 
 ## Potions
 
 - `effect`:`Object`
   - `duration`:`Number(Percent)` Percent of the user potion duration time set by the game
-  - 
