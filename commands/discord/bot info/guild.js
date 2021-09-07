@@ -5,6 +5,7 @@ export default {
 
   // Function executed
   f ({ embed, content, m }) {
+    
     // Determines user selected action
     const action = content.includes(' ') ? content.slice(0, content.indexOf(' ') + 1) : content
 

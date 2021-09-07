@@ -6,17 +6,22 @@ function bs () {
 }
 
 export default {
-  async f (m) {
+  async f ({ send }) {
     const k = bs(); const v = bs()
-    m.channel.send('```' + await request('https://aternos.org/panel/ajax/start.php?headstart=0&SEC=' + k + '%3A' + v, {
+    /*send*/console.log('```' + await request('https://aternos.org/panel/ajax/start.php?headstart=0&access-credits=0&SEC=' + k + '%3A' + v + '&TOKEN=obnijPTEZ0QlQWBxQ6yB', {
       headers: {
-        accept: '*/*',
-        'accept-language': 'en-US,en;q=0.9',
-        'sec-fetch-dest': 'empty',
-        'sec-fetch-mode': 'cors',
-        'sec-fetch-site': 'same-origin',
-        'x-requested-with': 'XMLHttpRequest',
-        cookie: 'ATERNOS_SEC_' + k + '=' + v + '; __cfduid=d2e6897155d775af5e07bdbe9b091087d1597622881; PHPSESSID=mbgj9q9va88gb9k94gmfnk9cp8; _ga=GA1.2.990482964.1597632260; ATERNOS_SESSION=iZMLjk1AS89FeKNNpdi0Kp6Z2mmEKIEI4rCiD5YoUfJGl7p1UCaPWOz2p4bnp2a5d5XD6aLytxNSoZVrmiXEmphfsLJYVHw9lNzS; ATERNOS_SERVER=LHqgWmgIpSudGRMT; __gads=ID=b0bf909c626d84d2-2281ea5dffc200c5:T=1598032768:S=ALNI_MZr1FX35zS5wzQmfahgNQ9yFU79lQ; ATERNOS_STYLE=dark; SKpbjs-unifiedid=%7B%22TDID%22%3A%22c7fbdc14-e71f-4247-ac30-cdc43fcc4c4b%22%2C%22TDID_LOOKUP%22%3A%22FALSE%22%2C%22TDID_CREATED_AT%22%3A%222020-09-04T02%3A05%3A37%22%7D; SKpbjs-unifiedid_last=Fri%2C%2004%20Sep%202020%2002%3A05%3A36%20GMT; SKpbjs-id5id=%7B%22ID5ID%22%3A%22ID5-ZHMORGWMaGdJiqhwyi9Cyz5RXWqQ9vrQxEzY2PvENA%22%2C%22ID5ID_CREATED_AT%22%3A%222020-09-04T02%3A05%3A37.27Z%22%2C%22ID5_CONSENT%22%3Atrue%2C%22CASCADE_NEEDED%22%3Atrue%2C%22ID5ID_LOOKUP%22%3Afalse%2C%223PIDS%22%3A%5B%5D%7D; SKpbjs-id5id_last=Fri%2C%2004%20Sep%202020%2002%3A05%3A36%20GMT; _gid=GA1.2.418362054.1599591617'
+        accept: "*/*",
+        "accept-language": "en-US,en;q=0.9",
+        "cache-control": "no-cache",
+        "pragma": "no-cache",
+        "sec-ch-ua": "\"Chromium\";v=\"92\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"92\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "x-requested-with": "XMLHttpRequest",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.9 Safari/537.36",
+        cookie: 'ATERNOS_SEC_' + k + '=' + v + '; PHPSESSID=2agmgfbptp97ddqnstltu0o8io; ATERNOS_LANGUAGE=en; ATERNOS_SESSION=NiGmu4HJJL3Lw9Fw0fcrXmbitmnaJn4Zp5Ky4ZCPrOGenEjKY9Ld2wOEgNhgZxw502Rvvsxi8M6eOMAPoqGBbJF2MqseZoNPdNPC; ATERNOS_SERVER=nbPzTDULX4ADGhNr; _ga=GA1.2.1329554425.1622470713; _gid=GA1.2.955779864.1622470713; _pbjs_userid_consent_data=3524755945110770; sharedid=%7B%22id%22%3A%2201F71CMX95HM13ZVZEMEB9D37D%22%2C%22ts%22%3A1622470718758%2C%22ns%22%3Atrue%7D'
       },
       referrer: 'https://aternas.org/server/',
       referrerPolicy: 'no-referrer-when-downgrade',
