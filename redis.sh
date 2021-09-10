@@ -10,8 +10,8 @@ if [ "$(redis-cli ping)" == "PONG" ] ; then
 # If it didn't, start redis
 else
   sysctl vm.overcommit_memory=1
-  sudo echo never > /sys/kernel/mm/transparent_hugepage/enabled
+  # sudo echo never > /sys/kernel/mm/transparent_hugepage/enabled
   sudo echo 511 > /proc/sys/net/core/somaxconn
-  cd /home/aqilc/redis-stable
+  cd /home/aqil/redis-stable
   redis-server --daemonize yes
 fi
