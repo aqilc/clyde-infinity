@@ -9,7 +9,7 @@ import { readdirSync } from 'fs'
  * @param {string} str - The string to get mentions from
  * @returns {string[]} All the mentions :D
 */
-export const mentions = str => str.replace(/\D/g, '').replace(/\s*/g, ' ').split(' ').filter(v => v.length === 18)
+export const mentions = str => str.replace(/\D/g, '').replace(/\s+/g, ' ').split(' ').filter(v => v.length > 15);
 
 /**
  * Finds words(with optional prefixes and suffixes) in a string
@@ -37,7 +37,7 @@ export const titlecase = str => str.split(' ').map(s => s[0].toUpperCase() + s.s
  */
 export const objtoarr = obj => obj.length ? obj : Object.keys(obj).map(k => [k, obj[k]])
 
-// Reads the directories and classifies files and folders
+// Reads THE FIRST LEVEL of the directory specified and separates files and folders
 export const readdir = dir => {
 
   // Reads the directory
@@ -111,70 +111,6 @@ export const list = arr => {
   return (arr.length > 1 ? arr.join(', ') + ' and ' : '') + last
 }
 
-// Cleans up text for code for evalling. Returns an object
-export function codify (str) {
-
-  str = str.trim()
-
-  // Object for returning
-  const v = {
-    code: '',
-    type: 'js'
-  }
-
-  // Takes out code block stuff
-  if (str.search(/```[\w]*/) === 0 && str.endsWith('```')) { v.type = str.match(/```(\w)/)[1]; str = str.slice(str.match(/```[\w]*/)[0].length, -3).trim() }
-
-  // Returns v + the code
-  return v.code = str, v
-};
-
-// Suite of functions for fetching stuff from the discord api
-export const fetch = {
-
-  // Fetches a bunch of messages, almost to Infinity, until it encounters some undeletable ones(Input: MessageManager ie. m.channel.messages, Amount)
-  async messages (manager, amount, skip) {
-    if (typeof amount !== 'number') { throw new TypeError('"amount" not of correct type') }
-
-    // Stores messages
-    let m = manager.cache.array().filter(msg => !msg.deleted)
-
-    // Skips messages
-    if (skip) { skip -= m.length - (m = m.slice(-skip)).length }
-
-    // Return messagecount if it's already cached
-    if (m.length >= amount) { return m.slice(-amount) }
-
-    // Slices off the size we already have cached.
-    amount -= m.length
-
-    // Fetches all messages and caches them :D
-    while (m.length < amount) {
-      // Sets up the options for getting messages
-      const opts = {
-
-        // How many messages should be gotten
-        limit: Math.min(amount + skip, 100)
-      }
-
-      // If *any* messages are cached, find the oldest one and add it into the options
-      if (m.length) { opts.before = m.reduce((a, b) => Math.min(a.createdTimestamp, b.createdTimestamp)).id }
-
-      // Fetches as many messages as needed before the last message we currently have :D
-      m = m.concat(Array.from((await manager.fetch(opts)).values()))
-
-      // If undeletable messages are encountered, filter them out of the cache and exit the loop
-      if (m.find(mes => !mes.deletable)) { console.log('filtered', m.filter(mes => !mes.deletable).map(m => m.content), m.length); m = m.filter(mes => mes.deletable); break }
-    }
-
-    // Skips some leftover messages if skip was specified
-    if (skip) { return m.slice(-skip) }
-
-    // else just returns the leftover cache
-    return m
-  }
-}
-
 // A suite of array functions that can be put into the Array constructor or used externally to do handy stuff
 export const arr = {
 
@@ -209,26 +145,23 @@ export const arr = {
 }
 
 // Creates a random string of letters
-export const rand = {
-
-  // Creates a random number between 'low' and 'high'
-  num: (low = 0, high = 1, round = false) => round ? Math.round(Math.random() * (high - low) + low) : Math.random() * (high - low) + low,
+export const randnum = (low = 0, high = 1, round = false) => round ? Math.round(Math.random() * (high - low) + low) : Math.random() * (high - low) + low;
 
   // Generates a random string
-  str (len = 10, { special = false, nums = false }) {
-    // The returned string
-    let str = ''
+export const randstr = (len = 10, { special = false, nums = false }) => {
+  
+  // The returned string
+  let str = ''
 
-    // Determines letters
-    const letters = (nums && '1234567890') || 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890' + (special ? "!@#$%^&*()_+-=\\/?[]{}<>'\";:.,`~" : '')
+  // Determines letters
+  const letters = (nums && '1234567890') || 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890' + (special ? "!@#$%^&*()_+-=\\/?[]{}<>'\";:.,`~" : '')
 
-    // Gets a random letter and adds it
-    for (let i = 0; i < len; i++)
-      str += letters[Math.floor(Math.random() * letters.length)]
+  // Gets a random letter and adds it
+  for (let i = 0; i < len; i++)
+    str += letters[Math.floor(Math.random() * letters.length)]
 
-    // Returns constructed string
-    return str
-  }
+  // Returns constructed string
+  return str
 }
 
 /**
@@ -291,4 +224,41 @@ export const mods = (mods, bitf) => {
   
   // Returns what was calculated
   return str;
+}
+
+/**
+ * Simple ratelimit namespace gen.
+ * @returns {(key: string, time: number) => (name: string) => boolean} A function that creates the ratelimit database entry
+ */
+export const ratelimit = () => {
+
+  // Database/namespace cache
+  const db = {};
+
+  // Function store, for namespace function storage
+  const funcs = {};
+
+  // Stores the database entry into the database and returns a function
+  return new Proxy(function (key, time) {
+    
+    // Database name entry
+    db[key] = {};
+    
+    // Returns a function that checks if the string was accessed in the specified time, while storying the function in the function store
+    return funcs[key] = name => {
+
+      // If the access was too early, return false
+      if(Date.now() - db[key][name] < time) return false;
+
+      // Otherwise, set the access time and return true
+      db[key][name] = Date.now(); return true;
+    }
+  }, {
+
+    // Returns the database
+    get: (_, p) => funcs[p],
+
+    // Doesn't allow stuff to be set
+    set: () => {},
+  });
 }
