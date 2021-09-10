@@ -26,7 +26,7 @@
 import Path from './func/path.js'
 
 // Imports embeds for proper message things
-import embed from './func/discord/embed.js'
+import { Embed as embed } from './func/discord/embed.js'
 
 // Makes a new Path on project directory
 const { dir } = new Path(import.meta.url)
@@ -132,7 +132,7 @@ export const c = {
     user: 'Clyde Infinity Beta',
 
     // Prefix
-    pre: 'c@',
+    pre: '&',
 
     // Description
     desc: 'This bot stays in AqilAcademy and is the main bot for everything',
@@ -157,7 +157,7 @@ export const c = {
   },
 
   // Reaper's bot
-  reaper: {
+  /*reaper: {
 
     // Token
     token: 'NjkzODc1ODA1Mzg1OTE2NDY3.XoDefg.NPDwUtIt3_oGOVzsPNTv5jKpjBY',
@@ -179,5 +179,5 @@ export const c = {
 
     // Special eval prefix
     eval: 'reaper:'
-  }
+  }*/
 }

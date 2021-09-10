@@ -3,7 +3,7 @@
 import { MessageEmbed } from "discord.js";
 
 // Exports edited embed class :D
-export default class Embed extends MessageEmbed {
+export class Embed extends MessageEmbed {
   constructor(title) {
 
     // Makes an embed
