@@ -1,6 +1,6 @@
 {
-  "name": "aqilacademy-bots",
-  "version": "0.58.10029",
+  "name": "clyde-infinity",
+  "version": "0.76.342",
   "description": "Bots made for AqilAcademy.",
   "main": "server.js",
   "type": "module",
