@@ -1,5 +1,5 @@
 // Fetches message fetcher
-import { fetch } from '../../../func/f.js'
+import { fetch } from '../../../func/discord/f.js'
 
 // Imports a collection class just to see if it makes any difference
 import { Collection } from 'discord.js'

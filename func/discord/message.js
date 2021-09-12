@@ -3,170 +3,127 @@ import { word, mentions } from '../f.js'
 
 // Exports the function
 export default function Message (m) {
-  // Makes a new message object
-  const message = Object.assign({}, m)
 
-  // Stores message in case you need to access values that are not provided in the function or it's native values
-  message.m = m
-  /*
-  // Message ID
-  message.id = m.id;
+	// Makes a new message object
+	const message = Object.assign({}, m)
 
-  // Message Channel
-  message.channel = m.channel;
+	// Stores message in case you need to access values that are not provided in the function or it's native values
+	message.m = m
+	/*
+	// Message ID
+	message.id = m.id;
 
-  // Message guild
-  message.guild = m.guild;
+	// Message Channel
+	message.channel = m.channel;
 
-  // Message author
-  message.author = m.author;
+	// Message guild
+	message.guild = m.guild;
 
-  // Edited messages
-  message.edits = m.edits;
-  */
-  // Delete message rework
-  message.delete = async () => m.deletable ? Message(await m.delete()) : (console.log(`Message ${message.id} (${message.content}) isn't deletable`), message)
+	// Message author
+	message.author = m.author;
 
-  // Edit message rework
-  message.edit = async (...args) => m.editable ? Message(await m.edit(...args)) : (console.log(`Message ${message.id} (${message.content}) isn't sent by the client(${m.client.user.username})`), message)
+	// Edited messages
+	message.edits = m.edits;
+	*/
+	// Delete message rework
+	message.delete = async () => m.deletable ? Message(await m.delete()) : (console.log(`Message ${message.id} (${message.content}) isn't deletable`), message)
 
-  // Pin message rework
-  message.pin = async () => Message(await m.pin())
+	// Edit message rework
+	message.edit = async (...args) => m.editable ? Message(await m.edit(...args)) : (console.log(`Message ${message.id} (${message.content}) isn't sent by the client(${m.client.user.username})`), message)
 
-  // Reply message rework
-  message.reply = async (...args) => Message(await m.reply(args))
+	// Pin message rework
+	message.pin = async () => Message(await m.pin())
 
-  // Adds some getters
-  Object.defineProperties(message, {
+	// Reply message rework
+	message.reply = async (...args) => Message(await m.reply(...args))
 
-    // Reactions simplicity getter
-    reactions: {
-      get () {
-        // Makes an array from the collection of reactions
-        const reactions = m.reactions.array()
+	// Adds some getters
+	Object.defineProperties(message, {
 
-        // Defines methods
-        Object.defineProperties(reactions, {
+		// Reactions simplicity getter
+		reactions: {
+			get () {
 
-          // Clears all reactios
-          clear: {
+				// Makes an array from the collection of reactions
+				const reactions = m.reactions.array()
 
-            // Only the function needs to be used
-            async value () {
-              // Returns a new message with the reactions removed
-              return Message(await m.clearReactions())
-            }
-          },
+				// Defines methods
+				Object.defineProperties(reactions, {
 
-          // Returns a reaction collector
-          collect: {
+					// Clears all reactios
+					clear: {
 
-            // Function for creating the collector(f: Filter function, o: Options object)
-            value (f, o) {
-              return m.createReactionCollector(f, o)
-            }
-          }
-        })
+						// Only the function needs to be used
+						async value () {
 
-        // returns newly created Reactions array
-        return reactions
-      }
-    },
+							// Returns a new message with the reactions removed
+							return Message(await m.clearReactions())
+						}
+					},
 
-    // Does some cool stuff with the embeds in the message
-    embeds: {
+					// Returns a reaction collector
+					collect: {
 
-      // Makes this a getter
-      get () {
-        // Gets the embeds from the message
-        const embeds = m.embeds || {}
+						// Function for creating the collector(f: Filter function, o: Options object)
+						value (f, o) {
+							return m.createReactionCollector(f, o)
+						}
+					}
+				})
 
-        // Adds a cool method
-        Object.defineProperties(embeds, {
+				// returns newly created Reactions array
+				return reactions
+			}
+		},
 
-          // If a word is anywhere in an embed, it will return true
-          contains: {
+		// Does some cool stuff with the embeds in the message
+		embeds: {
 
-            // The function(word, prefix, suffix)
-            value (w, p, f) {
-              // Loops through the message's embeds
-              for (const i of embeds) {
-                if (word(i.title, w, p, f) || word(i.description, w, p, f) || word(i.footer, w, p, f) || word(i.author.name + ' ' + i.author.value, w, p, f) || word(i.fields.map(f => f.name + ' ' + f.value).join(' '), w, p, f)) { return true }
-              }
-            }
-          }
-        })
+			// Makes this a getter
+			get () {
+				// Gets the embeds from the message
+				const embeds = m.embeds || {}
 
-        // returns the embed array
-        return embeds
-      }
-    },
+				// Adds a cool method
+				Object.defineProperties(embeds, {
 
-    // Content stuff
-    content: {
+					// If a word is anywhere in an embed, it will return true
+					contains: {
 
-      // Makes a getter
-      get () {
-        // Makes a string *object* so we can add methods to it
-        const content = new String(m.content)
+						// The function(word, prefix, suffix)
+						value (w, p, f) {
 
-        // Adds a cool method
-        Object.defineProperties(content, {
+							// Loops through the message's embeds
+							for (const i of embeds) {
+								if (word(i.title, w, p, f) || word(i.description, w, p, f) || word(i.footer, w, p, f) || word(i.author.name + ' ' + i.author.value, w, p, f) || word(i.fields.map(f => f.name + ' ' + f.value).join(' '), w, p, f)) { return true }
+							}
+						}
+					}
+				})
 
-          // If a word is anywhere in the content, it will return true
-          contains: {
+				// returns the embed array
+				return embeds
+			}
+		},
 
-            // The function(word, prefix, suffix)
-            value (w, p, f) {
-              return word(m.content, w, p, f)
-            }
-          },
+		// Mentions stuff
+		mentions: {
+			get () {
+				// Gets the mentions in order, gets the message mentions and creates an array for the message mentions to be in order
+				const o = {}; const men = ['users', 'everyone', 'channels', 'members', 'roles'].map(t => (o[t] = {}, o[t].value = m.mentions[t].toArray().map(v => (v.mtype = t, v))))
 
-          // Returns the version the user sees
-          clean: {
+				// When converted to a string, it will return the ids of the mentioned people joined together
+				o.toString = function () { mentions(m.content) }
 
-            // returns the clean version of the content
-            value: m.cleanContent
-          },
+				// Defines all properties
+				Object.defineProperties(men, o)
 
-          // Returns the lowercase form for some usage(idk)
-          lower: {
+				// Returns the object
+				return men
+			}
+		}
+	})
 
-            // getter that does the function for you
-            get: () => m.content.toLowerCase()
-          },
-
-          // Returns the uppercase form for some usage(idk)
-          upper: {
-
-            // getter that does the function for you
-            get: () => m.content.toUpperCase()
-          }
-        })
-
-        // returns String
-        return content
-      }
-    },
-
-    // Mentions stuff
-    mentions: {
-      get () {
-        // Gets the mentions in order, gets the message mentions and creates an array for the message mentions to be in order
-        const o = {}; const men = ['users', 'everyone', 'channels', 'members', 'roles'].map(t => (o[t] = {}, o[t].value = m.mentions[t].toArray().map(v => (v.mtype = t, v))))
-
-        // When converted to a string, it will return the ids of the mentioned people joined together
-        o.toString = function () { mentions(m.content) }
-
-        // Defines all properties
-        Object.defineProperties(men, o)
-
-        // Returns the object
-        return men
-      }
-    }
-  })
-
-  // returns newly created/edited Message object
-  return message
+	// returns newly created/edited Message object
+	return message
 }
