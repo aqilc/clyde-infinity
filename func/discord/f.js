@@ -1,4 +1,3 @@
-import { Message } from "discord.js";
 import { mentions } from "../f.js"
 import { Embed as embed } from "./embed.js";
 

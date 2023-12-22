@@ -1,9 +1,6 @@
 // Fetches message fetcher
 import { fetch } from '../../../func/discord/f.js'
 
-// Imports a collection class just to see if it makes any difference
-import { Collection } from 'discord.js'
-
 // Stores filters for messages
 const filters = {
 
@@ -37,7 +34,7 @@ export default {
     const filtered = await filters[filter](content.match(new RegExp(filter))[0], m, 1)
 
     // Loops through filtered messages and deletes them  a l l
-    while (filtered.length) { Object.assign(deleted, (await m.channel.bulkDelete(new Collection(filtered.splice(0, Math.min(filtered.length, 100))), true))) }
+    while (filtered.length) { Object.assign(deleted, (await m.channel.bulkDelete([...filtered.splice(0, Math.min(filtered.length, 100))], true))) }
 
     console.log(content, deleted.length)
     // Sends a message saying it was successful

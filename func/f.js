@@ -89,13 +89,13 @@ export const readeverything = dir => {
 export const byte = num => {
 
   // Levels of byte divisions
-  const levels = ['bits', 'kb', 'mb', 'gb', 'tb', 'pb']; let level = 0
+  const levels = [' bits', ' kb', ' mb', ' gb', ' tb', ' pb']; let level = 0
 
   // Loops through divisions of the numbers while also determining level
   while (num >= 1024) num /= 1024, level++
 
   // Returns the rounded number + the level of byte division
-  return num.toFixed(2) + ' ' + levels[level]
+  return num.toFixed(2) + levels[level]
 }
 
 // Turns an array into a proper, human-readable list
@@ -262,3 +262,17 @@ export const ratelimit = () => {
     set: () => {},
   });
 }
+
+/**
+ * camelCases a list of TITLE_CASE strings
+ * @param {string[]} list List of TITLE_CASE strings
+ * @returns List of camelCase strings
+ */
+export const camelCaseList = list => list.join(",").toLowerCase().replace(/_(\w)/g, (p, p1) => p1.toUpperCase()).split(",")
+
+/**
+ * TITLE_CASEs a list of camelCase strings
+ * @param {string[]} list List of camelCase strings
+ * @returns List of TITLE_CASE strings
+ */
+export const TITLE_CASE_LIST = list => list.join(",").toLowerCase().replace(/_(\w)/g, (p, p1) => p.toUpperCase()).split(",")

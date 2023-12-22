@@ -161,7 +161,7 @@ export default class Command {
    * @param {{ [key: string]: Command }} commands - All commands to find the command from
    * @param {string} str - The string possibly invoking a command
    * @param {string} prefix - The possible prefix of the command
-   * @returns {Command} - The command that was found
+   * @returns {{ command: Command, args: string[], flags: { [key: string]: string }, name: string }} - The command that was found
   */
   static find(commands, str, prefix) {
 

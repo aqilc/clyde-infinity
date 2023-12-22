@@ -1,27 +1,25 @@
-/** Discord Bot Client
- * 
- * 
- */
 
 // Colorful logs :3
-await import("colors");
+import "colors";
 
 // For benchmarks :D
 import { performance } from "perf_hooks";
 
 // Discord API stuff
-import msg from "../func/discord/message.js";
-import embed from "../func/discord/embed.js";
+import { Embed as embed } from "../func/discord/embed.js";
 
 // Permissions Class
-import Perms from "../func/perms.js";
-      
+import Perms, { discord as dperms } from "../func/perms.js";
+
+// Ratelimits
+import { ratelimit } from "../func/f.js";
+const rates = ratelimit();
+
 // Custom functions to make some tasks easier
-import * as f from "../func/f.js";
-const { codify, fetch } = f;
+import { codify } from "../func/discord/f.js";
 
 // Imports Discord :D
-import Discord, { Client, Permissions } from "discord.js";
+import Discord, { Client } from "eris";
 
 // Imports this for the 'find' function thats so op
 import Command from "../func/command.js";
@@ -31,7 +29,7 @@ const { find: cfind } = Command;
 export default function (c, cmds) {
 
   // Sets up Client
-  let client = new Client(),
+  let client = new Client(c.token, { compress: true, intents: this.intents, partials: ['MESSAGE', 'CHANNEL', 'REACTION'], }),
 
       // Gets all native objects
       { apis, worker } = this;
@@ -63,10 +61,10 @@ export default function (c, cmds) {
   client.on("ready", async () => {
 
     // Changes username if not set to what's specified
-    client.user.username !== c.u && await client.user.setUsername(c.u);
+    if(client.user.username !== c.user) await client.editSelf({ username: c.user });
 
     // Logs what bot is logged in and when with all available commands loaded onto the bot
-    console.log(`Bot "${c.name}" (${client.user.tag}) Online (${new Date().toLocaleString()})\ncmds available for "${c.name}": (${Object.keys(cmds).length}) ${Object.keys(cmds).join(", ")}`);
+    console.log(`Bot "${c.name}" (${client.user.username + "#" + client.user.discriminator}) Online (${new Date().toLocaleString()})\ncmds available for "${c.name}": (${Object.keys(cmds).length}) ${Object.keys(cmds).join(", ")}`);
   });
 
   // Client Invalidation handler
@@ -76,13 +74,12 @@ export default function (c, cmds) {
   client.on("error", err => { console.error(`An error occurred on bot "${c.name}": ${err}\n\n\tKilling...`); worker.send("die"); })
 
   // Messages
-  client.on("message", async m => {
+  client.on("messageCreate", async m => {
+
+    console.log('this did happen right')
 
     // Deletes token for safety
-    delete c.t;
-
-    // Makes it a better message
-    m = msg(m);
+    delete c.token;
 
     // Stores command if it is called in the message, Custom permissions based on bot
     let perms = new Perms(), botperms = new Perms("BOT_ADMIN", "BOT_MODERATOR");
@@ -95,10 +92,10 @@ export default function (c, cmds) {
     if(m.member) {
 
       // Member Perms
-      perms.add(Perms.find(m.member.permissions.bitfield, Permissions.FLAGS));
+      perms.add(Perms.find(m.member.permissions.allow, dperms));
 
       // Bot perms
-      botperms.add(Perms.find(m.guild.me.permissions.bitfield, Permissions.FLAGS))
+      botperms.add(Perms.find(m.channel.guild.members.filter(v => v.id === client.user.id).permissions.allow, dperms))
     }
 
     // Eval command
@@ -129,7 +126,7 @@ export default function (c, cmds) {
     }
 
     // Checks if the message is issuing a command
-    let { content } = m, pre = new RegExp("^(<@!?" + client.user.id + ">)");
+    let { content } = m, pre = new RegExp("^(<@!?" + client.user.id + ">).*");
     if(c.pre && content.startsWith(c.pre) ? (content = content.slice(c.pre.length)) : (pre.test(content) && (content = content.slice(content.match(pre)[0].length)))) {
 
       // Variable for storing a command match
@@ -163,19 +160,25 @@ export default function (c, cmds) {
               return m.channel.send(user[i]);
         }
 
+        // Cooldown stuff
+        if (command.cd)
+          if(!rates[name])
+            rates(name, command.cd)(m.author.id);
+          else if(!rates[name](m.author.id))
+            return (await m.channel.send(new embed("Please wait " + command.cd/1000 + " seconds before using it again.").c("red"))).delete({ timeout: 2000 });
+
         // Executing command with all necessary APIs and customizations
-        return command.f.call({ worker, config: c, client, m, Discord, commands: cmds, apis, prefix: c.pre }, {
+        return command.f.call({ worker, config: c, client, Discord, commands: cmds, prefix: c.pre }, {
           embed: new embed().c(c.dc), send: m.channel.send.bind(m.channel), m,
           content: content.slice(name.length).trim(),
-          perms, botperms, args, flags
+          perms, botperms, args, flags, apis
         });
       }
     }
   });
 
   // Sets up a custom login function
-  const { login } = client;
-  client.login = () => login.call(client, c.token);
+  client.login = () => client.connect();
 
   // Pushes the client object into the bots object to be exported.
   return client;

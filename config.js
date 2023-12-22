@@ -153,7 +153,10 @@ export const c = {
     apis: ['osu', 'redis'],
 
     // Modules the bot has access to
-    mods: []
+    mods: [],
+
+    // Intents the bot needs (https://discord.com/developers/docs/topics/gateway#list-of-intents)
+    intents: ['guilds', 'guildMembers', 'guildMessages', 'guildMessageReactions', 'directMessages', 'directMessageReactions']//["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS", "DIRECT_MESSAGES", "DIRECT_MESSAGE_REACTIONS"]
   },
 
   // Reaper's bot

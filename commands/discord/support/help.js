@@ -26,8 +26,6 @@ export default {
           // If no command was found, just exit with that message.
           if(!cmd)
             return send(embed.a("No bot command that starts with " + content + " found."));
-
-          
         }
       }
     }

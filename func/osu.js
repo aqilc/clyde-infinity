@@ -4,88 +4,86 @@
 // HTTPS api
 import get from "./request.js";
 
+// Stringifies querystring objs for me
+import { stringify as query } from "querystring";
+
 // The links to the osu API
-const //{ createCanvas } = Canvas,
-
-  // API Urls for osu!
-  apis = [
-  {
-
-    // The base URL
-    base: "https://osu.ppy.sh/api/",
-
-    // Everything related to maps
-    maps(id/* Beatmapset ID */, key/* API Key */) {
-
-      // Other APIs
-      const other = {
-
-        // Return the cover and thumbnail images if you input the beatmapset_id
-        cover: `https://assets.ppy.sh/beatmaps/${id}/covers/cover.jpg`,
-        thumbnail: `https://b.ppy.sh/thumb/${id}l.jpg`
-      };
-
-      // Returns url for beatmap getting endpoint in a String object with other apis
-      return Object.assign(String(apis[0].base + "get_beatmaps?k=" + key), other);
-    },
-
-    // Everything related to users
-    user(user/* User ID or Username */, key/* API Key */) {
-
-      // Other APIs
-      const other = {
-
-        // Returns url for the user's avatar
-        pfp: "http://s.ppy.sh/a/" + user,
-
-        // Best user plays
-        best: apis[0].base + "get_user_best?k=" + key + "&u=" + user,
-
-        // The user's recent plays
-        recent: apis[0].base + "get_user_recent?k=" + key + "&u=" + user
-      };
-
-      // Returns object containing the string and the other apis
-      return Object.assign(new String(apis[0].base + "get_user?k=" + key + "&u=" + user), other);
-    },
-
-    // Returns the url for the multi data
-    multi: (id, key) => apis[0].base + "get_match?k=" + key + "&mp=" + id,
-  }
-];
+//const { createCanvas } = Canvas
 
 // The osu! class with osu integration
-export default class osu {
+export class osuv1 {
 
   // Constructor made for setting key and version of API
-  constructor(key, ver) {
+  constructor(key) {
 
     // API Key
     this.key = key;
 
-    // Sets API Version
-    if(apis[ver])
-      this.ver = ver;
-  }
+    // Sets up map stuff
+    this.map = {
 
-  // User stats and other stuff
-  get user() {
+      // Return the cover and thumbnail images if you input the beatmapset_id
+      cover: id => `https://assets.ppy.sh/beatmaps/${id}/covers/cover.jpg`,
+      thumbnail: id => `https://b.ppy.sh/thumb/${id}l.jpg`,
 
-    // Stores 'this' so it can be used in other scopes
-    const self = this;
-
-    // Other functions for user info
-    let others = {
-      pfp: user => req(apis[0].user(user).pfp),
-      best: user => req(apis[0].user(user, this.key).best),
-      recent: user => req(apis[0].user(user, this.key).recent)
+      // Information stuffs
+      info: ({ since, b, u, m, limit, mods, s } = {}) => get(osuv1.base + "get_beatmaps?k=" + key + "&" + query(JSON.parse(JSON.stringify({ since, b, s, u, m, limit, mods }))))
     };
 
-    // Returns the other functions and the original combined
-    return Object.assign(function (user) {
-      return req(apis[0].user(user, self.key))
-    }, others)
+    // Sets up user related things
+    this.user = user => ({
+
+      // Returns url for the user's avatar
+      pfp: () => get("http://s.ppy.sh/a/" + user),
+
+      // Best user plays
+      best: ({ m, limit = 10 } = {}) => get(osuv1.base + "get_user_best?k=" + key + "&u=" + user + (m ? "&m=" + m : "") + "&limit=" + limit),
+
+      // The user's recent plays
+      recent: ({ m } = {}) => get(osuv1.base + "get_user_recent?k=" + key + "&u=" + user + (m ? "&m=" + m : "")),
+
+      // User info
+      info: ({ m } = {}) => get(osuv1.base + "get_user?k=" + key + "&u=" + user + (m ? "&m=" + m : ""))
+    });
+
+    this.multi = id => get(osuv1.base + "get_match?k=" + key + "&mp=" + id);
   }
+
+  // The base URL
+  static base = "https://osu.ppy.sh/api/"
+
+  // Mods
+  static mods = ["NF", "EZ", "TD", "HD", "HR", "SD", "DT", "RX", "HT", "NC", "FL", "AT", "SO", "AP", "PF", "K4", "K5", "K6", "K7", "K8", "FI", "RD", "CN", "TG", "K9", "KC", "K1", "K2", "K3", "SV2", "MR"];
+
+  /**
+   * Converts a mod bitfield to a string of mods
+   * @param {number} bits The bitfield containing the mods
+   * @returns {string} The mods in a string
+   */
+  static calcmods(bits) {
+    let mod = "";
+
+    // Makes sure bits is a number
+    bits = +bits;
+
+    // Goes through the array backwards, computing the bits the mods should have and adding the mod to the string
+    for (let i = osuv1.mods.length - 1; i >= 0; i--) {
+      let m = bits - 2 ** i;
+      if (m >= 0) mod += osuv1.mods[i], bits = m;
+      if(bits === 0) break;
+    }
+
+    return mod;
+  }
+
+  // Map things
+  maps;
+
+  // osu! user information and links
+  user;
+
+  // Returns the url for the multi data
+  multi;
 
   // Creates a custom image(signature) profile card
   /*sig(user) {
@@ -98,15 +96,4 @@ export default class osu {
     // returns the image buffer
     return canvas.toBuffer();
   }*/
-
-  // Returns the "apis" variable used for the rest of the urls
-  static apis;
-}
-
-// Creates a function that sends a get request
-async function req(url) {
-
-  // Tries to import user data, logs and rejects if import fails
-  try { return await get(url + "");
-  } catch (err) { throw new Error(err); }
 }

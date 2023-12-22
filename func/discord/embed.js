@@ -1,23 +1,9 @@
 
-// Default embed class from Discord
-import { MessageEmbed } from "discord.js";
-
 // Exports edited embed class :D
-export class Embed extends MessageEmbed {
-  constructor(title) {
+export class Embed {
+  title; type; description; url; timestamp; color; footer; image; thumbnail; video; provider; author; fields = [];
 
-    // Makes an embed
-    super();
-    
-    // Copies over properties so they are shorter
-    this.d = this.setDescription;
-    this.t = this.setTitle;
-    this.a = this.setAuthor;
-    this.f = this.setFooter;
-    this.i = this.setImage;
-    this.ts = this.setTimestamp;
-    this.tn = this.setThumbnail;
-    this.url = this.setURL;
+  constructor(title) {
     
     // Sets default color
     this.c("blue");
@@ -26,12 +12,35 @@ export class Embed extends MessageEmbed {
     if(title)
       this.t(title);
   }
+
+  // The basic Setters
+  d (desc) { this.description = desc; return this; }
+  t (title, url) { this.title = title; this.url = url; return this; }
+  a (name, url, icon) { this.author = { name, url, icon }; return this; }
+  f (text, icon_url) { this.footer = { text, icon_url }; return this; }
+  i (url, height, width) { this.image = { url, height, width }; return this; }
+  ts (ts) { this.timestamp = ts; return this; }
+  tn (url, height, width) { this.thumbnail = { url, height, width }; return this; }
+  url (str) { this.url = str; return this; }
+
+  // Adds fields to the fields prop
+  addFields (fields) {
+    this.fields = this.fields.concat(fields);
+    return this;
+  }
+  addField(title, desc, inline) {
+    this.fields.push({ name: title, value: desc, inline });
+    return this;
+  }
   
   // Discord RichEmbed setColor function edit
   c(color) {
     
     // Sets the actual embed color and returns
-    return this.setColor(Embed.colors[color] || color);
+    this.color = Embed.colors[color] || color
+
+    // Returns the embed
+    return this;
   }
   
   // Adds field

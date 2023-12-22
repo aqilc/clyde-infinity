@@ -510,7 +510,7 @@ parser.prototype.feed_line = function (line) {
 
     // now that we've handled space comments we can trim space
     line = this.curline = line.trim();
-    if (line.length <= 0) return this;
+    if (!line) return this;
 
     // c++ style comments
     if (line.startsWith("//")) return this;
@@ -524,8 +524,6 @@ parser.prototype.feed_line = function (line) {
         this.section = line.substring(1, line.length - 1);
         return this;
     }
-
-    if (!line) return this;
 
     switch (this.section) {
         case "Metadata": this._metadata(); break;
@@ -1371,49 +1369,41 @@ export function std_accuracy(values) {
     this.n100 = values.n100 || 0;
     this.n50 = values.n50 || 0;
 
-    let nobjects;
+    let { nobjects, percent } = values;
 
-    if (values.nobjects) {
+    if (!percent && nobjects) {
         let n300 = this.n300;
-        nobjects = values.nobjects;
         let hitcount;
 
-        if (n300 < 0) {
+        if (n300 < 0)
             n300 = Math.max(0, nobjects - this.n100 - this.n50 - this.nmiss);
-        }
 
         hitcount = n300 + this.n100 + this.n50 + this.nmiss;
 
-        if (hitcount > nobjects) {
+        if (hitcount > nobjects)
             n300 -= Math.min(n300, hitcount - nobjects);
-        }
 
         hitcount = n300 + this.n100 + this.n50 + this.nmiss;
 
-        if (hitcount > nobjects) {
+        if (hitcount > nobjects)
             this.n100 -= Math.min(this.n100, hitcount - nobjects);
-        }
 
         hitcount = n300 + this.n100 + this.n50 + this.nmiss;
 
-        if (hitcount > nobjects) {
+        if (hitcount > nobjects)
             this.n50 -= Math.min(this.n50, hitcount - nobjects);
-        }
 
         hitcount = n300 + this.n100 + this.n50 + this.nmiss;
 
-        if (hitcount > nobjects) {
+        if (hitcount > nobjects)
             this.nmiss -= Math.min(this.nmiss, hitcount - nobjects);
-        }
 
         this.n300 = nobjects - this.n100 - this.n50 - this.nmiss;
     }
 
-    if (values.percent !== undefined) {
-        nobjects = values.nobjects;
-        if (nobjects === undefined) {
+    if (percent !== undefined) {
+        if (nobjects === undefined)
             throw new TypeError("nobjects is required when specifying percent");
-        }
 
         let max300 = nobjects - this.nmiss;
 
@@ -1748,11 +1738,7 @@ std_ppv2.prototype.toString = function () {
 };
 
 // _(internal)_ base pp value for stars
-std_ppv2.prototype._base = function (stars) {
-    return (
-        Math.pow(5.0 * Math.max(1.0, stars / 0.0675) - 4.0, 3.0) / 100000.0
-    );
-};
+std_ppv2.prototype._base = stars => Math.pow(5 * Math.max(1, stars / 0.0675) - 4, 3) / 100000;
 
 // generic pp calc function that figures out what calculator to use
 // based on the params' mode and passes through params and
@@ -1764,10 +1750,7 @@ export function ppv2(params) {
         mode = params.map.mode;
     else mode = params.mode || modes.std;
 
-    switch (mode) {
-        case modes.std:
-            return new std_ppv2().calc(params);
-    }
+    if(mode === modes.std) return new std_ppv2().calc(params);
 
     throw {
         name: "NotImplementedError",

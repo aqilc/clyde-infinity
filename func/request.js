@@ -7,10 +7,10 @@ import https from 'https'
  * @param {string | URL} url The url
  * @returns {Promise<any>} The response
  */
-export default (url, { method, headers, data, referrer, refererPolicy, body, mode } = {}) => new Promise((res, rej) => {
+export default (url, { method, headers, data } = {}) => new Promise((res, rej) => {
 
   // Starts a new HTTPS request
-  const req = https.request(url, { method, headers, referrer, refererPolicy, body, mode }, r => {
+  const req = https.request(url, { method, headers }, r => {
 
     // Stores data
     let data = ''
